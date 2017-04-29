@@ -2,6 +2,7 @@
 
 require_once 'HTTP/Request2.php';
 require_once 'SignatureBuilder.php';
+require_once 'vufoenviroment.php';
 
 // See the Vuforia Web Services Developer API Specification - https://developer.vuforia.com/resources/dev-guide/retrieving-target-cloud-database
 // The PostNewTarget sample demonstrates how to update the attributes of a target using a JSON request body. This example updates the target's metadata.
@@ -23,8 +24,17 @@ class PostNewTarget{
 	private $width			= 320.0;
 	private $meta			= "Vuforia test metadata";
 	private $activeflag		= 1;
-	
-	function PostNewTarget(){
+
+	function __construct()
+    {
+        $this->targetName = vufoenviroment::getTargetName();
+        $this->imageLocation = vufoenviroment::getImageLocation();
+        $this->width = vufoenviroment::getWidth();
+        $this->meta = vufoenviroment::getMeta();
+        $this->activeflag = vufoenviroment::getActiveflag();
+    }
+
+    function PostNewTarget(){
 		$send = array(
 			'width'=>$this->width,
 			'name'=>$this->targetName,
@@ -33,7 +43,7 @@ class PostNewTarget{
 			'active_flag'=>$this->activeflag );
 		$this->jsonRequestObject = json_encode( $send );
 
-		$this->execPostNewTarget();
+		return $this->execPostNewTarget();
 
 	}
 	
@@ -71,13 +81,13 @@ class PostNewTarget{
 			$response = $this->request->send();
 
 			if (200 == $response->getStatus() || 201 == $response->getStatus() ) {
-				echo $response->getBody();
+				return $response->getBody();
 			} else {
-				echo 'Unexpected HTTP status: ' . $response->getStatus() . ' ' .
+				return 'Unexpected HTTP status: ' . $response->getStatus() . ' ' .
 						$response->getReasonPhrase(). ' ' . $response->getBody();
 			}
 		} catch (HTTP_Request2_Exception $e) {
-			echo 'Error: ' . $e->getMessage();
+			return 'Error: ' . $e->getMessage();
 		}
 
 

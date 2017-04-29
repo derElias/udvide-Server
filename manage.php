@@ -1,4 +1,5 @@
 <?php
+require_once 'vuforiaaccess.php';
 /**
  * Created by PhpStorm.
  * User: User
@@ -14,18 +15,9 @@
  * get home template
  */
 $template = file_get_contents('managetemplate.html');
-$template = str_replace('{}', $elem,$template);
+//$template = str_replace('{}', $elem,$template);
 
-class vuforiaaccess {
-    private $accessmethod;
-    private $target;
+echo $template;
 
-    /**
-     * @param mixed $accessmethod
-     */
-    public function setAccessmethod($accessmethod)
-    {
-        $this->accessmethod = $accessmethod;
-    }
+echo (new vuforiaaccess())->execute();
 
-}
