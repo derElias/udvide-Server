@@ -20,10 +20,18 @@ class PostNewTarget{
 	
 	private $targetName 	= "[ name ]";
 	private $imageLocation 	= "[ /path/file.ext ]";
+	private $width			= 320.0;
+	private $meta			= "Vuforia test metadata";
+	private $activeflag		= 1;
 	
 	function PostNewTarget(){
-		
-		$this->jsonRequestObject = json_encode( array( 'width'=>320.0 , 'name'=>$this->targetName , 'image'=>$this->getImageAsBase64() , 'application_metadata'=>base64_encode("Vuforia test metadata") , 'active_flag'=>1 ) );
+		$send = array(
+			'width'=>$this->width,
+			'name'=>$this->targetName,
+			'image'=>$this->getImageAsBase64(),
+			'application_metadata'=>base64_encode($this->meta),
+			'active_flag'=>$this->activeflag );
+		$this->jsonRequestObject = json_encode( $send );
 
 		$this->execPostNewTarget();
 
