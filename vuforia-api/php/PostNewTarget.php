@@ -1,67 +1,76 @@
 <?php
-
-require_once 'HTTP/Request2.php';
-require_once 'SignatureBuilder.php';
 require_once 'vufoenviroment.php';
 
-// See the Vuforia Web Services Developer API Specification - https://developer.vuforia.com/resources/dev-guide/retrieving-target-cloud-database
-// The PostNewTarget sample demonstrates how to update the attributes of a target using a JSON request body. This example updates the target's metadata.
-
+/**
+ * Class PostNewTarget
+ * Heavily based on Vuforia Samples this loads
+ */
 class PostNewTarget{
 
 	//Server Keys
-	private $access_key 	= "[ server access key ]";
-	private $secret_key 	= "[ server secret key ]";
+	private $access_key 	= "[error at vufoenviroment/PostNewTarget]";
+	private $secret_key 	= "[error at vufoenviroment/PostNewTarget]";
 	
 	//private $targetId 		= "eda03583982f41cdbe9ca7f50734b9a1";
 	private $url 			= "https://vws.vuforia.com";
 	private $requestPath 	= "/targets";
-	private $request;       // the HTTP_Request2 object
+
+	/**
+     * @var HTTP_Request2
+     */
+	private $request;
 	private $jsonRequestObject;
 	
-	private $targetName 	= "[ name ]";
-	private $imageLocation 	= "[ /path/file.ext ]";
-	private $width			= 320.0;
-	private $meta			= "Vuforia test metadata";
-	private $activeflag		= 1;
+	private $targetName 	= "[error at vufoenviroment/PostNewTarget]";
+	private $image       	= "[error at vufoenviroment/PostNewTarget]";
+	private $width			= "[error at vufoenviroment/PostNewTarget]";
+	private $meta			= "[error at vufoenviroment/PostNewTarget]";
+	private $activeflag		= "[error at vufoenviroment/PostNewTarget]";
 
 	function __construct()
     {
-        $this->targetName = vufoenviroment::getTargetName();
-        $this->imageLocation = vufoenviroment::getImageLocation();
-        $this->width = vufoenviroment::getWidth();
-        $this->meta = vufoenviroment::getMeta();
-        $this->activeflag = vufoenviroment::getActiveflag();
+    	$this->access_key   = vufoenviroment::getAccessKey();
+    	$this->secret_key   = vufoenviroment::getSecretKey();
+
+        $this->targetName   = isset($env['targetName']) ? $env['targetName'] : false;
+        $this->image        = isset($env['image'])      ? $env['image']      : false;
+        $this->width        = isset($env['width'])      ? $env['width']      : false;
+        $this->meta         = isset($env['meta'])       ? $env['meta']       : false;
+        $this->activeflag   = isset($env['activeflag']) ? $env['activeflag'] : false;
     }
 
-    function PostNewTarget(){
+    public function setName($name) {
+	    $this->targetName   = $name;
+    }
+
+    public function setImage($image) {
+        $this->image   = $image;
+    }
+
+    public function setWidth($width) {
+        $this->width   = $width;
+    }
+
+    public function PostNewTarget()
+	{
 		$send = array(
-			'width'=>$this->width,
-			'name'=>$this->targetName,
-			'image'=>$this->getImageAsBase64(),
-			'application_metadata'=>base64_encode($this->meta),
-			'active_flag'=>$this->activeflag );
+			'width'                 =>  $this->width,
+			'name'                  =>  $this->targetName,
+			'image'                 =>  $this->getImageAsBase64(),
+			'application_metadata'  =>  base64_encode($this->meta),
+			'active_flag'           =>  $this->activeflag );
 		$this->jsonRequestObject = json_encode( $send );
-
 		return $this->execPostNewTarget();
-
 	}
 	
-	function getImageAsBase64(){
-		
-		$file = file_get_contents( $this->imageLocation );
-		
-		if( $file ){
-			
-			$file = base64_encode( $file );
-		}
-		
-		return $file;
-	
+	function getImageAsBase64()
+	{
+		$file = $this->image;
+		return $file ? base64_encode( $file ) : $file;
 	}
 
-	public function execPostNewTarget(){
-
+	private function execPostNewTarget()
+	{
 		$this->request = new HTTP_Request2();
 		$this->request->setMethod( HTTP_Request2::METHOD_POST );
 		$this->request->setBody( $this->jsonRequestObject );
@@ -75,11 +84,8 @@ class PostNewTarget{
 		// Define the Date and Authentication headers
 		$this->setHeaders();
 
-
 		try {
-
 			$response = $this->request->send();
-
 			if (200 == $response->getStatus() || 201 == $response->getStatus() ) {
 				return $response->getBody();
 			} else {
@@ -89,8 +95,6 @@ class PostNewTarget{
 		} catch (HTTP_Request2_Exception $e) {
 			return 'Error: ' . $e->getMessage();
 		}
-
-
 	}
 
 	private function setHeaders(){
@@ -99,12 +103,9 @@ class PostNewTarget{
 
 		// Define the Date field using the proper GMT format
 		$this->request->setHeader('Date', $date->format("D, d M Y H:i:s") . " GMT" );
-		
 		$this->request->setHeader("Content-Type", "application/json" );
 		// Generate the Auth field value by concatenating the public server access key w/ the private query signature for this request
 		$this->request->setHeader("Authorization" , "VWS " . $this->access_key . ":" . $sb->tmsSignature( $this->request , $this->secret_key ));
-
 	}
 }
-
 ?>

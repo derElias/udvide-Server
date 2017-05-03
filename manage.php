@@ -10,14 +10,11 @@ require_once 'vuforiaaccess.php';
 /**
  * init
  */
-
+echo "\n";
 /**
  * get home template
  */
 $template = file_get_contents('managetemplate.html');
-//$template = str_replace('{}', $elem,$template);
+$template = str_replace('{HOME}', (new vuforiaaccess())->execute(),$template);
 
 echo $template;
-
-echo (new vuforiaaccess())->execute();
-

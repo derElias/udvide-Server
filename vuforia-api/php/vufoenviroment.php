@@ -1,4 +1,6 @@
 <?php
+require_once 'c:/xampp/php/pear/HTTP/Request2.php';
+require_once 'SignatureBuilder.php';
 
 /**
  * Created by PhpStorm.
@@ -8,16 +10,22 @@
  */
 class vufoenviroment
 {
+    // on a temp account
     private static $access_key 	    = "[ server access key ]";
     private static $secret_key 	    = "[ server secret key ]";
 
     private static $targetId 	    = "[ target id ]";
 
-    private static $targetName 	    = "[ fehlername ]";
-    private static $imageLocation 	= "[ /path/fehlerfile.ext ]";
+    private static $targetName 	    = "[ tname ]";
+    private static $image        	= "[ timage ]";
     private static $width			= 320.0;
-    private static $meta			= "Vuforia test fehlermetadata";
+    private static $meta			= "tmeta";
     private static $activeflag		= 1;
+
+    function __construct()
+    {
+        //$this->image = file_get_contents( '/img/logo.png' );
+    }
 
     /**
      * @return string
@@ -54,9 +62,9 @@ class vufoenviroment
     /**
      * @return string
      */
-    public static function getImageLocation(): string
+    public static function getImage(): string
     {
-        return self::$imageLocation;
+        return self::$image;
     }
 
     /**

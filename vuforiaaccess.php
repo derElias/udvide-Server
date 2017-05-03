@@ -8,6 +8,7 @@ require_once 'vuforia-api/php/DeleteTarget.php';
 class vuforiaaccess {
     private $accessmethod;
     private $target;
+    
 
     /**
     * @param mixed $accessmethod
