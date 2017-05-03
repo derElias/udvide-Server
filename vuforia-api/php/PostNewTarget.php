@@ -31,24 +31,36 @@ class PostNewTarget{
     {
     	$this->access_key   = vufoenviroment::getAccessKey();
     	$this->secret_key   = vufoenviroment::getSecretKey();
-
-        $this->targetName   = isset($env['targetName']) ? $env['targetName'] : false;
-        $this->image        = isset($env['image'])      ? $env['image']      : false;
-        $this->width        = isset($env['width'])      ? $env['width']      : false;
-        $this->meta         = isset($env['meta'])       ? $env['meta']       : false;
-        $this->activeflag   = isset($env['activeflag']) ? $env['activeflag'] : false;
     }
 
     public function setName($name) {
-	    $this->targetName   = $name;
+	    if ($name != false)
+	        $this->targetName   = $name;
+	    return $this;
     }
 
     public function setImage($image) {
-        $this->image   = $image;
+        if ($image != false)
+	        $this->image   = $image;
+        return $this;
     }
 
     public function setWidth($width) {
-        $this->width   = $width;
+        if ($width != false)
+	        $this->width   = $width;
+        return $this;
+    }
+
+    public function setMeta($meta) {
+        if ($meta != false)
+	        $this->meta = $meta;
+        return $this;
+    }
+
+    public function setActiveflag($activeflag) {
+        if ($activeflag != false)
+	        $this->activeflag = $activeflag;
+        return $this;
     }
 
     public function PostNewTarget()
