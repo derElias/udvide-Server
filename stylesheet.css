@@ -1,2 +1,85 @@
+body{
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
 
-#topnav{color: blue;}
+
+.header{
+    height: 5%;
+    overflow: hidden;
+    background-color: lightgrey;
+    font-size: 17px;
+}
+.header img{
+    float: left;
+    height: 100%;
+    width: 120px;
+}
+.headerbutton{
+    margin: auto;
+    background-color: lightgrey;
+    float: left;
+    width: auto;
+    height: 100%;
+    border: none;
+    outline: none;
+    display: block;
+}
+.headerbutton:hover{
+    background-color: black;
+    color: white;
+    heigth: 100%;
+}
+
+.content{
+    height: 80%;
+    margin: auto;
+}
+
+.contentBox{
+    background-color: lightblue;
+    width: 100%;
+    height: 100%;
+    margin:auto;
+}
+
+.suche{
+    float: right;
+    width: 20%;
+    hight: 15%;
+    padding: 4px 2px;
+    background-color: gray;
+    color: white;
+}
+
+.suchfeld{
+    float: right;
+    margin: auto;
+    padding: 2px 4px;
+    background-color: white;
+    color: grey;
+}
+
+
+
+#lupe-pic{
+    height: 12px;
+    width: auto;
+    padding-right: 6px;
+}
+
+footer {
+    height: 100px;
+    width: 100%;
+    background-color: lightgrey;
+    bottom: 0;
+    position: fixed;
+    text-align: center;
+}
+
+#homebutton{
+    height: 100%;
+    Padding:5px;
+}
