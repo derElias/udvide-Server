@@ -1,0 +1,4 @@
+Known Bug:
+When VWC respondes with anything else then 200 (201@POST) we currently throw an unrecoverable Error.
+This includes 404 when a requested record is missing etc.
+--> Error Handling needs improvments!!
