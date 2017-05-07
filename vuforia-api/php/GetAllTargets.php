@@ -17,7 +17,7 @@ class GetAllTargets implements VuFoWorker {
         $this->access_key   = vuforiaaccess::getAccessKey();
         $this->secret_key   = vuforiaaccess::getSecretKey();
         $this->url          = vuforiaaccess::getUrl();
-        $this->requestPath  = vuforiaaccess::getRequestPath();
+        $this->requestPath  = vuforiaaccess::getTargetRequestPath();
     }
 
 	public function execute(){
@@ -42,14 +42,7 @@ class GetAllTargets implements VuFoWorker {
 		// Define the Date and Authentication headers
 		$this->setHeaders();
 		try {
-			$response = $this->request->send();
-		
-			if (200 == $response->getStatus()) {
-				return  $response->getBody();
-			} else {
-				trigger_error('Unexpected HTTP status: ' . $response->getStatus() . ' ' .
-						$response->getReasonPhrase(). ' ' . $response->getBody(),E_USER_ERROR);
-			}
+            return $this->request->send();
 		} catch (HTTP_Request2_Exception $e) {
 			trigger_error('Error: ' . $e->getMessage(),E_USER_ERROR);
 		}

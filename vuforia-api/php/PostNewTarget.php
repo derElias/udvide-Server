@@ -32,7 +32,7 @@ class PostNewTarget implements VuFoWorker {
     	$this->access_key   = vuforiaaccess::getAccessKey();
     	$this->secret_key   = vuforiaaccess::getSecretKey();
     	$this->url          = vuforiaaccess::getUrl();
-    	$this->requestPath  = vuforiaaccess::getRequestPath();
+    	$this->requestPath  = vuforiaaccess::getTargetRequestPath();
     }
 
     /**
@@ -149,7 +149,7 @@ class PostNewTarget implements VuFoWorker {
          */
         if (!is_bool($this->activeflag) && !empty($this->activeflag)) {
             $isError = 1;
-            trigger_error("Active flag not set or invalid! Defaulting to true");
+            trigger_error("Active flag invalid! Defaulting to true");
             $this->activeflag = true;
         }
 
@@ -174,14 +174,8 @@ class PostNewTarget implements VuFoWorker {
 		$this->setHeaders();
 
 		try {
-			$response = $this->request->send();
-			if (200 == $response->getStatus() || 201 == $response->getStatus() ) {
-				return $response->getBody();
-			} else {
-				trigger_error('Unexpected HTTP status: ' . $response->getStatus() . ' ' .
-						$response->getReasonPhrase(). ' ' . $response->getBody(),E_USER_ERROR);
-			}
-		} catch (HTTP_Request2_Exception $e) {
+			return $this->request->send();
+        } catch (HTTP_Request2_Exception $e) {
 			trigger_error('Error: ' . $e->getMessage(),E_USER_ERROR);
 		}
 	}

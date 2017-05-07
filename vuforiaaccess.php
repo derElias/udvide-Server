@@ -9,14 +9,16 @@ require_once 'vuforia-api/php/GetAllTargets.php';
 require_once 'vuforia-api/php/GetTarget.php';
 require_once 'vuforia-api/php/DeleteTarget.php';
 
+include_once 'vuforia-api/php/DefaultErrorHandle.php';
+
 class vuforiaaccess {
     private static $url = "https://vws.vuforia.com";
-    private static $requestPath = "/targets";
-    private static $secretKey = '...';
-    private static $accessKey = '...';
+    private static $targetRequestPath = "/targets";
+    private static $targetSummaryPath = "/summary";
+    private static $secretKey = '...'; // change this to secretKey
+    private static $accessKey = '...'; // change this to Server accessKey
 
     private $accessmethod;
-    private $jsonresponse;
 
     private $targetId;
     private $targetName;
@@ -25,10 +27,11 @@ class vuforiaaccess {
     private $meta;
     private $activeflag;
 
+    //<editor-fold desc="static Getters">
     /**
      * @return string
      */
-    public static function getSecretKey()
+    public static function getSecretKey():string
     {
         return self::$secretKey;
     }
@@ -36,7 +39,7 @@ class vuforiaaccess {
     /**
      * @return string
      */
-    public static function getAccessKey()
+    public static function getAccessKey():string
     {
         return self::$accessKey;
     }
@@ -44,9 +47,9 @@ class vuforiaaccess {
     /**
      * @return string
      */
-    public static function getRequestPath(): string
+    public static function getTargetRequestPath(): string
     {
-        return self::$requestPath;
+        return self::$targetRequestPath;
     }
 
     /**
@@ -58,84 +61,156 @@ class vuforiaaccess {
     }
 
     /**
+     * @return string
+     */
+    public static function getTargetSummaryPath(): string
+    {
+        return self::$targetSummaryPath;
+    }
+    //</editor-fold>
+
+    /**
      * @return mixed
      */
     public function execute() {
+        $this->accessmethod = strtoupper($this->accessmethod);
         switch ($this->accessmethod) {
             case 'POST':
-                $subject = new PostNewTarget();
-                $subject
-                    ->setName($this->targetName)
-                    ->setImage($this->image);
-                if (!empty($this->width)) {
-                    $subject->setWidth($this->width);
-                }
-                if (!empty($this->meta)) {
-                    $subject->setMeta($this->meta);
-                }
-                if (!empty($this->activeflag)) {
-                    $subject->setActiveflag($this->activeflag);
-                }
-                $this->jsonresponse = $subject
-                    ->validateData()
-                    ->execute();
+                $response = $this->callPost();
                 break;
             case 'GET':
-                $this->jsonresponse = (new GetTarget())
-                    ->setTargetId($this->targetId)
-                    ->validateData()
-                    ->execute();
+                $response = $this->callGet();
                 break;
             case 'GETALL':
-                $this->jsonresponse = (new GetAllTargets())
-                    ->validateData()
-                    ->execute();
+                $response = $this->callGetAll();
                 break;
+            case 'UPD':
             case 'UPDATE':
-                $subject = new UpdateTarget();
-                if (!empty($this->targetName)) {
-                    $subject->setName($this->targetName);
-                }
-                if (!empty($this->image)) {
-                    $subject->setImage($this->image);
-                }
-                if (!empty($this->width)) {
-                    $subject->setWidth($this->width);
-                }
-                if (!empty($this->meta)) {
-                    $subject->setMeta($this->meta);
-                }
-                if (!empty($this->activeflag)) {
-                    $subject->setActiveflag($this->activeflag);
-                }
-                $this->jsonresponse = $subject
-                    ->validateData()
-                    ->execute();
+                $response = $this->callUpdate();
                 break;
+            case 'DEL':
             case 'DELETE':
-                $this->jsonresponse = (new DeleteTarget())
-                    ->setTargetId($this->targetId)
-                    ->validateData()
-                    ->execute();
+                $response = $this->callDelete();
                 break;
+            case 'SUM':
+            case 'SUMMARIZE':
+            case 'SUMMARY':
+                $response = $this->callSummary();
+                break;
+            case 'SUMALL':
+            case 'SUMMARIZEALL':
+            case 'SUMMARYALL':
+                $response = $this->callSummaryAll();
+                 break;
             default:
                 trigger_error("INVALID VUFORIAACCESS OPERATION!\n
-                Got $this->accessmethod instead of POST, GET, GETALL, UPDATE or DELETE!",E_USER_ERROR);
+                Got $this->accessmethod instead of POST, GET, GETALL, UPDATE, UPD, DELETE, DEL,\n
+                SUM, SUMMARIZE, SUMMARY, SUMALL, SUMMARIZEALL, SUMMARYALL!",E_USER_ERROR);
+                $response = 'trigger_error dosnt seem to work properly...';
                 break;
         }
-        // VuFo Response is now stored in $jsonresponse
-        return json_decode($this->jsonresponse); // ToDo
+        return $response;
     }
 
-    /**
-     * Fluent Setter and Getter for EVERYTHING
-     */
+    public function handleError($response)
+    {
+        switch($response->getStatus()) {
+            case '404':
+                echo '<div class="errorpopup">404: Target not found</div>';
+                break; // ToDo
+        }
+    }
+
+    //<editor-fold desc="Calls">
+    private function callPost()
+    {
+        $subject = new PostNewTarget();
+        $subject
+            ->setName($this->targetName)
+            ->setImage($this->image);
+        if (!empty($this->width)) {
+            $subject->setWidth($this->width);
+        }
+        if (!empty($this->meta)) {
+            $subject->setMeta($this->meta);
+        }
+        if (!empty($this->activeflag)) {
+            $subject->setActiveflag($this->activeflag);
+        }
+        return $subject
+            ->validateData()
+            ->execute();
+    }
+
+    private function callGet()
+    {
+        return (new GetTarget())
+            ->setTargetId($this->targetId)
+            ->validateData()
+            ->execute();
+    }
+
+    private function callGetAll()
+    {
+        return (new GetAllTargets())
+            ->validateData()
+            ->execute();
+    }
+
+    private function callUpdate()
+    {
+        $subject = new UpdateTarget();
+        if (!empty($this->targetName)) {
+            $subject->setName($this->targetName);
+        }
+        if (!empty($this->image)) {
+            $subject->setImage($this->image);
+        }
+        if (!empty($this->width)) {
+            $subject->setWidth($this->width);
+        }
+        if (!empty($this->meta)) {
+            $subject->setMeta($this->meta);
+        }
+        if (!empty($this->activeflag)) {
+            $subject->setActiveflag($this->activeflag);
+        }
+        return $subject
+            ->validateData()
+            ->execute();
+    }
+
+    private function callDelete()
+    {
+        return (new DeleteTarget())
+            ->setTargetId($this->targetId)
+            ->validateData()
+            ->execute();
+    }
+
+    private function callSummary()
+    {
+        return (new GetSummary())
+            ->setTargetId($this->targetId)
+            ->validateData()
+            ->execute();
+    }
+
+    private function callSummaryAll()
+    {
+        return (new GetAllSummaries())
+            ->validateData()
+            ->execute();
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Fluent Setters">
 
     /**
      * @param string $accessmethod
      * @return vuforiaaccess
      */
-    public function setAccessmethod($accessmethod)
+    public function setAccessmethod($accessmethod):vuforiaaccess
     {
         if ($accessmethod != 'POST' &&
             $accessmethod != 'GET' &&
@@ -219,6 +294,9 @@ class vuforiaaccess {
         return $this;
     }
 
+    //</editor-fold>
+
+    //<editor-fold desc="Getters">
     /**
      * @return string
      */
@@ -274,6 +352,8 @@ class vuforiaaccess {
     {
         return $this->accessmethod;
     }
+    //</editor-fold>
+
 }
 
 interface VuFoWorker {

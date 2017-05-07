@@ -1,74 +1,64 @@
 <?php
 require_once '../../vuforiaaccess.php';
-
 // See the Vuforia Web Services Developer API Specification - https://developer.vuforia.com/resources/dev-guide/retrieving-target-cloud-database
-// The DeleteTarget sample demonstrates how to delete a target from its Cloud Database using the target's target id.
-// * note that targets cannot be 'Processing' and must be inactive to be deleted.
-
-class DeleteTarget implements VuFoWorker {
-
+// The GetTarget sample demonstrates how to query a single target by target id.
+class GetSummary implements VuFoWorker {
+	
 	//Server Keys
 	private $access_key;
 	private $secret_key;
-
+	
+	private $targetId;
 	private $url;
 	private $requestPath;
-
-    private $targetId;
-
-	private $request; // internal
+	private $request;
 
     public function __construct()
     {
         $this->access_key   = vuforiaaccess::getAccessKey();
         $this->secret_key   = vuforiaaccess::getSecretKey();
         $this->url          = vuforiaaccess::getUrl();
-        $this->requestPath  = vuforiaaccess::getTargetRequestPath();
+        $this->requestPath  = vuforiaaccess::getTargetSummaryPath();
     }
+	
+	public function execute() {
 
-    /**
-     * @param string $targetId
-     * @return DeleteTarget
-     */
-    public function setTargetId(string $targetId)
-    {
-        $this->targetId = $targetId;
-        return $this;
-    }
-
-    public function execute()
-    {
         $this->requestPath = "$this->requestPath/$this->targetId";
-        return $this->execDeleteTarget();
-    }
+
+		return $this->execGetSummary();
+	}
 
     public function validateData()
     {
         if (!empty($this->targetId))
-            trigger_error('no target ID set - invalid DELETE Request',E_USER_ERROR);
+            trigger_error("no target ID set - invalid SUMMARY Request\nTo get a list of TargetIDs try SUMMARYALL",E_USER_ERROR);
         return $this;
     }
-
-	private function execDeleteTarget(){
-
+	
+	private function execGetSummary(){
+		
 		$this->request = new HTTP_Request2();
-		$this->request->setMethod( HTTP_Request2::METHOD_DELETE );
+		$this->request->setMethod( HTTP_Request2::METHOD_GET );
 		
 		$this->request->setConfig(array(
 				'ssl_verify_peer' => false
 		));
+		
 		$this->request->setURL( $this->url . $this->requestPath );
-
+		
 		// Define the Date and Authentication headers
 		$this->setHeaders();
-
+		
+		
 		try {
-			return $this->request->send();
+            return $this->request->send();
 		} catch (HTTP_Request2_Exception $e) {
 			trigger_error('Error: ' . $e->getMessage(),E_USER_ERROR);
 		}
+		
+		
 	}
-
+	
 	private function setHeaders(){
 		$sb = 	new SignatureBuilder();
 		$date = new DateTime("now", new DateTimeZone("GMT"));
@@ -78,4 +68,14 @@ class DeleteTarget implements VuFoWorker {
 		// Generate the Auth field value by concatenating the public server access key w/ the private query signature for this request
 		$this->request->setHeader("Authorization" , "VWS " . $this->access_key . ":" . $sb->tmsSignature( $this->request , $this->secret_key ));
 	}
+
+    /**
+     * @param mixed $targetId
+     * @return GetSummary
+     */
+    public function setTargetId($targetId)
+    {
+        $this->targetId = $targetId;
+        return $this;
+    }
 }
