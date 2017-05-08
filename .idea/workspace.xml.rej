@@ -1,0 +1,9 @@
+diff a/.idea/workspace.xml b/.idea/workspace.xml	(rejected hunks)
+@@ -2,7 +2,6 @@
+ <project version="4">
+   <component name="ChangeListManager">
+     <list default="true" id="e5874ff8-d329-446d-9770-a3d3600cdf40" name="Default" comment="">
+-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/Entry.svg" />
+       <change type="DELETED" beforePath="$PROJECT_DIR$/res/home.svg" afterPath="" />
+       <change type="MOVED" beforePath="$PROJECT_DIR$/res/Homee.svg" afterPath="$PROJECT_DIR$/res/Home.svg" />
+       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
