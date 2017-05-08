@@ -1,14 +1,12 @@
 <?php
-require_once 'HTTP/Request2.php'; // change this line to the HTTP/Request2.php path e.g. c:/xampp/php/pear/
-require_once '../keys.json'; // this file is purposely not on git, please don't do that...
+require_once '/xampp/php/pear/HTTP/Request2.php'; // change this line to the HTTP/Request2.php path e.g. /xampp/php/pear/... or /php/...
 
 class vuforiaaccess {
     private static $url = "https://vws.vuforia.com";
     private static $targetRequestPath = "/targets";
     private static $targetSummaryPath = "/summary";
 
-    private $secretKey;
-    private $accessKey;
+    private $keys;
 
     private $accessmethod;
 
@@ -47,9 +45,7 @@ class vuforiaaccess {
 
     public function __construct()
     {
-        $keys = json_decode(file_get_contents('keys.json'));
-        $this->accessKey = $keys->access;
-        $this->secretKey = $keys->secret;
+        $this->keys = json_decode(file_get_contents('../keys.json'));
     }
 
     /**
@@ -62,39 +58,39 @@ class vuforiaaccess {
             case 'C':
             case 'CREATE':
             case 'POST':
-                $response = $this->callPost();
+                $response = $this->callPost($this->keys);
                 break;
             case 'R':
             case 'READ':
             case 'GET':
-                $response = $this->callGet();
+                $response = $this->callGet($this->keys);
                 break;
             case 'RA':
             case 'READALL':
             case 'GETALL':
-                $response = $this->callGetAll();
+                $response = $this->callGetAll($this->keys);
                 break;
             case 'U':
             case 'UPD':
             case 'UPDATE':
-                $response = $this->callUpdate();
+                $response = $this->callUpdate($this->keys);
                 break;
             case 'D':
             case 'DEL':
             case 'DELETE':
-                $response = $this->callDelete();
+                $response = $this->callDelete($this->keys);
                 break;
             case 'S':
             case 'SUM':
             case 'SUMMARIZE':
             case 'SUMMARY':
-                $response = $this->callSummary();
+                $response = $this->callSummary($this->keys);
                 break;
             case 'SA':
             case 'SUMALL':
             case 'SUMMARIZEALL':
             case 'SUMMARYALL':
-                $response = $this->callSummaryAll();
+                $response = $this->callSummaryAll($this->keys);
                  break;
             default:
                 trigger_error("INVALID VUFORIAACCESS OPERATION!\n
@@ -107,14 +103,14 @@ class vuforiaaccess {
     }
 
     //<editor-fold desc="Calls">
-    private function callPost()
+    private function callPost($keys)
     {
-        $subject = new PostNewTarget();
+        $subject = new PostNewTarget($keys);
         $subject
             ->setName($this->targetName)
-            ->setImage($this->image);
-        if (!empty($this->width)) {
-            $subject->setWidth($this->width);
+            ->setWidth($this->width);
+        if (!empty($this->image)) {
+            $subject->setImage($this->Image);
         }
         if (!empty($this->meta)) {
             $subject->setMeta($this->meta);
@@ -127,24 +123,24 @@ class vuforiaaccess {
             ->execute();
     }
 
-    private function callGet()
+    private function callGet($keys)
     {
-        return (new GetTarget())
+        return (new GetTarget($keys))
             ->setTargetId($this->targetId)
             ->validateData()
             ->execute();
     }
 
-    private function callGetAll()
+    private function callGetAll($keys)
     {
-        return (new GetAllTargets())
+        return (new GetAllTargets($keys))
             ->validateData()
             ->execute();
     }
 
-    private function callUpdate()
+    private function callUpdate($keys)
     {
-        $subject = new UpdateTarget();
+        $subject = new UpdateTarget($keys);
         if (!empty($this->targetName)) {
             $subject->setName($this->targetName);
         }
@@ -165,25 +161,25 @@ class vuforiaaccess {
             ->execute();
     }
 
-    private function callDelete()
+    private function callDelete($keys)
     {
-        return (new DeleteTarget())
+        return (new DeleteTarget($keys))
             ->setTargetId($this->targetId)
             ->validateData()
             ->execute();
     }
 
-    private function callSummary()
+    private function callSummary($keys)
     {
-        return (new GetSummary())
+        return (new GetSummary($keys))
             ->setTargetId($this->targetId)
             ->validateData()
             ->execute();
     }
 
-    private function callSummaryAll()
+    private function callSummaryAll($keys)
     {
-        return (new GetAllSummaries())
+        return (new GetAllSummaries($keys))
             ->validateData()
             ->execute();
     }
@@ -337,29 +333,13 @@ class vuforiaaccess {
     {
         return $this->accessmethod;
     }
-
-    /**
-     * @return string
-     */
-    public function getSecretKey():string
-    {
-        return $this->secretKey;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAccessKey():string
-    {
-        return $this->accessKey;
-    }
     //</editor-fold>
 
 }
 
 //<editor-fold desc="Worker">
 interface VuFoWorker {
-    public function __construct();
+    public function __construct($keys);
     public function execute();
     public function validateData();
 }
@@ -387,10 +367,10 @@ class PostNewTarget implements VuFoWorker {
     private $meta;
     private $activeflag;
 
-    function __construct()
+    function __construct($keys)
     {
-        $this->access_key   = vuforiaaccess::getAccessKey();
-        $this->secret_key   = vuforiaaccess::getSecretKey();
+        $this->access_key = $keys->access;
+        $this->secret_key = $keys->secret;
         $this->url          = vuforiaaccess::getUrl();
         $this->requestPath  = vuforiaaccess::getTargetRequestPath();
     }
@@ -563,10 +543,10 @@ class GetAllTargets implements VuFoWorker {
     private $requestPath;
     private $request;
 
-    public function __construct()
+    function __construct($keys)
     {
-        $this->access_key   = vuforiaaccess::getAccessKey();
-        $this->secret_key   = vuforiaaccess::getSecretKey();
+        $this->access_key = $keys->access;
+        $this->secret_key = $keys->secret;
         $this->url          = vuforiaaccess::getUrl();
         $this->requestPath  = vuforiaaccess::getTargetRequestPath();
     }
@@ -622,10 +602,10 @@ class GetTarget implements VuFoWorker {
     private $requestPath;
     private $request;
 
-    public function __construct()
+    function __construct($keys)
     {
-        $this->access_key   = vuforiaaccess::getAccessKey();
-        $this->secret_key   = vuforiaaccess::getSecretKey();
+        $this->access_key = $keys->access;
+        $this->secret_key = $keys->secret;
         $this->url          = vuforiaaccess::getUrl();
         $this->requestPath  = vuforiaaccess::getTargetRequestPath();
     }
@@ -700,10 +680,10 @@ class GetAllSummaries implements VuFoWorker {
     private $requestPath;
     private $request;
 
-    public function __construct()
+    function __construct($keys)
     {
-        $this->access_key   = vuforiaaccess::getAccessKey();
-        $this->secret_key   = vuforiaaccess::getSecretKey();
+        $this->access_key = $keys->access;
+        $this->secret_key = $keys->secret;
         $this->url          = vuforiaaccess::getUrl();
         $this->requestPath  = vuforiaaccess::getTargetSummaryPath();
     }
@@ -759,10 +739,10 @@ class GetSummary implements VuFoWorker {
     private $requestPath;
     private $request;
 
-    public function __construct()
+    function __construct($keys)
     {
-        $this->access_key   = vuforiaaccess::getAccessKey();
-        $this->secret_key   = vuforiaaccess::getSecretKey();
+        $this->access_key = $keys->access;
+        $this->secret_key = $keys->secret;
         $this->url          = vuforiaaccess::getUrl();
         $this->requestPath  = vuforiaaccess::getTargetSummaryPath();
     }
@@ -847,10 +827,10 @@ class UpdateTarget implements VuFoWorker {
     private $request;
     private $jsonBody;
 
-    public function __construct()
+    function __construct($keys)
     {
-        $this->access_key   = vuforiaaccess::getAccessKey();
-        $this->secret_key   = vuforiaaccess::getSecretKey();
+        $this->access_key = $keys->access;
+        $this->secret_key = $keys->secret;
         $this->url          = vuforiaaccess::getUrl();
         $this->requestPath  = vuforiaaccess::getTargetRequestPath();
     }
@@ -1043,10 +1023,10 @@ class DeleteTarget implements VuFoWorker {
 
     private $request; // internal
 
-    public function __construct()
+    function __construct($keys)
     {
-        $this->access_key   = vuforiaaccess::getAccessKey();
-        $this->secret_key   = vuforiaaccess::getSecretKey();
+        $this->access_key = $keys->access;
+        $this->secret_key = $keys->secret;
         $this->url          = vuforiaaccess::getUrl();
         $this->requestPath  = vuforiaaccess::getTargetRequestPath();
     }
@@ -1145,7 +1125,6 @@ class SignatureBuilder{
             print("ERROR: Invalid content type passed to Sig Builder");
         }
         $toDigest = $method . "\n" . $this->hexDigest . "\n" . $this->contentType . "\n" . $dateValue . "\n" . $requestPath ;
-        echo $toDigest;
         $shaHashed = "";
         try {
             // the SHA1 hash needs to be transformed from hexadecimal to Base64

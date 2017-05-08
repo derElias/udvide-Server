@@ -26,3 +26,5 @@ Options for User in CMS:
 Generate printable marker
 
 
+Ez HTTP API:
+call crudForm for actions towards the DB
