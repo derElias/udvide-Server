@@ -49,22 +49,32 @@ body{
 .suche{
     float: right;
     width: 20%;
-    height: 20px;
+    height: 34px;
     padding: 4px 2px;
     background-color: gray;
 }
 
 .suchfeld{
-    float: right;
+    float: left;
     padding: 2px 4px;
-    width: 80%;
+    width: 70%;
+    height: 28px;
 }
 .suchfeld:hover{
     color: lightgrey;
-    fill: lightgrey;
     text-decoration: underline;
 }
-
+.searchbutton{
+    float: right;
+    background-color: lightgrey;
+    height: 28px;
+    width: 28px;
+}
+#searchicon{
+    padding: 2px;
+    width: 90%;
+    height: 90%;
+}
 
 footer {
     height: 100px;
