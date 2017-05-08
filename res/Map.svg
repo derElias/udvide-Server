@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Svg Vector Icons : http://www.onlinewebfonts.com/icon -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg
+        height="90%"
+        width="50px"
+        id="homebutton"
+        version="1.1"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        x="0px"
+        y="0px"
+        viewBox="0 0 1000 1000"
+        enable-background="new 0 0 1000 1000"
+        xml:space="preserve">
+<metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
+<g><g><path d="M963,186.6l-294-147c-13.8-6.9-30-6.9-43.9,0L349.2,177.6L74.5,86c-15-5-31.4-2.5-44.2,6.8c-12.8,9.2-20.3,24-20.3,39.7v637.1c0,18.6,10.5,35.5,27.1,43.8l294,147c6.9,3.4,14.4,5.2,21.9,5.2c7.5,0,15-1.7,21.9-5.2l275.9-137.9l274.7,91.6c14.9,4.9,31.4,2.4,44.2-6.8c12.8-9.2,20.3-24,20.3-39.7V230.4C990,211.9,979.6,194.9,963,186.6L963,186.6z M402,260.8l196-98v576.4l-196,98V260.8L402,260.8z M108,200.4l196,65.3v571.4l-196-98V200.4z M892,799.6l-196-65.4V162.8l196,98V799.6z"/>
+</g></g>
+</svg>

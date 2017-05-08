@@ -82,15 +82,22 @@ footer {
 
 .footerlink{
     color:black;
-}
-. footerlink a{
-    color: black;
     font-size: 17px;
+    margin-top: 0.5%;
+}
+.footerlink a {
+    color: black;
+    text-decoration: none;
 }
 
-.footerlink:hover{
+.footerlink a:hover{
+    color: black;
     text-decoration: underline;
 }
+
+
+
+
 
 #homebutton{
     height: 100%;
