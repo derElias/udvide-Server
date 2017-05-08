@@ -5,7 +5,6 @@ body{
     padding: 0;
 }
 
-
 .header{
     height: 5%;
     overflow: hidden;
@@ -18,20 +17,20 @@ body{
     width: 120px;
 }
 .headerbutton{
-    margin-left: auto;
+    margin-left: 4%;
     background-color: lightgrey;
     float: left;
-    width: auto;
-    height: 100%;
     border: none;
     outline: none;
     display: block;
     padding: 5px;
+    height: 90%;
+    width: 50px;
 }
+
 .headerbutton:hover{
     background-color: black;
     color: white;
-    heigth: 100%;
     fill: white;
 }
 
