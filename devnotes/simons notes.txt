@@ -1,0 +1,28 @@
+I want to handle these errors custom:
+403:TargetNameExists POST/PUT
+404:UnknownTarget POST/PUT/DELETE
+422:BadImage POST/PUT
+422:ImageTooLarge POST/PUT
+422:MetadataTooLarge POST/PUT
+500:Fail --> retry once? twice with delay?
+
+http://pear.php.net/package/HTTP_Request2/docs/latest/HTTP_Request2/HTTP_Request2_Response.html
+
+ToDos:
+Done: VuFoAccess API (to get response)
+WIP: ToDo DBaccess implementation
+ToDo DB-VuFo connector (offer common methods to frontend)
+ToDo SVG Marker Generator
+ToDo SVG to PNG method
+ToDo manage.php template builder (using connector and templates to generate CMS UI)
+
+StretchGoals:
+ToDo Optimize VuFoAccess (merge Workers with class etc.)
+
+
+Max metadata filesize = 2mb?
+
+Options for User in CMS:
+Generate printable marker
+
+
