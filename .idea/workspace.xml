@@ -2,16 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e5874ff8-d329-446d-9770-a3d3600cdf40" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/Entry.svg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/Homee.svg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/Map.svg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/Marker.svg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/User.svg" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/res/home.svg" afterPath="" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/res/Homee.svg" afterPath="$PROJECT_DIR$/res/Home.svg" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/manage.php" afterPath="$PROJECT_DIR$/manage.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/home.svg" afterPath="$PROJECT_DIR$/res/home.svg" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/Entry.svg" afterPath="$PROJECT_DIR$/res/Entry.svg" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/Map.svg" afterPath="$PROJECT_DIR$/res/Map.svg" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/Marker.svg" afterPath="$PROJECT_DIR$/res/Marker.svg" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/User.svg" afterPath="$PROJECT_DIR$/res/User.svg" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/stylesheet.css" afterPath="$PROJECT_DIR$/stylesheet.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/temp/footerTempl.html" afterPath="$PROJECT_DIR$/temp/footerTempl.html" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -23,7 +22,7 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="manage.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="manage.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/manage.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="374">
@@ -33,11 +32,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Entry.svg" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/res/Entry.svg">
+      <file leaf-file-name="stylesheet.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/stylesheet.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="102">
-              <caret line="6" column="23" lean-forward="false" selection-start-line="6" selection-start-column="23" selection-end-line="6" selection-end-column="23" />
+            <state relative-caret-position="493">
+              <caret line="29" column="1" lean-forward="true" selection-start-line="29" selection-start-column="1" selection-end-line="29" selection-end-column="1" />
               <folding />
             </state>
           </provider>
@@ -46,28 +45,18 @@
       <file leaf-file-name="Marker.svg" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/res/Marker.svg">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="51">
-              <caret line="3" column="8" lean-forward="false" selection-start-line="3" selection-start-column="8" selection-end-line="5" selection-end-column="23" />
+            <state relative-caret-position="68">
+              <caret line="4" column="20" lean-forward="false" selection-start-line="4" selection-start-column="20" selection-end-line="4" selection-end-column="20" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Map.svg" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/res/Map.svg">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="102">
-              <caret line="6" column="23" lean-forward="false" selection-start-line="6" selection-start-column="23" selection-end-line="6" selection-end-column="23" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="User.svg" pinned="false" current-in-tab="false">
+      <file leaf-file-name="User.svg" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/res/User.svg">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="19" column="6" lean-forward="true" selection-start-line="19" selection-start-column="6" selection-end-line="19" selection-end-column="6" />
+            <state relative-caret-position="170">
+              <caret line="10" column="15" lean-forward="true" selection-start-line="10" selection-start-column="15" selection-end-line="10" selection-end-column="15" />
               <folding />
             </state>
           </provider>
@@ -112,14 +101,15 @@
         <option value="$PROJECT_DIR$/temp/MitarbeiterTempl.html" />
         <option value="$PROJECT_DIR$/res/Eintrag.svg" />
         <option value="$PROJECT_DIR$/temp/footerTempl.html" />
-        <option value="$PROJECT_DIR$/stylesheet.css" />
-        <option value="$PROJECT_DIR$/res/Homee.svg" />
-        <option value="$PROJECT_DIR$/res/home.svg" />
-        <option value="$PROJECT_DIR$/res/Marker.svg" />
-        <option value="$PROJECT_DIR$/res/Map.svg" />
-        <option value="$PROJECT_DIR$/res/User.svg" />
-        <option value="$PROJECT_DIR$/res/Entry.svg" />
         <option value="$PROJECT_DIR$/manage.php" />
+        <option value="$PROJECT_DIR$/stylesheet.css" />
+        <option value="$PROJECT_DIR$/res/Entry.svg" />
+        <option value="$PROJECT_DIR$/res/Map.svg" />
+        <option value="$PROJECT_DIR$/res/home.svg" />
+        <option value="$PROJECT_DIR$/res/Homee.svg" />
+        <option value="$PROJECT_DIR$/res/Home.svg" />
+        <option value="$PROJECT_DIR$/res/Marker.svg" />
+        <option value="$PROJECT_DIR$/res/User.svg" />
       </list>
     </option>
   </component>
@@ -329,12 +319,12 @@
       <workItem from="1493804835729" duration="20261000" />
       <workItem from="1494224346055" duration="4180000" />
       <workItem from="1494228761028" duration="899000" />
-      <workItem from="1494230358943" duration="1412000" />
+      <workItem from="1494230358943" duration="1767000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="46881000" />
+    <option name="totallyTimeSpent" value="47236000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="970" y="0" width="957" height="1047" extended-state="0" />
@@ -391,7 +381,7 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/res/home.svg">
+    <entry file="file://$PROJECT_DIR$/res/Home.svg">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="51">
           <caret line="3" column="18" lean-forward="false" selection-start-line="3" selection-start-column="18" selection-end-line="3" selection-end-column="18" />
@@ -439,7 +429,7 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/temp/menuTempl.html" />
-    <entry file="file://$PROJECT_DIR$/res/home.svg">
+    <entry file="file://$PROJECT_DIR$/res/Home.svg">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="136">
           <caret line="8" column="17" lean-forward="false" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
@@ -667,22 +657,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/stylesheet.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="64" column="0" lean-forward="true" selection-start-line="64" selection-start-column="0" selection-end-line="64" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/Homee.svg">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="15" column="0" lean-forward="false" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/temp/footerTempl.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
@@ -699,42 +673,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/res/User.svg">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="19" column="6" lean-forward="true" selection-start-line="19" selection-start-column="6" selection-end-line="19" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/home.svg">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="8" lean-forward="true" selection-start-line="4" selection-start-column="8" selection-end-line="4" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/Marker.svg">
+    <entry file="file://$PROJECT_DIR$/res/Home.svg">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="51">
-          <caret line="3" column="8" lean-forward="false" selection-start-line="3" selection-start-column="8" selection-end-line="5" selection-end-column="23" />
+          <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/res/Entry.svg">
+    <entry file="file://$PROJECT_DIR$/res/Home.svg">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="6" column="23" lean-forward="false" selection-start-line="6" selection-start-column="23" selection-end-line="6" selection-end-column="23" />
+        <state relative-caret-position="238">
+          <caret line="14" column="4" lean-forward="false" selection-start-line="14" selection-start-column="4" selection-end-line="14" selection-end-column="4" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/res/Map.svg">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="6" column="23" lean-forward="false" selection-start-line="6" selection-start-column="23" selection-end-line="6" selection-end-column="23" />
+        <state relative-caret-position="85">
+          <caret line="5" column="20" lean-forward="false" selection-start-line="5" selection-start-column="20" selection-end-line="5" selection-end-column="20" />
           <folding />
         </state>
       </provider>
@@ -743,6 +701,38 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="374">
           <caret line="22" column="37" lean-forward="false" selection-start-line="22" selection-start-column="37" selection-end-line="22" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/Entry.svg">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="20" lean-forward="false" selection-start-line="5" selection-start-column="20" selection-end-line="5" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stylesheet.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="493">
+          <caret line="29" column="1" lean-forward="true" selection-start-line="29" selection-start-column="1" selection-end-line="29" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/Marker.svg">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="20" lean-forward="false" selection-start-line="4" selection-start-column="20" selection-end-line="4" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/User.svg">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="10" column="15" lean-forward="true" selection-start-line="10" selection-start-column="15" selection-end-line="10" selection-end-column="15" />
           <folding />
         </state>
       </provider>

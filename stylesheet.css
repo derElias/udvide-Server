@@ -26,6 +26,7 @@ body{
     border: none;
     outline: none;
     display: block;
+    padding: 5px;
 }
 .headerbutton:hover{
     background-color: black;
@@ -93,13 +94,4 @@ footer {
 .footerlink a:hover{
     color: black;
     text-decoration: underline;
-}
-
-
-
-
-
-#homebutton{
-    height: 100%;
-    Padding:5px;
 }

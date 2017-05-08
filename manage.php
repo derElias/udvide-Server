@@ -1,7 +1,7 @@
 <?php
 $template = file_get_contents('temp/manageTempl.html');
 
-    $svg = file_get_contents('res/home.svg');
+    $svg = file_get_contents('res/Home.svg');
     $template = str_replace('<!--home-->',$svg,$template);
     $svg = file_get_contents('res/Entry.svg');
     $template = str_replace('<!--eintrag-->',$svg,$template);
