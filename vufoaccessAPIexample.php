@@ -19,5 +19,9 @@ $nonError = [200,201];
 if (in_array($response->getStatus(), $nonError)) {
     echo $response->getBody();
 } else {
-    $VuFoAccess->handleError($response);
+    switch($response->getStatus()) {
+        case '404':
+            echo '<div class="errorPopup">404: Target not found</div>';
+            break; // ToDo
+    }
 }

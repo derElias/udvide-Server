@@ -106,15 +106,6 @@ class vuforiaaccess {
         return $response;
     }
 
-    public function handleError($response)
-    {
-        switch($response->getStatus()) {
-            case '404':
-                echo '<div class="errorpopup">404: Target not found</div>';
-                break; // ToDo
-        }
-    }
-
     //<editor-fold desc="Calls">
     private function callPost()
     {
