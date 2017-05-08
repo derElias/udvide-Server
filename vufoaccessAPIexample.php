@@ -10,10 +10,12 @@ $VuFoAccess = new vuforiaaccess();
 $response = $VuFoAccess
     ->setAccessmethod('POST')
     ->setTargetName('Example')
-    ->setWidth('320')
+    ->setWidth('910')
     ->setMeta("http://" . gethostname() . "/clientrequest.php#h=[kundennummer][lokale ID]")
-    ->setImageByPath('/img/logo.png')
-    ->execute();
+    ->setImageByPath('img/logo.png')
+    ->execute();/* */
+
+var_dump($response);
 
 $nonError = [200,201];
 if (in_array($response->getStatus(), $nonError)) {
