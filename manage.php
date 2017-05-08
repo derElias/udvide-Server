@@ -1,5 +1,4 @@
 <?php
-<<<<<<< HEAD
 $template = file_get_contents('temp/manageTempl.html');
 
     $svg = file_get_contents('res/Home.svg');
@@ -36,20 +35,3 @@ $template = str_replace('<!--footer-->',$temp,$template);
 
 echo $template;
 ?>
-
-
-
-
-
-
-=======
-require_once 'vuforiaaccess.php';
-/**
- * Created by PhpStorm.
- * User: User
- * Date: 13.04.2017
- * Time: 20:55
- */
-
-echo $template;
->>>>>>> 35ab3c9bd48b0be3c11a5c39719df7f9eb60e0db
