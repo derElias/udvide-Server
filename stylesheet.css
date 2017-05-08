@@ -18,7 +18,7 @@ body{
     width: 120px;
 }
 .headerbutton{
-    margin: auto;
+    margin-left: auto;
     background-color: lightgrey;
     float: left;
     width: auto;

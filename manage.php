@@ -22,7 +22,7 @@ $template = str_replace('<!--Admin-->',$temp,$template);
     $template = str_replace('<!--verwaltung-->',$svg,$template);
     $svg = file_get_contents('res/home.svg');
     $template = str_replace('<!--karten-->',$svg,$template);
-    
+
 
 $temp = file_get_contents('temp/contentTempl.html');
 $template = str_replace('<!--content-->',$temp,$template);
