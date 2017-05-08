@@ -27,6 +27,9 @@ $template = str_replace('<!--Admin-->',$temp,$template);
 $temp = file_get_contents('temp/contentTempl.html');
 $template = str_replace('<!--content-->',$temp,$template);
 
+$temp = file_get_contents('temp/footerTempl.html');
+$template = str_replace('<!--footer-->',$temp,$template);
+
 echo $template;
 ?>
 
