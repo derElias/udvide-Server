@@ -80,6 +80,18 @@ footer {
     text-align: center;
 }
 
+.footerlink{
+    color:black;
+}
+. footerlink a{
+    color: black;
+    font-size: 17px;
+}
+
+.footerlink:hover{
+    text-decoration: underline;
+}
+
 #homebutton{
     height: 100%;
     Padding:5px;
