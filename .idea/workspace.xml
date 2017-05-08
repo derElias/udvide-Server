@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e5874ff8-d329-446d-9770-a3d3600cdf40" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/stylesheet.css" afterPath="$PROJECT_DIR$/stylesheet.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/temp/contentTempl.html" afterPath="$PROJECT_DIR$/temp/contentTempl.html" />
-    </list>
+    <list default="true" id="e5874ff8-d329-446d-9770-a3d3600cdf40" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -30,7 +26,7 @@
         <entry file="file://$PROJECT_DIR$/temp/contentTempl.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="255">
-              <caret line="15" column="10" lean-forward="true" selection-start-line="15" selection-start-column="10" selection-end-line="15" selection-end-column="10" />
+              <caret line="15" column="10" lean-forward="false" selection-start-line="15" selection-start-column="10" selection-end-line="15" selection-end-column="10" />
               <folding />
             </state>
           </provider>
@@ -40,7 +36,7 @@
         <entry file="file://$PROJECT_DIR$/stylesheet.css">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="526">
-              <caret line="69" column="17" lean-forward="true" selection-start-line="69" selection-start-column="17" selection-end-line="69" selection-end-column="17" />
+              <caret line="69" column="17" lean-forward="false" selection-start-line="69" selection-start-column="17" selection-end-line="69" selection-end-column="17" />
               <folding />
             </state>
           </provider>
@@ -49,8 +45,8 @@
       <file leaf-file-name="manage.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/manage.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="51">
-              <caret line="3" column="45" lean-forward="false" selection-start-line="3" selection-start-column="45" selection-end-line="3" selection-end-column="45" />
+            <state relative-caret-position="68">
+              <caret line="4" column="45" lean-forward="false" selection-start-line="4" selection-start-column="45" selection-end-line="4" selection-end-column="45" />
               <folding />
             </state>
           </provider>
@@ -110,11 +106,11 @@
         <option value="$PROJECT_DIR$/res/Map.svg" />
         <option value="$PROJECT_DIR$/res/Marker.svg" />
         <option value="$PROJECT_DIR$/res/User.svg" />
-        <option value="$PROJECT_DIR$/manage.php" />
         <option value="$PROJECT_DIR$/res/search.svg" />
         <option value="$PROJECT_DIR$/temp/manageTempl.html" />
         <option value="$PROJECT_DIR$/temp/contentTempl.html" />
         <option value="$PROJECT_DIR$/stylesheet.css" />
+        <option value="$PROJECT_DIR$/manage.php" />
       </list>
     </option>
   </component>
@@ -329,12 +325,12 @@
       <workItem from="1494247795495" duration="63000" />
       <workItem from="1494247892384" duration="154000" />
       <workItem from="1494249153922" duration="1924000" />
-      <workItem from="1494268471817" duration="216000" />
+      <workItem from="1494268471817" duration="813000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="58085000" />
+    <option name="totallyTimeSpent" value="58682000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="953" y="0" width="974" height="1047" extended-state="0" />
@@ -724,7 +720,7 @@
     <entry file="file://$PROJECT_DIR$/temp/contentTempl.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
-          <caret line="15" column="10" lean-forward="true" selection-start-line="15" selection-start-column="10" selection-end-line="15" selection-end-column="10" />
+          <caret line="15" column="10" lean-forward="false" selection-start-line="15" selection-start-column="10" selection-end-line="15" selection-end-column="10" />
           <folding />
         </state>
       </provider>
@@ -732,15 +728,15 @@
     <entry file="file://$PROJECT_DIR$/stylesheet.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="526">
-          <caret line="69" column="17" lean-forward="true" selection-start-line="69" selection-start-column="17" selection-end-line="69" selection-end-column="17" />
+          <caret line="69" column="17" lean-forward="false" selection-start-line="69" selection-start-column="17" selection-end-line="69" selection-end-column="17" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/manage.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="45" lean-forward="false" selection-start-line="3" selection-start-column="45" selection-end-line="3" selection-end-column="45" />
+        <state relative-caret-position="68">
+          <caret line="4" column="45" lean-forward="false" selection-start-line="4" selection-start-column="45" selection-end-line="4" selection-end-column="45" />
           <folding />
         </state>
       </provider>
