@@ -1,14 +1,14 @@
 <?php
 require_once 'HTTP/Request2.php'; // change this line to the HTTP/Request2.php path e.g. c:/xampp/php/pear/
-
-require_once 'vuforia-api/php/SignatureBuilder.php';
+require_once 'keys.json'; // this file is purposely not on git, please don't do that...
 
 class vuforiaaccess {
     private static $url = "https://vws.vuforia.com";
     private static $targetRequestPath = "/targets";
     private static $targetSummaryPath = "/summary";
-    private static $secretKey = '...'; // change this to secretKey
-    private static $accessKey = '...'; // change this to Server accessKey
+
+    private $secretKey;
+    private $accessKey;
 
     private $accessmethod;
 
@@ -20,22 +20,6 @@ class vuforiaaccess {
     private $activeflag;
 
     //<editor-fold desc="static Getters">
-    /**
-     * @return string
-     */
-    public static function getSecretKey():string
-    {
-        return self::$secretKey;
-    }
-
-    /**
-     * @return string
-     */
-    public static function getAccessKey():string
-    {
-        return self::$accessKey;
-    }
-
     /**
      * @return string
      */
@@ -61,34 +45,52 @@ class vuforiaaccess {
     }
     //</editor-fold>
 
+    public function __construct()
+    {
+        $keys = json_decode(file_get_contents('keys.json'));
+        $this->accessKey = $keys->access;
+        $this->secretKey = $keys->secret;
+    }
+
     /**
      * @return mixed
      */
     public function execute() {
+
         $this->accessmethod = strtoupper($this->accessmethod);
         switch ($this->accessmethod) {
+            case 'C':
+            case 'CREATE':
             case 'POST':
                 $response = $this->callPost();
                 break;
+            case 'R':
+            case 'READ':
             case 'GET':
                 $response = $this->callGet();
                 break;
+            case 'RA':
+            case 'READALL':
             case 'GETALL':
                 $response = $this->callGetAll();
                 break;
+            case 'U':
             case 'UPD':
             case 'UPDATE':
                 $response = $this->callUpdate();
                 break;
+            case 'D':
             case 'DEL':
             case 'DELETE':
                 $response = $this->callDelete();
                 break;
+            case 'S':
             case 'SUM':
             case 'SUMMARIZE':
             case 'SUMMARY':
                 $response = $this->callSummary();
                 break;
+            case 'SA':
             case 'SUMALL':
             case 'SUMMARIZEALL':
             case 'SUMMARYALL':
@@ -343,6 +345,22 @@ class vuforiaaccess {
     public function getAccessmethod(): string
     {
         return $this->accessmethod;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSecretKey():string
+    {
+        return $this->secretKey;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAccessKey():string
+    {
+        return $this->accessKey;
     }
     //</editor-fold>
 

@@ -1,9 +1,4 @@
-Known Bug:
-When VWC respondes with anything else then 200 (201@POST) we currently throw an unrecoverable Error.
-This includes 404 when a requested record is missing etc.
---> Error Handling needs improvments!!
-
-I want to handle these errors costum:
+I want to handle these errors custom:
 403:TargetNameExists POST/PUT
 404:UnknownTarget POST/PUT/DELETE
 422:BadImage POST/PUT
@@ -12,4 +7,9 @@ I want to handle these errors costum:
 500:Fail --> retry
 
 http://pear.php.net/package/HTTP_Request2/docs/latest/HTTP_Request2/HTTP_Request2_Response.html
-ToDo fuck the worker classes into the access
+
+ToDos:
+Done VuFoAccess API (to get response)
+ToDo DBaccess implementation
+ToDo DB-VuFo connector (offer common methods to frontend)
+ToDo manage.php template builder (using connector and templates to generate CMS UI)
