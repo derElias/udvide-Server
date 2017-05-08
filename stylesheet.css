@@ -29,7 +29,7 @@ body{
 }
 
 .headerbutton:hover{
-    background-color: black;
+    background-color: darkgray;
     color: white;
     fill: white;
 }
@@ -49,26 +49,24 @@ body{
 .suche{
     float: right;
     width: 20%;
-    hight: 15%;
+    height: 20px;
     padding: 4px 2px;
     background-color: gray;
-    color: white;
 }
 
 .suchfeld{
     float: right;
-    margin: auto;
     padding: 2px 4px;
-    background-color: white;
-    color: grey;
+    width: 80%;
+}
+.suchfeld:hover{
+    color: lightgrey;
+    fill: lightgrey;
+    text-decoration: underline;
 }
 
 
 
-#lupe-pic{
-    height: 12px;
-    width: auto;
-    padding-right: 6px;
 }
 
 footer {
@@ -83,7 +81,7 @@ footer {
 .footerlink{
     color:black;
     font-size: 17px;
-    margin-top: 0.5%;
+    margin-top: 1%;
 }
 .footerlink a {
     color: black;

@@ -27,6 +27,9 @@ $template = str_replace('<!--Admin-->',$temp,$template);
 $temp = file_get_contents('temp/contentTempl.html');
 $template = str_replace('<!--content-->',$temp,$template);
 
+    $svg = file_get_contents('res/search.svg');
+    $template = str_replace('<!--searchicon-->',$svg,$template);
+
 $temp = file_get_contents('temp/footerTempl.html');
 $template = str_replace('<!--footer-->',$temp,$template);
 

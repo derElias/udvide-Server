@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Svg Vector Icons : http://www.onlinewebfonts.com/icon -->
+<!DOCTYPE svg PUBLIc"-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg
+        id="searchicon"
+        version="1.1"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        x="0px"
+        y="0px"
+        viewBox="0 0 1000 1000"
+        enable-background="new 0 0 1000 1000"
+        xml:space="preserve">
+
+<metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
+<g>
+    <path d="M976.8,847.9L725.9,597c35.8-58.5,57.5-126.6,57.5-200.3C783.4,183.2,610.2,10,396.7,10C183.2,10,10,183.2,10,396.7c0,213.5,173.2,386.7,386.7,386.7c73.7,0,141.8-21.7,200.3-57.4l250.9,250.8c17.6,17.6,46.8,17.5,64.5,0l64.5-64.5C994.4,894.7,994.4,865.5,976.8,847.9z M396.7,654.5c-142.4,0-257.8-115.4-257.8-257.8c0-142.4,115.4-257.8,257.8-257.8c142.4,0,257.8,115.4,257.8,257.8C654.5,539.1,539.1,654.5,396.7,654.5z"/>
+</g>
+</svg>
