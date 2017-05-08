@@ -8,8 +8,14 @@ require_once 'vuforiaaccess.php';
  */
 class lolzImTooTiredForALegitName
 {
-    public function newTarget()
+    public function submitNewTarget()
     {
-        
+
     }
 }
+// ToDo If Logged in
+$vfa = (new vuforiaaccess())
+    ->setAccessmethod($_POST['access']);
+$vfa->setTargetName($_POST['name']);
+$vfa->setWidth($_POST['width']);
+$vfa->set($_POST['width']);

@@ -1,6 +1,6 @@
 <?php
 require_once 'HTTP/Request2.php'; // change this line to the HTTP/Request2.php path e.g. c:/xampp/php/pear/
-require_once 'keys.json'; // this file is purposely not on git, please don't do that...
+require_once '../keys.json'; // this file is purposely not on git, please don't do that...
 
 class vuforiaaccess {
     private static $url = "https://vws.vuforia.com";

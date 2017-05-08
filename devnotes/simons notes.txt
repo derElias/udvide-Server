@@ -21,3 +21,8 @@ ToDo Optimize VuFoAccess (merge Workers with class etc.)
 
 
 Max metadata filesize = 2mb?
+
+Options for User in CMS:
+Generate printable marker
+
+
