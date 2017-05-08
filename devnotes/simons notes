@@ -12,3 +12,4 @@ I want to handle these errors costum:
 500:Fail --> retry
 
 http://pear.php.net/package/HTTP_Request2/docs/latest/HTTP_Request2/HTTP_Request2_Response.html
+ToDo fuck the worker classes into the access

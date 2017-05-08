@@ -1,15 +1,7 @@
 <?php
-require_once 'c:/xampp/php/pear/HTTP/Request2.php'; // change this line to the HTTP/Request2.php path
+require_once 'HTTP/Request2.php'; // change this line to the HTTP/Request2.php path e.g. c:/xampp/php/pear/
 
 require_once 'vuforia-api/php/SignatureBuilder.php';
-
-require_once 'vuforia-api/php/PostNewTarget.php';
-require_once 'vuforia-api/php/UpdateTarget.php';
-require_once 'vuforia-api/php/GetAllTargets.php';
-require_once 'vuforia-api/php/GetTarget.php';
-require_once 'vuforia-api/php/DeleteTarget.php';
-
-include_once 'vuforia-api/php/DefaultErrorHandle.php';
 
 class vuforiaaccess {
     private static $url = "https://vws.vuforia.com";
@@ -356,8 +348,811 @@ class vuforiaaccess {
 
 }
 
+//<editor-fold desc="Worker">
 interface VuFoWorker {
     public function __construct();
     public function execute();
     public function validateData();
+}
+
+//Create: Post
+class PostNewTarget implements VuFoWorker {
+
+    //Server Keys
+    private $access_key;
+    private $secret_key;
+    private $url;
+    private $requestPath;
+
+    /**
+     * @var HTTP_Request2
+     */
+    private $request;
+    private $jsonRequestObject;
+
+    //private $targetId 		= "eda03583982f41cdbe9ca7f50734b9a1";
+
+    private $targetName;
+    private $image;
+    private $width;
+    private $meta;
+    private $activeflag;
+
+    function __construct()
+    {
+        $this->access_key   = vuforiaaccess::getAccessKey();
+        $this->secret_key   = vuforiaaccess::getSecretKey();
+        $this->url          = vuforiaaccess::getUrl();
+        $this->requestPath  = vuforiaaccess::getTargetRequestPath();
+    }
+
+    /**
+     * @param string $name
+     * @return $this
+     */
+    public function setName(string $name) {
+        $this->targetName = $name;
+        return $this;
+    }
+
+    /**
+     * @param string $image
+     * @return $this
+     */
+    public function setImage(string $image) {
+        $this->image   = $image;
+        return $this;
+    }
+
+    /**
+     * @param float|integer $width
+     * @return $this
+     */
+    public function setWidth($width) {
+        $this->width   = $width;
+        return $this;
+    }
+
+    /**
+     * @param string $meta
+     * @return $this
+     */
+    public function setMeta(string $meta) {
+        $this->meta = $meta;
+        return $this;
+    }
+
+    /**
+     * @param bool $activeflag
+     * @return $this
+     */
+    public function setActiveflag(bool $activeflag) {
+        $this->activeflag = $activeflag;
+        return $this;
+    }
+
+    public function execute()
+    {
+        $send = [];
+        // required stuff
+        $send['width'] = $this->width;
+        $send['name'] = $this->targetName;
+
+        // optional stuff
+        if (!empty($this->image)) {
+            $send['image'] = $this->image;
+        }
+        if (!empty($this->meta)) {
+            $send['application_metadata'] = $this->meta;
+        }
+        if (!empty($this->activeflag)) {
+            $send['active_flag'] = $this->activeflag;
+        }
+
+        $this->jsonRequestObject = json_encode( $send );
+        return $this->execPostNewTarget();
+    }
+
+    /**
+     * @return PostNewTarget
+     * might convert an integer width to a float
+     */
+    public function validateData()
+    {
+        $isError = 0;
+        /**
+         * targetName
+         */
+        if (empty($this->targetName)
+            || $this->targetName === '') {
+            $isError = 2;
+            trigger_error('targetName is required when you POST');
+        }
+        if (sizeof($this->targetName) > 64) {
+            $isError = 2;
+            trigger_error('targetName cannot be longer then 64 characters');
+        }
+        /**
+         * width
+         */
+        if (empty($this->width)) {
+            $isError = 2;
+            trigger_error('width is required when you POST');
+        }
+        if (is_numeric($this->width)
+            && (int) $this->width != 0) { // is width is infinity or zero or NAN or not numeric, this will get it
+            if (!is_float($this->width))
+                $this->width = (float)$this->width;
+        } else {
+            $isError = 2;
+            trigger_error('width invalid - includes 0, infinity, NAN');
+        }
+        /**
+         * image
+         */
+        if (base64_decode($this->image,true) === false && !empty($this->image)) {
+            $isError = 1;
+            trigger_error("Image seems invalid; recovering by re-encoding\nOriginal Image: $this->image");
+            $this->image = base64_encode($this->image);
+        }
+        /**
+         * activeflag
+         */
+        if (!is_bool($this->activeflag) && !empty($this->activeflag)) {
+            $isError = 1;
+            trigger_error("Active flag invalid! Defaulting to true");
+            $this->activeflag = true;
+        }
+
+        if ($isError == 2)
+            trigger_error('invalid Request',E_USER_ERROR);
+        return $this;
+    }
+
+    private function execPostNewTarget() // completly unmodified
+    {
+        $this->request = new HTTP_Request2();
+        $this->request->setMethod( HTTP_Request2::METHOD_POST );
+        $this->request->setBody( $this->jsonRequestObject );
+
+        $this->request->setConfig(array(
+            'ssl_verify_peer' => false
+        ));
+
+        $this->request->setURL( $this->url . $this->requestPath );
+
+        // Define the Date and Authentication headers
+        $this->setHeaders();
+
+        try {
+            return $this->request->send();
+        } catch (HTTP_Request2_Exception $e) {
+            trigger_error('Error: ' . $e->getMessage(),E_USER_ERROR);
+        }
+    }
+
+    private function setHeaders(){
+        $sb = 	new SignatureBuilder();
+        $date = new DateTime("now", new DateTimeZone("GMT"));
+
+        // Define the Date field using the proper GMT format
+        $this->request->setHeader('Date', $date->format("D, d M Y H:i:s") . " GMT" );
+        $this->request->setHeader("Content-Type", "application/json" );
+        // Generate the Auth field value by concatenating the public server access key w/ the private query signature for this request
+        $this->request->setHeader("Authorization" , "VWS " . $this->access_key . ":" . $sb->tmsSignature( $this->request , $this->secret_key ));
+    }
+}
+
+//Read: GetAll
+class GetAllTargets implements VuFoWorker {
+
+    //Server Keys
+    private $access_key;
+    private $secret_key;
+
+    private $url;
+    private $requestPath;
+    private $request;
+
+    public function __construct()
+    {
+        $this->access_key   = vuforiaaccess::getAccessKey();
+        $this->secret_key   = vuforiaaccess::getSecretKey();
+        $this->url          = vuforiaaccess::getUrl();
+        $this->requestPath  = vuforiaaccess::getTargetRequestPath();
+    }
+
+    public function execute(){
+        // this method felt really stupid to write :D
+        return $this->execGetAllTargets();
+    }
+
+    public function validateData()
+    {
+        // GetAll can't fail validation, since there is no data we can validate :)
+        return $this;
+    }
+
+    private function execGetAllTargets(){
+        $this->request = new HTTP_Request2();
+        $this->request->setMethod( HTTP_Request2::METHOD_GET );
+        $this->request->setConfig(array(
+            'ssl_verify_peer' => false
+        ));
+        $this->request->setURL( $this->url . $this->requestPath );
+
+        // Define the Date and Authentication headers
+        $this->setHeaders();
+        try {
+            return $this->request->send();
+        } catch (HTTP_Request2_Exception $e) {
+            trigger_error('Error: ' . $e->getMessage(),E_USER_ERROR);
+        }
+    }
+
+    private function setHeaders(){
+        $sb = 	new SignatureBuilder();
+        $date = new DateTime("now", new DateTimeZone("GMT"));
+
+        // Define the Date field using the proper GMT format
+        $this->request->setHeader('Date', $date->format("D, d M Y H:i:s") . " GMT" );
+        // Generate the Auth field value by concatenating the public server access key w/ the private query signature for this request
+        $this->request->setHeader("Authorization" , "VWS " . $this->access_key . ":" . $sb->tmsSignature( $this->request , $this->secret_key ));
+    }
+}
+
+//Read: Get
+class GetTarget implements VuFoWorker {
+
+    //Server Keys
+    private $access_key;
+    private $secret_key;
+
+    private $targetId;
+    private $url;
+    private $requestPath;
+    private $request;
+
+    public function __construct()
+    {
+        $this->access_key   = vuforiaaccess::getAccessKey();
+        $this->secret_key   = vuforiaaccess::getSecretKey();
+        $this->url          = vuforiaaccess::getUrl();
+        $this->requestPath  = vuforiaaccess::getTargetRequestPath();
+    }
+
+    public function execute() {
+
+        $this->requestPath = "$this->requestPath/$this->targetId";
+
+        return $this->execGetTarget();
+    }
+
+    public function validateData()
+    {
+        if (!empty($this->targetId))
+            trigger_error("no target ID set - invalid GET Request\nTo get a list of TargetIDs try GETALL",E_USER_ERROR);
+        return $this;
+    }
+
+    private function execGetTarget(){
+
+        $this->request = new HTTP_Request2();
+        $this->request->setMethod( HTTP_Request2::METHOD_GET );
+
+        $this->request->setConfig(array(
+            'ssl_verify_peer' => false
+        ));
+
+        $this->request->setURL( $this->url . $this->requestPath );
+
+        // Define the Date and Authentication headers
+        $this->setHeaders();
+
+
+        try {
+            return $this->request->send();
+        } catch (HTTP_Request2_Exception $e) {
+            trigger_error('Error: ' . $e->getMessage(),E_USER_ERROR);
+        }
+
+
+    }
+
+    private function setHeaders(){
+        $sb = 	new SignatureBuilder();
+        $date = new DateTime("now", new DateTimeZone("GMT"));
+
+        // Define the Date field using the proper GMT format
+        $this->request->setHeader('Date', $date->format("D, d M Y H:i:s") . " GMT" );
+        // Generate the Auth field value by concatenating the public server access key w/ the private query signature for this request
+        $this->request->setHeader("Authorization" , "VWS " . $this->access_key . ":" . $sb->tmsSignature( $this->request , $this->secret_key ));
+    }
+
+    /**
+     * @param mixed $targetId
+     * @return GetTarget
+     */
+    public function setTargetId($targetId)
+    {
+        $this->targetId = $targetId;
+        return $this;
+    }
+}
+
+//Read: SummarizeAll
+class GetAllSummaries implements VuFoWorker {
+
+    //Server Keys
+    private $access_key;
+    private $secret_key;
+
+    private $url;
+    private $requestPath;
+    private $request;
+
+    public function __construct()
+    {
+        $this->access_key   = vuforiaaccess::getAccessKey();
+        $this->secret_key   = vuforiaaccess::getSecretKey();
+        $this->url          = vuforiaaccess::getUrl();
+        $this->requestPath  = vuforiaaccess::getTargetSummaryPath();
+    }
+
+    public function execute(){
+        // this method felt really stupid to write :D
+        return $this->execSummarizeAllTargets();
+    }
+
+    public function validateData()
+    {
+        // GetAll can't fail validation, since there is no data we can validate :)
+        return $this;
+    }
+
+    private function execSummarizeAllTargets(){
+        $this->request = new HTTP_Request2();
+        $this->request->setMethod( HTTP_Request2::METHOD_GET );
+        $this->request->setConfig(array(
+            'ssl_verify_peer' => false
+        ));
+        $this->request->setURL( $this->url . $this->requestPath );
+
+        // Define the Date and Authentication headers
+        $this->setHeaders();
+        try {
+            return $this->request->send();
+        } catch (HTTP_Request2_Exception $e) {
+            trigger_error('Error: ' . $e->getMessage(),E_USER_ERROR);
+        }
+    }
+
+    private function setHeaders(){
+        $sb = 	new SignatureBuilder();
+        $date = new DateTime("now", new DateTimeZone("GMT"));
+
+        // Define the Date field using the proper GMT format
+        $this->request->setHeader('Date', $date->format("D, d M Y H:i:s") . " GMT" );
+        // Generate the Auth field value by concatenating the public server access key w/ the private query signature for this request
+        $this->request->setHeader("Authorization" , "VWS " . $this->access_key . ":" . $sb->tmsSignature( $this->request , $this->secret_key ));
+    }
+}
+
+//Read: Summarize
+class GetSummary implements VuFoWorker {
+
+    //Server Keys
+    private $access_key;
+    private $secret_key;
+
+    private $targetId;
+    private $url;
+    private $requestPath;
+    private $request;
+
+    public function __construct()
+    {
+        $this->access_key   = vuforiaaccess::getAccessKey();
+        $this->secret_key   = vuforiaaccess::getSecretKey();
+        $this->url          = vuforiaaccess::getUrl();
+        $this->requestPath  = vuforiaaccess::getTargetSummaryPath();
+    }
+
+    public function execute() {
+
+        $this->requestPath = "$this->requestPath/$this->targetId";
+
+        return $this->execGetSummary();
+    }
+
+    public function validateData()
+    {
+        if (!empty($this->targetId))
+            trigger_error("no target ID set - invalid SUMMARY Request\nTo get a list of TargetIDs try SUMMARYALL",E_USER_ERROR);
+        return $this;
+    }
+
+    private function execGetSummary(){
+
+        $this->request = new HTTP_Request2();
+        $this->request->setMethod( HTTP_Request2::METHOD_GET );
+
+        $this->request->setConfig(array(
+            'ssl_verify_peer' => false
+        ));
+
+        $this->request->setURL( $this->url . $this->requestPath );
+
+        // Define the Date and Authentication headers
+        $this->setHeaders();
+
+
+        try {
+            return $this->request->send();
+        } catch (HTTP_Request2_Exception $e) {
+            trigger_error('Error: ' . $e->getMessage(),E_USER_ERROR);
+        }
+
+
+    }
+
+    private function setHeaders(){
+        $sb = 	new SignatureBuilder();
+        $date = new DateTime("now", new DateTimeZone("GMT"));
+
+        // Define the Date field using the proper GMT format
+        $this->request->setHeader('Date', $date->format("D, d M Y H:i:s") . " GMT" );
+        // Generate the Auth field value by concatenating the public server access key w/ the private query signature for this request
+        $this->request->setHeader("Authorization" , "VWS " . $this->access_key . ":" . $sb->tmsSignature( $this->request , $this->secret_key ));
+    }
+
+    /**
+     * @param mixed $targetId
+     * @return GetSummary
+     */
+    public function setTargetId($targetId)
+    {
+        $this->targetId = $targetId;
+        return $this;
+    }
+}
+
+//Update: Update
+class UpdateTarget implements VuFoWorker {
+
+    //Server Keys
+    private $access_key;
+    private $secret_key;
+
+    private $url;
+    private $requestPath;
+
+    private $targetId;
+
+    private $targetName;
+    private $image;
+    private $width;
+    private $meta;
+    private $activeflag;
+
+    private $request;
+    private $jsonBody;
+
+    public function __construct()
+    {
+        $this->access_key   = vuforiaaccess::getAccessKey();
+        $this->secret_key   = vuforiaaccess::getSecretKey();
+        $this->url          = vuforiaaccess::getUrl();
+        $this->requestPath  = vuforiaaccess::getTargetRequestPath();
+    }
+
+    public function execute(){
+
+        $this->requestPath = "$this->requestPath/$this->targetId";
+
+        $send = [];
+        if (!empty($this->width)) {
+            $send['width'] = $this->width;
+        }
+        if (!empty($this->targetName)) {
+            $send['name'] = $this->targetName;
+        }
+        if (!empty($this->image)) {
+            $send['image'] = $this->image;
+        }
+        if (!empty($this->meta)) {
+            $send['application_metadata'] = $this->meta;
+        }
+        if (!empty($this->activeflag)) {
+            $send['active_flag'] = $this->activeflag;
+        }
+
+        $this->jsonBody = json_encode($send);
+
+        return $this->execUpdateTarget();
+    }
+
+    public function validateData()
+    {
+        $isError = 0;
+        /**
+         * targetID
+         */
+        if (!empty($this->targetId)) {
+            $isError = 2;
+            trigger_error('targetID cannot be empty, if you want to Update!');
+        }
+        /**
+         * targetName
+         */
+        if ($this->targetName === '') {
+            unset($this->targetName);
+        }
+        if (sizeof($this->targetName) > 64) {
+            $isError = 2;
+            trigger_error('targetName cannot be longer then 64 characters');
+        }
+        /**
+         * width
+         */
+        if (!is_numeric($this->width)
+            || ((int) $this->width) != 0
+        ) {
+            $isError = 2;
+            trigger_error('width invalid - includes 0, infinity, NAN');
+        } elseif (!is_float($this->width)) {
+            $this->width = (float) $this->width;
+        }
+        /**
+         * image
+         */
+        if (base64_decode($this->image,true) === false && !empty($this->image)) {
+            $isError = 1;
+            trigger_error("Image seems invalid; recovering by re-encoding\nOriginal Image: $this->image");
+            $this->image = base64_encode($this->image);
+        }
+        /**
+         * activeflag
+         */
+        if (!is_bool($this->activeflag && !empty($this->activeflag))) {
+            $isError = 1;
+            trigger_error("Active flag invalid! Defaulting to true");
+            $this->activeflag = true;
+        }
+
+        if ($isError == 2)
+            trigger_error('invalid Request',E_USER_ERROR);
+        return $this;
+    }
+
+    private function execUpdateTarget(){
+
+        $this->request = new HTTP_Request2();
+        $this->request->setMethod( HTTP_Request2::METHOD_PUT );
+        $this->request->setBody( $this->jsonBody );
+
+        $this->request->setConfig(array(
+            'ssl_verify_peer' => false
+        ));
+
+        $this->request->setURL( $this->url . $this->requestPath );
+
+        // Define the Date and Authentication headers
+        $this->setHeaders();
+
+
+        try {
+            return $this->request->send();
+        } catch (HTTP_Request2_Exception $e) {
+            trigger_error('Error: ' . $e->getMessage(),E_USER_ERROR);
+        }
+    }
+
+    private function setHeaders(){
+        $sb = 	new SignatureBuilder();
+        $date = new DateTime("now", new DateTimeZone("GMT"));
+
+        // Define the Date field using the proper GMT format
+        $this->request->setHeader('Date', $date->format("D, d M Y H:i:s") . " GMT" );
+        $this->request->setHeader("Content-Type", "application/json" );
+        // Generate the Auth field value by concatenating the public server access key w/ the private query signature for this request
+        $this->request->setHeader("Authorization" , "VWS " . $this->access_key . ":" . $sb->tmsSignature( $this->request , $this->secret_key ));
+    }
+
+    /**
+     * @param string $targetName
+     * @return UpdateTarget
+     */
+    public function setName(string $targetName)
+    {
+        $this->targetName = $targetName;
+        return $this;
+    }
+
+    /**
+     * @param string $image
+     * @return UpdateTarget
+     */
+    public function setImage(string $image)
+    {
+        $this->image = $image;
+        return $this;
+    }
+
+    /**
+     * @param float $width
+     * @return UpdateTarget
+     */
+    public function setWidth(float $width)
+    {
+        $this->width = $width;
+        return $this;
+    }
+
+    /**
+     * @param string $meta
+     * @return UpdateTarget
+     */
+    public function setMeta(string $meta)
+    {
+        $this->meta = $meta;
+        return $this;
+    }
+
+    /**
+     * @param boolean $activeflag
+     * @return UpdateTarget
+     */
+    public function setActiveflag(bool $activeflag)
+    {
+        $this->activeflag = $activeflag;
+        return $this;
+    }
+
+    /**
+     * @param mixed $targetId
+     * @return UpdateTarget
+     */
+    public function setTargetId($targetId)
+    {
+        $this->targetId = $targetId;
+        return $this;
+    }
+}
+
+//Delete: Delete
+class DeleteTarget implements VuFoWorker {
+
+    //Server Keys
+    private $access_key;
+    private $secret_key;
+
+    private $url;
+    private $requestPath;
+
+    private $targetId;
+
+    private $request; // internal
+
+    public function __construct()
+    {
+        $this->access_key   = vuforiaaccess::getAccessKey();
+        $this->secret_key   = vuforiaaccess::getSecretKey();
+        $this->url          = vuforiaaccess::getUrl();
+        $this->requestPath  = vuforiaaccess::getTargetRequestPath();
+    }
+
+    /**
+     * @param string $targetId
+     * @return DeleteTarget
+     */
+    public function setTargetId(string $targetId)
+    {
+        $this->targetId = $targetId;
+        return $this;
+    }
+
+    public function execute()
+    {
+        $this->requestPath = "$this->requestPath/$this->targetId";
+        return $this->execDeleteTarget();
+    }
+
+    public function validateData()
+    {
+        if (!empty($this->targetId))
+            trigger_error('no target ID set - invalid DELETE Request',E_USER_ERROR);
+        return $this;
+    }
+
+    private function execDeleteTarget(){
+
+        $this->request = new HTTP_Request2();
+        $this->request->setMethod( HTTP_Request2::METHOD_DELETE );
+
+        $this->request->setConfig(array(
+            'ssl_verify_peer' => false
+        ));
+        $this->request->setURL( $this->url . $this->requestPath );
+
+        // Define the Date and Authentication headers
+        $this->setHeaders();
+
+        try {
+            return $this->request->send();
+        } catch (HTTP_Request2_Exception $e) {
+            trigger_error('Error: ' . $e->getMessage(),E_USER_ERROR);
+        }
+    }
+
+    private function setHeaders(){
+        $sb = 	new SignatureBuilder();
+        $date = new DateTime("now", new DateTimeZone("GMT"));
+
+        // Define the Date field using the proper GMT format
+        $this->request->setHeader('Date', $date->format("D, d M Y H:i:s") . " GMT" );
+        // Generate the Auth field value by concatenating the public server access key w/ the private query signature for this request
+        $this->request->setHeader("Authorization" , "VWS " . $this->access_key . ":" . $sb->tmsSignature( $this->request , $this->secret_key ));
+    }
+}
+
+//</editor-fold>
+
+/**
+ * Copyright (c) 2011-2013 Qualcomm Austria Research Center GmbH. All rights Reserved. Nothing in these materials is an offer to sell any of the components or devices referenced herein. Qualcomm is a trademark of QUALCOMM Incorporated, registered in the United States and other countries.Vuforia is a trademark of QUALCOMM Incorporated. Trademarks of QUALCOMM Incorporated are used with permission.
+ * Vuforia SDK is a product of Qualcomm Austria Research Center GmbH. Vuforia Cloud Recognition Service is provided by Qualcomm Technologies, Inc..
+ *
+ * This Vuforia (TM) sample code provided in source code form (the "Sample Code") is made available to view for reference purposes only.
+ * If you would like to use the Sample Code in your web application, you must first download the Vuforia Software Development Kit and agree to the terms and conditions of the License Agreement for the Vuforia Software Development Kit, which may be found at https://developer.vuforia.com/legal/license.
+ * Any use of the Sample Code is subject in all respects to all of the terms and conditions of the License Agreement for the Vuforia Software Development Kit and the Vuforia Cloud Recognition Service Agreement.
+ * If you do not agree to all the terms and conditions of the License Agreement for the Vuforia Software Development Kit and the Vuforia Cloud Recognition Service Agreement, then you must not retain or in any manner use any of the Sample Code.
+ *
+ */
+class SignatureBuilder{
+
+    private $contentType = '';
+    private $hexDigest = 'd41d8cd98f00b204e9800998ecf8427e'; // Hex digest of an empty string
+
+    public function tmsSignature( $request , $secret_key ){
+
+        $method = $request->getMethod();
+        // The HTTP Header fields are used to authenticate the request
+        $requestHeaders = $request->getHeaders();
+        // note that header names are converted to lower case
+        $dateValue = $requestHeaders['date'];
+
+        $requestPath = $request->getURL()->getPath();
+
+        // Not all requests will define a content-type
+        if( isset( $requestHeaders['content-type'] ))
+            $this->contentType = $requestHeaders['content-type'];
+
+        if ( $method == 'GET' || $method == 'DELETE' ) {
+            // Do nothing because the strings are already set correctly
+        } else if ( $method == 'POST' || $method == 'PUT' ) {
+            // If this is a POST or PUT the request should have a request body
+            $this->hexDigest = md5( $request->getBody() , false );
+        } else {
+            print("ERROR: Invalid content type passed to Sig Builder");
+        }
+        $toDigest = $method . "\n" . $this->hexDigest . "\n" . $this->contentType . "\n" . $dateValue . "\n" . $requestPath ;
+        echo $toDigest;
+        $shaHashed = "";
+        try {
+            // the SHA1 hash needs to be transformed from hexadecimal to Base64
+            $shaHashed = $this->hexToBase64( hash_hmac("sha1", $toDigest , $secret_key) );
+        } catch ( Exception $e) {
+            $e->getMessage();
+        }
+        return $shaHashed;
+    }
+
+
+    private function hexToBase64($hex){
+        $return = "";
+        foreach(str_split($hex, 2) as $pair){
+            $return .= chr(hexdec($pair));
+        }
+        return base64_encode($return);
+    }
 }
