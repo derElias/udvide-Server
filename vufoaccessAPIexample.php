@@ -6,16 +6,17 @@ include_once 'vuforiaaccess.php';
  * Date: 08.05.2017
  * Time: 01:28
  */
+$tName = 'peterbraun';
 $VuFoAccess = new vuforiaaccess();
+// echo file_get_contents('img/First.png');
 $response = $VuFoAccess
     ->setAccessmethod('POST')
-    ->setTargetName('Example')
-    ->setWidth('910')
-    ->setMeta("http://" . gethostname() . "/clientrequest.php#h=[kundennummer][lokale ID]")
-    ->setImageByPath('img/logo.png')
+    ->setTargetName($tName)
+    ->setWidth('320')
+    ->setMeta("http://" . gethostname() . "/clientRequest.php#h=[client]" . $tName)
+    ->setImageByPath('img/img.jpg')
+    ->setActiveflag(true)
     ->execute();/* */
-
-var_dump($response);
 
 $nonError = [200,201];
 if (in_array($response->getStatus(), $nonError)) {
@@ -24,6 +25,8 @@ if (in_array($response->getStatus(), $nonError)) {
     switch($response->getStatus()) {
         case '404':
             echo '<div class="errorPopup">404: Target not found</div>';
-            break; // ToDo
+            break;
+        default:
+            echo '<div class="errorPopup">' . var_dump($response) . '</div>';
     }
 }

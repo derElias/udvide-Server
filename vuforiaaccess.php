@@ -1,7 +1,7 @@
 <?php
 require_once '/xampp/php/pear/HTTP/Request2.php'; // change this line to the HTTP/Request2.php path e.g. /xampp/php/pear/... or /php/...
 
-class vuforiaaccess {
+class vuforiaaccess { // ToDo cleanup -- merge classes etc.
     private static $url = "https://vws.vuforia.com";
     private static $targetRequestPath = "/targets";
     private static $targetSummaryPath = "/summary";
@@ -49,7 +49,7 @@ class vuforiaaccess {
     }
 
     /**
-     * @return mixed
+     * @return HTTP_Request2_Response
      */
     public function execute() {
 
@@ -96,7 +96,7 @@ class vuforiaaccess {
                 trigger_error("INVALID VUFORIAACCESS OPERATION!\n
                 Got $this->accessmethod instead of POST, GET, GETALL, UPDATE, UPD, DELETE, DEL,\n
                 SUM, SUMMARIZE, SUMMARY, SUMALL, SUMMARIZEALL, SUMMARYALL!",E_USER_ERROR);
-                $response = 'trigger_error dosnt seem to work properly...';
+                $response = 'trigger_error dosnt seem to work properly...'; // Should be unreachable code
                 break;
         }
         return $response;
@@ -110,7 +110,7 @@ class vuforiaaccess {
             ->setName($this->targetName)
             ->setWidth($this->width);
         if (!empty($this->image)) {
-            $subject->setImage($this->Image);
+            $subject->setImage($this->image);
         }
         if (!empty($this->meta)) {
             $subject->setMeta($this->meta);
@@ -404,10 +404,11 @@ class PostNewTarget implements VuFoWorker {
 
     /**
      * @param string $meta
-     * @return $this
+     * @return UpdateTarget
      */
-    public function setMeta(string $meta) {
-        $this->meta = $meta;
+    public function setMeta(string $meta)
+    {
+        $this->meta = base64_encode($meta);
         return $this;
     }
 
@@ -416,7 +417,9 @@ class PostNewTarget implements VuFoWorker {
      * @return $this
      */
     public function setActiveflag(bool $activeflag) {
-        $this->activeflag = $activeflag;
+        $this->activeflag = 0;
+        if ($activeflag)
+            $this->activeflag = 1;
         return $this;
     }
 
@@ -487,10 +490,10 @@ class PostNewTarget implements VuFoWorker {
         /**
          * activeflag
          */
-        if (!is_bool($this->activeflag) && !empty($this->activeflag)) {
+        if ($this->activeflag != 0 && $this->activeflag != 1 && !empty($this->activeflag)) {
             $isError = 1;
-            trigger_error("Active flag invalid! Defaulting to true");
-            $this->activeflag = true;
+            trigger_error("Active flag invalid! Defaulting to 1/true");
+            $this->activeflag = 1;
         }
 
         if ($isError == 2)
@@ -903,10 +906,10 @@ class UpdateTarget implements VuFoWorker {
         /**
          * activeflag
          */
-        if (!is_bool($this->activeflag && !empty($this->activeflag))) {
+        if ($this->activeflag != 0 && $this->activeflag != 1 && !empty($this->activeflag)) {
             $isError = 1;
-            trigger_error("Active flag invalid! Defaulting to true");
-            $this->activeflag = true;
+            trigger_error("Active flag invalid! Defaulting to 1/true");
+            $this->activeflag = 1;
         }
 
         if ($isError == 2)
@@ -984,7 +987,7 @@ class UpdateTarget implements VuFoWorker {
      */
     public function setMeta(string $meta)
     {
-        $this->meta = $meta;
+        $this->meta = base64_encode($meta);
         return $this;
     }
 
