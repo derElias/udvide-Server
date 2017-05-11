@@ -6,6 +6,8 @@ include_once 'vuforiaaccess.php';
  * Date: 08.05.2017
  * Time: 01:28
  */
+
+
 $tName = 'peterbraun';
 $VuFoAccess = new vuforiaaccess();
 // echo file_get_contents('img/First.png');
@@ -13,7 +15,7 @@ $response = $VuFoAccess
     ->setAccessmethod('POST')
     ->setTargetName($tName)
     ->setWidth('320')
-    ->setMeta("http://" . gethostname() . "/clientRequest.php#h=[client]" . $tName)
+    ->setMeta("/clientRequest.php#h=[client]" . $tName)
     ->setImageByPath('img/img.jpg')
     ->setActiveflag(true)
     ->execute();/* */
