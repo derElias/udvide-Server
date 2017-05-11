@@ -31,3 +31,7 @@ Generate printable marker
 
 Ez HTTP API:
 call crudForm for actions towards the DB
+
+
+Choices:
+NetBeans folding style: seems arbitrary and i thought it looks nicer

@@ -1,5 +1,6 @@
 <?php
 include_once 'vuforiaaccess.php';
+include_once 'vfcAccess.php';
 /**
  * Created by PhpStorm.
  * User: User
@@ -8,16 +9,16 @@ include_once 'vuforiaaccess.php';
  */
 
 
-$tName = 'peterbraun';
-$VuFoAccess = new vuforiaaccess();
+$tName = 'vfcAccess Test #1';
+$VuFoAccess = new vfcAccess();
 // echo file_get_contents('img/First.png');
 $response = $VuFoAccess
-    ->setAccessmethod('POST')
+    ->setAccessmethod('GET')
     ->setTargetName($tName)
-    ->setWidth('320')
     ->setMeta("/clientRequest.php#h=[client]" . $tName)
     ->setImageByPath('img/img.jpg')
     ->setActiveflag(true)
+    ->setTargetId('c7a6d67295a146f1b82404c71801f230')
     ->execute();/* */
 
 $nonError = [200,201];

@@ -101,7 +101,7 @@ class vfcAccess
         // build array to be sent as body
         $send = [];
         // required stuff
-        $send['width'] = $this->width;
+        $send['width'] = 500.0; // Docu: this is an arbitrary value that could be used to estimate real distances if we could influence the way the client wants his marker... could be expanded upon; decision against as it does not provide enough value; should be greater then nearclip-target distance according to https://developer.vuforia.com/users/davidbeard on https://developer.vuforia.com/forum/general-discussion/image-target-width
         $send['name'] = $this->targetName;
 
         // optional stuff
@@ -112,13 +112,7 @@ class vfcAccess
             $send['application_metadata'] = base64_encode($this->meta);
         }
         if (!empty($this->activeflag)) {
-            if (is_bool($this->activeflag)) {
-                $send['active_flag'] = $this->activeflag ? 1 : 0;
-            } elseif ($this->activeflag < 2 && $this->activeflag > 0) {
-                $send['active_flag'] = $this->activeflag;
-            } else {
-                trigger_error('activeflag invalid; using default');
-            }
+            $send['active_flag'] = $this->activeflag ? 1 : 0;
         }
         $request->setBody(json_encode($send));
 
@@ -126,24 +120,19 @@ class vfcAccess
 
         $request->setHeader("Content-Type", "application/json");
 
-        $request = $this->setCommonValues($request); // un-clutter
-
-        try {
-            return $request->send();
-        } catch (HTTP_Request2_Exception $e) { // Docu weird Behavior from phpstorm regarding installed packages
-            trigger_error('Error: ' . $e->getMessage(),E_USER_ERROR);
-        }
-        return null;
+        return $this->setCommonValuesAndSend($request); // un-clutter
     }
-/*
+
     private function callGet()
     {
-        return (new GetTarget($keys))
-            ->setTargetId($this->targetId)
-            ->validateData()
-            ->execute();
-    }
+        $request = new HTTP_Request2();
+        $request->setMethod( HTTP_Request2::METHOD_GET );
 
+        $request->setURL( $this->url . $this->targetRequestPath . '/' . $this->targetId );
+
+        return $this->setCommonValuesAndSend($request); // un-clutter
+    }
+/*
     private function callGetAll()
     {
         return (new GetAllTargets($keys))
@@ -300,7 +289,7 @@ class vfcAccess
         $requestPath = $request->getURL()->getPath(); // Docu weird Behavior from phpstorm regarding installed packages
 
         // Not all requests will define a content-type
-        $hexDigest = '';
+        $hexDigest = 'd41d8cd98f00b204e9800998ecf8427e'; // Hex digest of empty
         $contentType = '';
         if( isset( $requestHeaders['content-type'] ))
             $contentType = $requestHeaders['content-type'];
@@ -331,10 +320,10 @@ class vfcAccess
 
     /**
      * @param HTTP_Request2 $request
-     * @return HTTP_Request2
+     * @return HTTP_Request2_Response
      * sets common values every VWS-API call requires
      */
-    private function setCommonValues(HTTP_Request2 $request): HTTP_Request2
+    private function setCommonValuesAndSend(HTTP_Request2 $request): HTTP_Request2_Response
     {
         $date = new DateTime("now", new DateTimeZone("GMT"));
 
@@ -348,6 +337,11 @@ class vfcAccess
         // Generate the Auth field value by concatenating the public server access key w/ the private query signature for this request
         $request->setHeader("Authorization" , "VWS " . $this->access_key . ":" . $this->buildTmsSignature( $request , $this->secret_key ));
 
-        return $request;
+        try {
+            return $request->send();
+        } catch (HTTP_Request2_Exception $e) { // Docu weird Behavior from phpstorm regarding installed packages
+            trigger_error('Error: ' . $e->getMessage(),E_USER_ERROR);
+        }
+        return null;
     }
 }
