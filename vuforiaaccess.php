@@ -705,11 +705,11 @@ class GetAllSummaries implements VuFoWorker {
     private function execSummarizeAllTargets(){
         $this->request = new HTTP_Request2();
         $this->request->setMethod( HTTP_Request2::METHOD_GET );
+
+        $this->request->setURL( $this->url . $this->requestPath );
         $this->request->setConfig(array(
             'ssl_verify_peer' => false
         ));
-        $this->request->setURL( $this->url . $this->requestPath );
-
         // Define the Date and Authentication headers
         $this->setHeaders();
         try {

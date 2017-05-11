@@ -38,46 +38,24 @@ class vfcAccess
         $this->secret_key = $keys->secret;
     }
 
+    //<editor-fold desc="Fluent Setters /w validation">
     /**
-     * @return HTTP_Request2_Response
+     * Trying to let the client do as much as possible and correcting as much potential Errors as possible
      */
-    public function execute():HTTP_Request2_Response
+
+    /**
+     * @param string $accessmethod
+     * @return vfcAccess
+     */
+    public function setAccessmethod($accessmethod): vfcAccess
     {
-        $this->accessmethod = strtoupper($this->accessmethod);
-        switch ($this->accessmethod) {
-            case 'C':
-            case 'CREATE':
-            case 'POST':
-                $response = $this->callPost();
-                break;
-            case 'R':
-            case 'READ':
-            case 'GET':
-                $response = $this->callGet();
-                break;
-            case 'RA':
-            case 'READALL':
-            case 'GETALL':
-                $response = $this->callGetAll();
-                break;
-            case 'U':
-            case 'UPD':
-            case 'UPDATE':
-                $response = $this->callUpdate();
-                break;
-            case 'D':
-            case 'DEL':
-            case 'DELETE':
-                $response = $this->callDelete();
-                break;
-            case 'S':
-            case 'SUM':
-            case 'SUMMARIZE':
-            case 'SUMMARY':
-                $response = $this->callSummary();
-                break;
-            case 'SA':
-            case 'SUMALL':
+    ['C', 'CREATE', 'POST'];
+                ['R', 'READ', 'GET'];
+        ['RA', 'READALL', 'GETALL'];
+        ['U', 'UPD', 'PUT', 'UPDATE'];
+        ['D', 'DEL', 'DELETE'];
+        ['S', 'SUM', 'SUMMARIZE', 'SUMMARY'];
+        ['SA', 'SUMALL'];/*
             case 'SUMMARIZEALL':
             case 'SUMMARYALL':
                 $response = $this->callSummaryAll();
@@ -87,115 +65,7 @@ class vfcAccess
                 Got $this->accessmethod instead of POST, GET, GETALL, UPDATE, UPD, DELETE, DEL,\n
                 SUM, SUMMARIZE, SUMMARY, SUMALL, SUMMARIZEALL, SUMMARYALL!",E_USER_ERROR);
                 $response = 'trigger_error seems to not work properly...'; // Should be unreachable code
-                break;
-        }
-        return $response;
-    }
-
-    //<editor-fold desc="Calls">
-    private function callPost()
-    {
-        $request = new HTTP_Request2();
-        $request->setMethod( HTTP_Request2::METHOD_POST );
-
-        // build array to be sent as body
-        $send = [];
-        // required stuff
-        $send['width'] = 500.0; // Docu: this is an arbitrary value that could be used to estimate real distances if we could influence the way the client wants his marker... could be expanded upon; decision against as it does not provide enough value; should be greater then nearclip-target distance according to https://developer.vuforia.com/users/davidbeard on https://developer.vuforia.com/forum/general-discussion/image-target-width
-        $send['name'] = $this->targetName;
-
-        // optional stuff
-        if (!empty($this->image)) {
-            $send['image'] = base64_encode($this->image);
-        }
-        if (!empty($this->meta)) {
-            $send['application_metadata'] = base64_encode($this->meta);
-        }
-        if (!empty($this->activeflag)) {
-            $send['active_flag'] = $this->activeflag ? 1 : 0;
-        }
-        $request->setBody(json_encode($send));
-
-        $request->setURL( $this->url . $this->targetRequestPath );
-
-        $request->setHeader("Content-Type", "application/json");
-
-        return $this->setCommonValuesAndSend($request); // un-clutter
-    }
-
-    private function callGet()
-    {
-        $request = new HTTP_Request2();
-        $request->setMethod( HTTP_Request2::METHOD_GET );
-
-        $request->setURL( $this->url . $this->targetRequestPath . '/' . $this->targetId );
-
-        return $this->setCommonValuesAndSend($request); // un-clutter
-    }
-/*
-    private function callGetAll()
-    {
-        return (new GetAllTargets($keys))
-            ->validateData()
-            ->execute();
-    }
-
-    private function callUpdate()
-    {
-        $subject = new UpdateTarget($keys);
-        if (!empty($this->targetName)) {
-            $subject->setName($this->targetName);
-        }
-        if (!empty($this->image)) {
-            $subject->setImage($this->image);
-        }
-        if (!empty($this->width)) {
-            $subject->setWidth($this->width);
-        }
-        if (!empty($this->meta)) {
-            $subject->setMeta($this->meta);
-        }
-        if (!empty($this->activeflag)) {
-            $subject->setActiveflag($this->activeflag);
-        }
-        return $subject
-            ->validateData()
-            ->execute();
-    }
-
-    private function callDelete()
-    {
-        return (new DeleteTarget($keys))
-            ->setTargetId($this->targetId)
-            ->validateData()
-            ->execute();
-    }
-
-    private function callSummary()
-    {
-        return (new GetSummary($keys))
-            ->setTargetId($this->targetId)
-            ->validateData()
-            ->execute();
-    }
-
-    private function callSummaryAll()
-    {
-        return (new GetAllSummaries($keys))
-            ->validateData()
-            ->execute();
-    }
-*/
-    //</editor-fold>
-
-    //<editor-fold desc="Fluent Setters /w validation"> // ToDo
-
-    /**
-     * @param string $accessmethod
-     * @return vfcAccess
-     */
-    public function setAccessmethod($accessmethod): vfcAccess
-    {
+                break;*/
         $this->accessmethod = $accessmethod;
         return $this;
     }
@@ -203,9 +73,12 @@ class vfcAccess
     /**
      * @param string $targetId
      * @return vfcAccess
+     * @throws VuforiaAccessAPIException
      */
     public function setTargetId(string $targetId): vfcAccess
     {
+        if (strlen($targetId) != 32)
+            throw new VuforiaAccessAPIException('TargetID invalid (length != 32)');
         $this->targetId = $targetId;
         return $this;
     }
@@ -213,9 +86,14 @@ class vfcAccess
     /**
      * @param string $targetName
      * @return vfcAccess
+     * @throws VuforiaAccessAPIException
      */
     public function setTargetName(string $targetName): vfcAccess
     {
+        if ($targetName === '')
+            throw new VuforiaAccessAPIException('Recoverable Error: TargetName empty', 1);
+        if (strlen($this->targetName) > 64)
+            throw new VuforiaAccessAPIException('Recoverable Error: targetName longer then 64 characters', 1);
         $this->targetName = $targetName;
         return $this;
     }
@@ -226,6 +104,7 @@ class vfcAccess
      */
     public function setImage(string $image): vfcAccess
     {
+//        $image.image_type_to_extension()
         $this->image = $image;
         return $this;
     }
@@ -268,6 +147,195 @@ class vfcAccess
     {
         $this->activeflag = $activeflag;
         return $this;
+    }
+
+    //</editor-fold>
+
+    /**
+     * @return HTTP_Request2_Response
+     * Selects based on $accessMethod which call to send
+     */
+    public function execute():HTTP_Request2_Response
+    {
+        $this->accessmethod = strtoupper($this->accessmethod);
+        switch ($this->accessmethod) {
+            case 'C':
+            case 'CREATE':
+            case 'POST':
+                $response = $this->callPost();
+                break;
+            case 'R':
+            case 'READ':
+            case 'GET':
+                $response = $this->callGet();
+                break;
+            case 'RA':
+            case 'READALL':
+            case 'GETALL':
+                $response = $this->callGetAll();
+                break;
+            case 'U':
+            case 'UPD':
+            case 'PUT':
+            case 'UPDATE':
+                $response = $this->callUpdate();
+                break;
+            case 'D':
+            case 'DEL':
+            case 'DELETE':
+                $response = $this->callDelete();
+                break;
+            case 'S':
+            case 'SUM':
+            case 'SUMMARIZE':
+            case 'SUMMARY':
+                $response = $this->callSummary();
+                break;
+            case 'SA':
+            case 'SUMALL':
+            case 'SUMMARIZEALL':
+            case 'SUMMARYALL':
+                $response = $this->callSummaryAll();
+                break;
+            default:
+                trigger_error("INVALID VUFORIAACCESS OPERATION!\n
+                Got $this->accessmethod instead of POST, GET, GETALL, UPDATE, UPD, DELETE, DEL,\n
+                SUM, SUMMARIZE, SUMMARY, SUMALL, SUMMARIZEALL, SUMMARYALL!",E_USER_ERROR);
+                $response = 'trigger_error seems to not work properly...'; // Should be unreachable code
+                break;
+        }
+        return $response;
+    }
+
+    //<editor-fold desc="Calls">
+
+    /**
+     * @return HTTP_Request2_Response
+     */
+    private function callPost(): HTTP_Request2_Response
+    {
+        $request = new HTTP_Request2();
+        $request->setMethod( HTTP_Request2::METHOD_POST );
+
+        // build array to be sent as body
+        $send = [];
+        // required stuff
+        $send['width'] = 500.0; // Docu: this is an arbitrary value that could be used to estimate real distances if we could influence the way the client wants his marker... could be expanded upon; decision against as it does not provide enough value; should be greater then nearclip-target distance according to https://developer.vuforia.com/users/davidbeard on https://developer.vuforia.com/forum/general-discussion/image-target-width
+        $send['name'] = $this->targetName;
+        // optional stuff
+        if (!empty($this->image)) {
+            $send['image'] = base64_encode($this->image);
+        }
+        if (!empty($this->meta)) {
+            $send['application_metadata'] = base64_encode($this->meta);
+        }
+        if (!empty($this->activeflag)) {
+            $send['active_flag'] = $this->activeflag ? 1 : 0;
+        }
+        $request->setBody(json_encode($send));
+
+        $request->setURL( $this->url . $this->targetRequestPath );
+
+        $request->setHeader("Content-Type", "application/json");
+
+        return $this->setCommonValuesAndSend($request); // un-clutter
+    }
+
+    /**
+     * @return HTTP_Request2_Response
+     */
+    private function callGet():HTTP_Request2_Response
+    {
+        $request = new HTTP_Request2();
+        $request->setMethod( HTTP_Request2::METHOD_GET );
+
+        $request->setURL( $this->url . $this->targetRequestPath . '/' . $this->targetId );
+
+        return $this->setCommonValuesAndSend($request); // un-clutter
+    }
+
+    /**
+     * @return HTTP_Request2_Response
+     */
+    private function callGetAll():HTTP_Request2_Response
+    {
+        $request = new HTTP_Request2();
+        $request->setMethod( HTTP_Request2::METHOD_GET );
+
+        $request->setURL( $this->url . $this->targetRequestPath );
+
+        return $this->setCommonValuesAndSend($request); // un-clutter
+    }
+
+    /**
+     * @return HTTP_Request2_Response
+     */
+    private function callUpdate():HTTP_Request2_Response
+    {
+        $request = new HTTP_Request2();
+        $request->setMethod( HTTP_Request2::METHOD_PUT );
+
+        // build array to be sent as body
+        $send = [];
+        // $send['width'] = 500.0;
+        if (!empty($this->targetName)) {
+            $send['name'] = $this->targetName;
+        }
+        if (!empty($this->image)) {
+            $send['image'] = base64_encode($this->image);
+        }
+        if (!empty($this->meta)) {
+            $send['application_metadata'] = base64_encode($this->meta);
+        }
+        if (!empty($this->activeflag)) {
+            $send['active_flag'] = $this->activeflag ? 1 : 0;
+        }
+        $request->setBody(json_encode($send));
+
+        $request->setURL( $this->url . $this->targetRequestPath . '/' . $this->targetId );
+
+        $request->setHeader("Content-Type", "application/json");
+
+        return $this->setCommonValuesAndSend($request); // un-clutter
+    }
+
+    /**
+     * @return HTTP_Request2_Response
+     */
+    private function callDelete():HTTP_Request2_Response
+    {
+        $request = new HTTP_Request2();
+        $request->setMethod( HTTP_Request2::METHOD_DELETE );
+
+        $request->setURL( $this->url . $this->targetRequestPath . '/' . $this->targetId );
+
+        return $this->setCommonValuesAndSend($request); // un-clutter
+    }
+
+    /**
+     * @return HTTP_Request2_Response
+     */
+    private function callSummary():HTTP_Request2_Response
+    {
+        $request = new HTTP_Request2();
+        $request->setMethod( HTTP_Request2::METHOD_GET );
+
+        $request->setURL( $this->url . $this->targetSummaryPath . '/' . $this->targetId );
+
+        return $this->setCommonValuesAndSend($request); // un-clutter
+    }
+
+    /**
+     * @return HTTP_Request2_Response
+     */
+    private function callSummaryAll():HTTP_Request2_Response
+    {
+        $request = new HTTP_Request2();
+        $request->setMethod( HTTP_Request2::METHOD_GET );
+
+        $request->setURL( $this->url . $this->targetSummaryPath );
+
+        return $this->setCommonValuesAndSend($request); // un-clutter
     }
 
     //</editor-fold>
@@ -322,6 +390,7 @@ class vfcAccess
      * @param HTTP_Request2 $request
      * @return HTTP_Request2_Response
      * sets common values every VWS-API call requires
+     * and Sends the request off
      */
     private function setCommonValuesAndSend(HTTP_Request2 $request): HTTP_Request2_Response
     {
@@ -345,3 +414,4 @@ class vfcAccess
         return null;
     }
 }
+class VuforiaAccessAPIException extends Exception {}

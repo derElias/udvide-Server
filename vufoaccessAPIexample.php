@@ -9,11 +9,11 @@ include_once 'vfcAccess.php';
  */
 
 
-$tName = 'vfcAccess Test #1';
+$tName = 'vfcAccess Test #1 Updated';
 $VuFoAccess = new vfcAccess();
 // echo file_get_contents('img/First.png');
 $response = $VuFoAccess
-    ->setAccessmethod('GET')
+    ->setAccessmethod('DEL')
     ->setTargetName($tName)
     ->setMeta("/clientRequest.php#h=[client]" . $tName)
     ->setImageByPath('img/img.jpg')
@@ -21,7 +21,7 @@ $response = $VuFoAccess
     ->setTargetId('c7a6d67295a146f1b82404c71801f230')
     ->execute();/* */
 
-$nonError = [200,201];
+$nonError = [200];
 if (in_array($response->getStatus(), $nonError)) {
     echo $response->getBody();
 } else {
