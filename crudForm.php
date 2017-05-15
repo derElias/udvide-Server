@@ -1,5 +1,5 @@
 <?php
-require_once 'vuforiaaccess.php';
+require_once 'vfcAccess.php';
 require_once 'dbaccess/dbaUdv.php';
 require_once 'helper.php';
 
@@ -14,14 +14,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") { // if form submit
     if ($loginOk) { //login valid
         if ($postData['udvideVerb'] == 'POST') { // ToDo Accept more variants? RFC!
             if ($perm[0]['role'] > 0) { //login has req permissions (Admin(1) or Client(2))
-                $vwsResponse = (new vuforiaaccess())
-                    ->setAccessmethod('POST') // ToDo Accept more variants? RFC!
+                $vwsResponse = (new vfcAccess())
                     ->setTargetName($postData['t_name'])
                     ->setWidth($postData['t_width'])
                     ->setImage($postData['t_image'])
                     ->setMeta('/error.php?error=targetNotLinkedToDbYet') // ToDo create Page // redirect marker to Inform the marker still needs a moment (max 15 min according to API Doc)
                     ->setActiveflag(false) // Target Inactive until DB synced
-                    ->execute();
+                    ->execute('post');
 
                 // ToDo: Error handling etc.
 
@@ -48,6 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") { // if form submit
                         break;
                 }
             }
+            // ToDo: stuff
         }
     }
 

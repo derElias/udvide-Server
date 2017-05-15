@@ -13,11 +13,23 @@ function purifyUserData() {
     }
     return $result;
 }
-function pepperedPassCheck($userPassHash, $serverPassHash) { // ToDo Far Stretch goal redo validation to have cleaner code
+
+/**
+ * @param string $userPassHash
+ * @param string $serverPassHash
+ * @return bool
+ */
+function pepperedPassCheck(string $userPassHash,string $serverPassHash):bool
+{ // ToDo Far Stretch goal redo validation to have cleaner code
     $keys = json_decode(file_get_contents('../keys.json'));
-    password_verify(sha1($userPassHash . $keys->pepper), $serverPassHash);
+    return password_verify(sha1($userPassHash . $keys->pepper), $serverPassHash);
 }
-function getPermissionsForUser($user) {
+
+/**
+ * @param string $user
+ * @return mixed
+ */
+function getPermissionsForUser(string $user) {
     $sql = <<<'SQL'
 SELECT u.passHash, u.role, e.t_id
 FROM udvide.Users u

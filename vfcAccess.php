@@ -1,21 +1,17 @@
 <?php
+require_once '/xampp/php/pear/HTTP/Request2.php'; // change this line to the HTTP/Request2.php path e.g. /xampp/php/pear/... or /php/...
 
 /**
- * Created by PhpStorm.
- * User: User
+ * Created by: Simon Janssen
+ * Contains Licensed Code from Qualcomm Austria Research Center GmbH
  * Date: 10.05.2017
  * Time: 19:53
- *
- * temporary class
- * task trying to accomplish: refactoring vuforiaaccess
  */
 class vfcAccess
 {
     private $url = "https://vws.vuforia.com";
     private $targetRequestPath = "/targets";
     private $targetSummaryPath = "/summary";
-
-    private $accessmethod;
 
     private $targetId;
     private $targetName;
@@ -40,35 +36,9 @@ class vfcAccess
 
     //<editor-fold desc="Fluent Setters /w validation">
     /**
-     * Trying to let the client do as much as possible and correcting as much potential Errors as possible
+     * Trying to let the client do as much as possible and
+     * throwing recoverable Errors so the frontend can decide how to solve the problem based on the specific case
      */
-
-    /**
-     * @param string $accessmethod
-     * @return vfcAccess
-     */
-    public function setAccessmethod($accessmethod): vfcAccess
-    {
-    ['C', 'CREATE', 'POST'];
-                ['R', 'READ', 'GET'];
-        ['RA', 'READALL', 'GETALL'];
-        ['U', 'UPD', 'PUT', 'UPDATE'];
-        ['D', 'DEL', 'DELETE'];
-        ['S', 'SUM', 'SUMMARIZE', 'SUMMARY'];
-        ['SA', 'SUMALL'];/*
-            case 'SUMMARIZEALL':
-            case 'SUMMARYALL':
-                $response = $this->callSummaryAll();
-                break;
-            default:
-                trigger_error("INVALID VUFORIAACCESS OPERATION!\n
-                Got $this->accessmethod instead of POST, GET, GETALL, UPDATE, UPD, DELETE, DEL,\n
-                SUM, SUMMARIZE, SUMMARY, SUMALL, SUMMARIZEALL, SUMMARYALL!",E_USER_ERROR);
-                $response = 'trigger_error seems to not work properly...'; // Should be unreachable code
-                break;*/
-        $this->accessmethod = $accessmethod;
-        return $this;
-    }
 
     /**
      * @param string $targetId
@@ -99,13 +69,24 @@ class vfcAccess
     }
 
     /**
-     * @param string $image // base 64 encoded
+     * @param string $image
      * @return vfcAccess
+     * @throws VuforiaAccessAPIException
      */
     public function setImage(string $image): vfcAccess
     {
-//        $image.image_type_to_extension()
-        $this->image = $image;
+        // Jpg is hinted and checked by FF D8 @start and FF D9 @end as magic numbers
+        // Docu: $image[-x] requires PHP 7.1+; but doesn'T seem to work in test env. using classic Syntax instead
+        // Validation method chosen to get a compromise between performance (could've checked file endings) and accuracy (use internal function)
+        $isJpg = (ord($image{0}) == 255)
+            && (ord($image{1}) == 216)
+            && (ord($image[strlen($image)-2]) == 255)
+            && (ord($image[strlen($image)-1]) == 217);
+        if ($isJpg) {
+            $this->image = $image;
+        } else {
+            throw new VuforiaAccessAPIException('Recoverable Error: Image set to non JPEG / JPG file', 1);
+        }
         return $this;
     }
 
@@ -115,8 +96,7 @@ class vfcAccess
      */
     public function setImageByPath(string $imagePath): vfcAccess
     {
-        $this->image = file_get_contents($imagePath);
-        return $this;
+        return $this->setImage(file_get_contents($imagePath));
     }
 
     /**
@@ -132,10 +112,17 @@ class vfcAccess
     /**
      * @param string $meta
      * @return vfcAccess
+     * @throws VuforiaAccessAPIException
      */
     public function setMeta(string $meta): vfcAccess
     {
-        $this->meta = $meta;
+        // Docu: Apparently Vuforia only accepts a MetaData of less than 2mb,
+        // and we'll give  a bit of tolerance to reduce required testing time of the VWS
+        if (strlen($meta)<2000000) {
+            $this->meta = $meta;
+        } else {
+            throw new VuforiaAccessAPIException('Human Interaction required - Error: The Meta you\'re trying to set is larger than 2mb',2);
+        }
         return $this;
     }
 
@@ -152,57 +139,67 @@ class vfcAccess
     //</editor-fold>
 
     /**
-     * @return HTTP_Request2_Response
      * Selects based on $accessMethod which call to send
+     * @param $accessmethod
+     * @return HTTP_Request2_Response
+     * @throws VuforiaAccessAPIException
      */
-    public function execute():HTTP_Request2_Response
+    public function execute($accessmethod):HTTP_Request2_Response
     {
-        $this->accessmethod = strtoupper($this->accessmethod);
-        switch ($this->accessmethod) {
-            case 'C':
-            case 'CREATE':
-            case 'POST':
-                $response = $this->callPost();
+        // Docu: We try to offer as much freedom to the frontend as possible here
+        $accessmethod = strtoupper($accessmethod);
+        $alternatives = [
+            'POST'       =>  ['C', 'CREATE', 'POST'],
+            'GET'        =>  ['R', 'READ', 'GET'],
+            'GETALL'     =>  ['RA', 'READALL', 'GETALL'],
+            'UPDATE'     =>  ['U', 'UPD', 'PUT', 'UPDATE'],
+            'DELETE'     =>  ['D', 'DEL', 'DELETE'],
+            'SUMMARY'    =>  ['S', 'SUM', 'SUMMARIZE', 'SUMMARY'],
+            'SUMMARYALL' =>  ['SA', 'SUMALL','SUMMARIZEALL','SUMMARYALL']
+        ]; // ToDo: Decision: Load from Json? Make more strict?
+
+        $response = null;
+        $valid = false;
+        foreach ($alternatives as $optName => $option) {
+            foreach ($option as $command) {
+                if ($accessmethod == $command) {
+                    $valid = true;
+                    break; // end search if result is found
+                }
+            }
+            if ($valid) {
+                switch ($optName) {
+                    case 'POST':
+                        $response = $this->callPost();
+                        break;
+                    case 'GET':
+                        $response = $this->callGet();
+                        break;
+                    case 'GETALL':
+                        $response = $this->callGetAll();
+                        break;
+                    case 'UPDATE':
+                        $response = $this->callUpdate();
+                        break;
+                    case 'DELETE':
+                        $response = $this->callDelete();
+                        break;
+                    case 'SUMMARY':
+                        $response = $this->callSummary();
+                        break;
+                    case 'SUMMARYALL':
+                        $response = $this->callSummaryAll();
+                        break;
+                    default:
+                        throw new VuforiaAccessAPIException('Can not happen. Seriously.',3);
+                }
                 break;
-            case 'R':
-            case 'READ':
-            case 'GET':
-                $response = $this->callGet();
-                break;
-            case 'RA':
-            case 'READALL':
-            case 'GETALL':
-                $response = $this->callGetAll();
-                break;
-            case 'U':
-            case 'UPD':
-            case 'PUT':
-            case 'UPDATE':
-                $response = $this->callUpdate();
-                break;
-            case 'D':
-            case 'DEL':
-            case 'DELETE':
-                $response = $this->callDelete();
-                break;
-            case 'S':
-            case 'SUM':
-            case 'SUMMARIZE':
-            case 'SUMMARY':
-                $response = $this->callSummary();
-                break;
-            case 'SA':
-            case 'SUMALL':
-            case 'SUMMARIZEALL':
-            case 'SUMMARYALL':
-                $response = $this->callSummaryAll();
-                break;
-            default:
-                trigger_error("INVALID VUFORIAACCESS OPERATION!\n
-                Got $this->accessmethod instead of POST, GET, GETALL, UPDATE, UPD, DELETE, DEL,\n
-                SUM, SUMMARIZE, SUMMARY, SUMALL, SUMMARIZEALL, SUMMARYALL!",E_USER_ERROR);
-                $response = 'trigger_error seems to not work properly...'; // Should be unreachable code
-                break;
+            }
+        }
+        if (!$valid) {
+            throw new VuforiaAccessAPIException("UserError: INVALID VUFORIAACCESS OPERATION!\n
+                Got $accessmethod instead of POST, GET, GETALL, UPDATE, UPD, DELETE, DEL,\n
+                SUM, SUMMARIZE, SUMMARY, SUMALL, SUMMARIZEALL, SUMMARYALL!", 2);
         }
         return $response;
     }
@@ -211,6 +208,7 @@ class vfcAccess
 
     /**
      * @return HTTP_Request2_Response
+     * @throws VuforiaAccessAPIException
      */
     private function callPost(): HTTP_Request2_Response
     {
@@ -221,7 +219,11 @@ class vfcAccess
         $send = [];
         // required stuff
         $send['width'] = 500.0; // Docu: this is an arbitrary value that could be used to estimate real distances if we could influence the way the client wants his marker... could be expanded upon; decision against as it does not provide enough value; should be greater then nearclip-target distance according to https://developer.vuforia.com/users/davidbeard on https://developer.vuforia.com/forum/general-discussion/image-target-width
-        $send['name'] = $this->targetName;
+        if (!empty($this->targetName)) {
+            $send['name'] = $this->targetName;
+        } else {
+            throw new VuforiaAccessAPIException('Human Interaction required - Error: target name required to post',2);
+        }
         // optional stuff
         if (!empty($this->image)) {
             $send['image'] = base64_encode($this->image);
@@ -356,9 +358,9 @@ class vfcAccess
 
         $requestPath = $request->getURL()->getPath(); // Docu weird Behavior from phpstorm regarding installed packages
 
-        // Not all requests will define a content-type
         $hexDigest = 'd41d8cd98f00b204e9800998ecf8427e'; // Hex digest of empty
         $contentType = '';
+        // Not all requests will define a content-type
         if( isset( $requestHeaders['content-type'] ))
             $contentType = $requestHeaders['content-type'];
 
