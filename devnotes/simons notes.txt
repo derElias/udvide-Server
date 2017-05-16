@@ -14,7 +14,7 @@ WIP: ToDo DBaccess implementation
 WIP: ToDo DB-VuFo connector (offer common methods to frontend) incl. form
     1. Send Vuforia the dataset
     2. Sync own dataset
-    3.
+    3. ...
 ToDo manage.php template builder (using connector and templates to generate CMS UI)
 ToDo check Form submission
 ToDo SVG Marker Generator
