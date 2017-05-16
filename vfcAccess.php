@@ -219,19 +219,19 @@ class vfcAccess
         $send = [];
         // required stuff
         $send['width'] = 500.0; // Docu: this is an arbitrary value that could be used to estimate real distances if we could influence the way the client wants his marker... could be expanded upon; decision against as it does not provide enough value; should be greater then nearclip-target distance according to https://developer.vuforia.com/users/davidbeard on https://developer.vuforia.com/forum/general-discussion/image-target-width
-        if (!empty($this->targetName)) {
+        if (isset($this->targetName)) {
             $send['name'] = $this->targetName;
         } else {
             throw new VuforiaAccessAPIException('Human Interaction required - Error: target name required to post',2);
         }
         // optional stuff
-        if (!empty($this->image)) {
+        if (isset($this->image)) {
             $send['image'] = base64_encode($this->image);
         }
-        if (!empty($this->meta)) {
+        if (isset($this->meta)) {
             $send['application_metadata'] = base64_encode($this->meta);
         }
-        if (!empty($this->activeflag)) {
+        if (isset($this->activeflag)) {
             $send['active_flag'] = $this->activeflag ? 1 : 0;
         }
         $request->setBody(json_encode($send));
@@ -280,16 +280,16 @@ class vfcAccess
         // build array to be sent as body
         $send = [];
         // $send['width'] = 500.0;
-        if (!empty($this->targetName)) {
+        if (isset($this->targetName)) {
             $send['name'] = $this->targetName;
         }
-        if (!empty($this->image)) {
+        if (isset($this->image)) {
             $send['image'] = base64_encode($this->image);
         }
-        if (!empty($this->meta)) {
+        if (isset($this->meta)) {
             $send['application_metadata'] = base64_encode($this->meta);
         }
-        if (!empty($this->activeflag)) {
+        if (isset($this->activeflag)) {
             $send['active_flag'] = $this->activeflag ? 1 : 0;
         }
         $request->setBody(json_encode($send));
