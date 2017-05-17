@@ -40,7 +40,7 @@ JOIN Editors e
 ON u.username = e.username
 WHERE u.username = ?
 SQL;
-    $db = access_DB::prepareExecuteGetStatement($sql, $user); // Documentation: this is how to follow Don't trust the user with dbaccess in addition to purify
+    $db = access_DB::prepareExecuteGetStatement($sql, [$user]); // Documentation: this is how to follow Don't trust the user with dbaccess in addition to purify
     if ($db === false)
         return false; // user doesn't exist
     if (!pepperedPassCheck($pass, $db[0]['passHash']))

@@ -45,9 +45,9 @@ function handleForm()
             $t_id = $vwsResponseBody['target_id'];
             $username = $postData['username'];
             $sql = "INSERT INTO udvide.Targets (t_id,t_owner) VALUES ($t_id,?);";
-            access_DB::prepareExecuteGetStatement($sql, $username);
+            access_DB::prepareExecuteGetStatement($sql, [$username]);
 
-            return 'Post sucessful';
+            return 'Post successful';
         }
 
         // ToDo: delete
@@ -90,7 +90,7 @@ function handleForm()
             }
 
             $sql = "UPDATE udvide.Targets SET xpos = '?' WHERE t_id = ?;"; // ToDo
-            access_DB::prepareExecuteGetStatement($sql, $postData['t_id']);
+            access_DB::prepareExecuteGetStatement($sql, ['xpos', $postData['t_id']]);
 
             return 'Update Successful';
         }

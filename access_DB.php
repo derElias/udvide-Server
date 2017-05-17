@@ -13,7 +13,7 @@ class access_DB implements dbaccessUdv {
     /**
      * This class should offer fallback mechanisms to various DB Access concepts, should one fail
      * @param string $preparesql
-     * @param string|null $executesql
+     * @param array|null $executesql
      * @return array|false empty -> false
      */
     public static function prepareExecuteGetStatement($preparesql, $executesql = null)
@@ -31,7 +31,7 @@ class access_DB implements dbaccessUdv {
 interface dbaccessUdv {
     /**
      * @param string $preparesql
-     * @param string|null $executesql
+     * @param array|null $executesql
      * @return array|false empty -> false
      */
     public static function prepareExecuteGetStatement($preparesql, $executesql = null);
@@ -64,7 +64,7 @@ class dbaccessPDOUdv implements dbaccessUdv
 
     /**
      * @param string $preparesql
-     * @param string|null $executesql
+     * @param array|null $executesql
      * @return array|false empty -> false
      */
     public static function prepareExecuteGetStatement($preparesql,$executesql = null)
@@ -97,12 +97,6 @@ class dbaccessSTUBUdv implements dbaccessUdv
         echo 'destruct';
     }
 
-    /**
-     * @param string $preparesql
-     * @param mixed $executesql string or null
-     * @return mixed false on failure or rows on success
-     * @internal param $sql
-     */
     public static function prepareExecuteGetStatement($preparesql,$executesql = null)
     {
         $dbaccessobj = null;

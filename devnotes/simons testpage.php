@@ -1,5 +1,5 @@
 <?php
-require_once '../dbaccess/dbaccessPDOUdv.php';
+require_once '../access_DB.php';
 /**
  * Created by PhpStorm.
  * User: User
@@ -8,10 +8,5 @@ require_once '../dbaccess/dbaccessPDOUdv.php';
  */
 echo time();
 
-$sql = /** @lang mysql */
-    <<<'VERYLONGTAGTONOTBESTUPID'
-SELECT *
-FROM Users
-VERYLONGTAGTONOTBESTUPID;
-echo $sql;
-$array = dbaccessPDOUdv::prepareExecuteGetStatement($sql);
+$var = access_DB::prepareExecuteGetStatement('SELECT ? FROM users','*');
+var_dump($var);
