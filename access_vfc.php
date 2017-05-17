@@ -16,7 +16,6 @@ class access_vfc
     private $targetId;
     private $targetName;
     private $image;
-    private $width;
     private $meta;
     private $activeflag;
 
@@ -97,16 +96,6 @@ class access_vfc
     public function setImageByPath(string $imagePath): access_vfc
     {
         return $this->setImage(file_get_contents($imagePath));
-    }
-
-    /**
-     * @param float $width
-     * @return access_vfc
-     */
-    public function setWidth(float $width): access_vfc
-    {
-        $this->width = $width;
-        return $this;
     }
 
     /**

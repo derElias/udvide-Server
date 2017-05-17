@@ -16,8 +16,8 @@ CREATE TABLE Targets (
 );
 CREATE TABLE Editors (
 	t_id VARCHAR(47) NOT NULL,
-  userID INT NOT NULL,
+  username INT NOT NULL,
   CONSTRAINT Editor PRIMARY KEY (t_id, userID),
-  FOREIGN KEY (userID) REFERENCES Users(userID),
+  FOREIGN KEY (username) REFERENCES Users(username),
 	FOREIGN KEY (t_id) REFERENCES Targets(t_id)
 );

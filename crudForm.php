@@ -1,58 +1,103 @@
 <?php
-require_once 'vfcAccess.php';
-require_once 'dbaccess/dbaUdv.php';
+require_once 'access_vfc.php';
+require_once 'access_DB.php';
 require_once 'helper.php';
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") { // if form submit
+echo handleForm();
 
-    $postData = purifyUserData();
+function handleForm()
+{
+    if ($_SERVER["REQUEST_METHOD"] == "POST") { // if form submit
 
-    $perm = getPermissionsForUser($postData['username']);
+        // structure
+        // don't trust the client: purify data
+        $postData = purifyUserData();
+        // is login valid? (->1)
+        // (t) is client or admin? (->2) (->editPerm)
+        // (t/t) do post / delete
+        // (t/f) has EditorLinks to Marker (->2)  (->editPerm)
+        // (t/t) do put
+        // (t/t) sync cached markers to db
 
-    $loginOk = $perm !== false // user exists?
-        && pepperedPassCheck($postData['passHash'], $perm[0]['passHash']);
-    if ($loginOk) { //login valid
-        if ($postData['udvideVerb'] == 'POST') { // ToDo Accept more variants? RFC!
-            if ($perm[0]['role'] > 0) { //login has req permissions (Admin(1) or Client(2))
-                $vwsResponse = (new vfcAccess())
-                    ->setTargetName($postData['t_name'])
-                    ->setWidth($postData['t_width'])
-                    ->setImage($postData['t_image'])
-                    ->setMeta('/error.php?error=targetNotLinkedToDbYet') // ToDo create Page // redirect marker to Inform the marker still needs a moment (max 15 min according to API Doc)
-                    ->setActiveflag(false) // Target Inactive until DB synced
-                    ->execute('post');
+
+        $perm = getPermissions($postData['username'], $postData['passHash']);
+        if ($perm === false) {
+            trigger_error('Invalid login (Bad password or username)');
+            return 'Error';
+        }
+
+        $editPerm = $perm[0] > 0; // true when Admin or Client
+        // post
+        if ($postData['udvideVerb'] == 'POST' && $editPerm) { // ToDo Accept more variants? RFC!
+            $vwsResponse = (new access_vfc())
+                ->setTargetName($postData['t_name'])
+                ->setImage($postData['t_image'])
+                ->setMeta('/error.php?error=targetNotLinkedToDbYet')// ToDo create Page // redirect marker to Inform the marker still needs a moment (max 15 min according to API Doc)
+                ->setActiveflag(false)// Target Inactive until DB synced
+                ->execute('post');
+
+            // ToDo: Error handling etc.
+
+            $vwsResponseBody = json_decode($vwsResponse->getBody());
+
+            // ToDo: Log Transaction IDs
+
+            $t_id = $vwsResponseBody['target_id'];
+            $username = $postData['username'];
+            $sql = "INSERT INTO udvide.Targets (t_id,t_owner) VALUES ($t_id,?);";
+            access_DB::prepareExecuteGetStatement($sql, $username);
+
+            return 'Post sucessful';
+        }
+
+        // ToDo: delete
+
+        // find edit permissions
+        if (!$editPerm) { // true when Editor has Permissions
+            foreach ($perm[1] as $tid) {
+                $editPerm = $tid === $postData['t_id'];
+                if ($editPerm)
+                    break;
+            }
+        }
+
+        if ($postData['access'] == 'PUT' && $editPerm) { // ToDo Accept more variants? RFC!
+            $vwsa = new access_vfc();
+            $vwsa->setTargetId($postData['t_id']);
+
+            $updateVWS = false;
+            if (isset($postData['t_name'])) {
+                $vwsa->setTargetName($postData['t_name']);
+                $updateVWS = true;
+            }
+            if (isset($postData['t_image'])) {
+                $vwsa->setImage($postData['t_image']);
+                $updateVWS = true;
+            }
+            if (isset($postData['activeFlag'])) {
+                $vwsa->setActiveflag($postData['activeFlag']);
+                $updateVWS = true;
+            }
+
+            if ($updateVWS) {
+                $vwsResponse = $vwsa->execute('put');
 
                 // ToDo: Error handling etc.
 
                 $vwsResponseBody = json_decode($vwsResponse->getBody());
-                $t_id = $vwsResponseBody['target_id'];
-                $username = $postData['username'];
-                echo $t_id;
-                $sql = "INSERT INTO udvide.Targets (t_id,t_owner) VALUES ($t_id,$username);";
-                dba::prepareExecuteGetStatement($sql);
 
-            } else {
-                echo "You seem to have insufficient Permissions to Create a new file!\n
-                The Login you are using has Editor permissions;\n
-                if you have Credentials to Log into a Admin or Client Account,
-                please do so <a href='manage.php?login=false&redirect=" . basename($_SERVER['SCRIPT_FILENAME']) . "'>here</a>"; //ToDo Error messages feel out of place here... //ToDo redir untested/nimmt keine getvariablen mit um die anfrage zu wiederholen
+                // ToDo: Log Transaction IDs
             }
+
+            $sql = "UPDATE udvide.Targets SET xpos = '?' WHERE t_id = ?;"; // ToDo
+            access_DB::prepareExecuteGetStatement($sql, $postData['t_id']);
+
+            return 'Update Successful';
         }
-        if ($postData['access'] == 'PUT') { // ToDo Accept more variants? RFC!
-            $editPerm = $perm[0]['role'] > 0; // true when Admin or Client
-            if (!$editPerm) { // true when Editor has Permissions
-                foreach ($perm as $row) {
-                    $editPerm = $row['t_id'] === $postData['t_id'];
-                    if ($editPerm)
-                        break;
-                }
-            }
-            // ToDo: stuff
-        }
+        return 'Error: Invalid command?';
+    } else {
+        echo "This site is used to evaluate CRUD Form requests.\n
+            Please use the form or consult the Documentation for more information";
+        return 'Error';
     }
-
-
-} else {
-    echo "This site is used to evaluate CRUD Form requests.\n
-     Please use the form or consult the Documentation for more information";
 }
