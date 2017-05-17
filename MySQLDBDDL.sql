@@ -10,14 +10,24 @@ CREATE TABLE Users (
 CREATE TABLE Targets (
 	t_id VARCHAR(32) NOT NULL UNIQUE,
   t_owner VARCHAR(127),
-  serverCache BLOB,
+  xpos INT,
+  ypos INT,
+  map INT,
   PRIMARY KEY (t_id),
   FOREIGN KEY (t_owner) REFERENCES Users(username)
 );
 CREATE TABLE Editors (
-	t_id VARCHAR(47) NOT NULL,
-  username INT NOT NULL,
+	t_id VARCHAR(32) NOT NULL,
+  username VARCHAR(127) NOT NULL,
   CONSTRAINT Editor PRIMARY KEY (t_id, userID),
   FOREIGN KEY (username) REFERENCES Users(username),
 	FOREIGN KEY (t_id) REFERENCES Targets(t_id)
+);
+CREATE TABLE TransactionLog (
+  tr_id VARCHAR(32) NOT NULL UNIQUE,
+  username VARCHAR(32),
+  t_id VARCHAR(32) NOT NULL,
+  PRIMARY KEY (tr_id),
+  FOREIGN KEY (username) REFERENCES Users(username),
+  FOREIGN KEY (t_id) REFERENCES Targets(t_id)
 );

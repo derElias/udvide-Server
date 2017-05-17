@@ -21,7 +21,7 @@ function purifyUserData() {
  * @return bool
  */
 function pepperedPassCheck(string $userPassHash,string $serverPassHash):bool
-{ // ToDo Far Stretch goal redo validation to have cleaner code
+{
     $keys = json_decode(file_get_contents('../keys.json'));
     return password_verify(sha1($userPassHash . $keys->pepper), $serverPassHash);
 }

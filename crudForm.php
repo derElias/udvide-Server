@@ -12,13 +12,11 @@ function handleForm()
         // structure
         // don't trust the client: purify data
         $postData = purifyUserData();
-        // is login valid? (->1)
-        // (t) is client or admin? (->2) (->editPerm)
-        // (t/t) do post / delete
-        // (t/f) has EditorLinks to Marker (->2)  (->editPerm)
-        // (t/t) do put
-        // (t/t) sync cached markers to db
-
+        // is login invalid? Error
+        // is client or admin? (->editPerm)
+        // editPerm ? do post / delete
+        // editPerm || has EditorLinks to Marker ? (->editPerm)
+        // editPerm ? do put
 
         $perm = getPermissions($postData['username'], $postData['passHash']);
         if ($perm === false) {
@@ -28,7 +26,7 @@ function handleForm()
 
         $editPerm = $perm[0] > 0; // true when Admin or Client
         // post
-        if ($postData['udvideVerb'] == 'POST' && $editPerm) { // ToDo Accept more variants? RFC!
+        if ($postData['udvideVerb'] == 'POST' && $editPerm) { // ToDo #26
             $vwsResponse = (new access_vfc())
                 ->setTargetName($postData['t_name'])
                 ->setImage($postData['t_image'])
@@ -46,6 +44,12 @@ function handleForm()
             $username = $postData['username'];
             $sql = "INSERT INTO udvide.Targets (t_id,t_owner) VALUES ($t_id,?);";
             access_DB::prepareExecuteGetStatement($sql, [$username]);
+
+            $vwsResponse = (new access_vfc())
+                ->setTargetId($t_id)
+                ->setMeta("/clientRequest.php?t=$t_id")
+                ->setActiveflag($postData['activeFlag'])
+                ->execute('put');
 
             return 'Post successful';
         }

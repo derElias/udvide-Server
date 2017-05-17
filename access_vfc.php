@@ -24,11 +24,13 @@ class access_vfc
 
     /**
      * vfcAccess constructor.
-     * reads VWS keys from keys.json in parent dictionary
+     * reads VWS keys from keys.json in root directory
      */
     public function __construct()
     {
-        $keys = json_decode(file_get_contents('../keys.json'));
+        $keys = json_decode(file_get_contents('keys.json'));
+        if ($keys === false)
+            trigger_error('keys.json konnte nicht eingelesen werden!',E_USER_ERROR);
         $this->access_key = $keys->access;
         $this->secret_key = $keys->secret;
     }

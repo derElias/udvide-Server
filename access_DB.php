@@ -19,6 +19,8 @@ class access_DB implements dbaccessUdv {
     public static function prepareExecuteGetStatement($preparesql, $executesql = null)
     {
         try {
+            if (is_array($executesql) && !isset($executesql[1]))
+                $executesql = $executesql[0]; // QoL
             return dbaccessPDOUdv::prepareExecuteGetStatement($preparesql, $executesql);
         } catch (exception $e) {
             $msg = 'Exception ' . $e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . "\n"

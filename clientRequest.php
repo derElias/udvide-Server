@@ -9,7 +9,7 @@ require_once 'dbaccess/dbaUdv.php';
 
 /**
  * will be called like
- * /clientrequest.php#h=[kundennummer][lokale ID]...
+ * /clientRequest.php#h=[kundennummer][lokale ID]...
  */
 
 ?>
