@@ -8,7 +8,7 @@
 
 require_once "enviromentUdv.php";
 
-class dbaUdv implements dbaccessUdv {
+class access_DB implements dbaccessUdv {
 
     /**
      * This class should offer fallback mechanisms to various DB Access concepts, should one fail
@@ -74,7 +74,6 @@ class dbaccessPDOUdv implements dbaccessUdv
         $stmt->execute($executesql);
 
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        var_dump($rows);
         $stmt = NULL;
         return empty($rows) || $rows === false ? false : $rows;
     }
@@ -112,4 +111,3 @@ class dbaccessSTUBUdv implements dbaccessUdv
         return [['column1'=>'STUBResult1','column2'=>'STUBResult2']];
     }
 }
-

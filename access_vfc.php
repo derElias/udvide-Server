@@ -7,7 +7,7 @@ require_once '/xampp/php/pear/HTTP/Request2.php'; // change this line to the HTT
  * Date: 10.05.2017
  * Time: 19:53
  */
-class vfcAccess
+class access_vfc
 {
     private $url = "https://vws.vuforia.com";
     private $targetRequestPath = "/targets";
@@ -42,10 +42,10 @@ class vfcAccess
 
     /**
      * @param string $targetId
-     * @return vfcAccess
+     * @return access_vfc
      * @throws VuforiaAccessAPIException
      */
-    public function setTargetId(string $targetId): vfcAccess
+    public function setTargetId(string $targetId): access_vfc
     {
         if (strlen($targetId) != 32)
             throw new VuforiaAccessAPIException('TargetID invalid (length != 32)');
@@ -55,10 +55,10 @@ class vfcAccess
 
     /**
      * @param string $targetName
-     * @return vfcAccess
+     * @return access_vfc
      * @throws VuforiaAccessAPIException
      */
-    public function setTargetName(string $targetName): vfcAccess
+    public function setTargetName(string $targetName): access_vfc
     {
         if ($targetName === '')
             throw new VuforiaAccessAPIException('Recoverable Error: TargetName empty', 1);
@@ -70,10 +70,10 @@ class vfcAccess
 
     /**
      * @param string $image
-     * @return vfcAccess
+     * @return access_vfc
      * @throws VuforiaAccessAPIException
      */
-    public function setImage(string $image): vfcAccess
+    public function setImage(string $image): access_vfc
     {
         // Jpg is hinted and checked by FF D8 @start and FF D9 @end as magic numbers
         // Docu: $image[-x] requires PHP 7.1+; but doesn'T seem to work in test env. using classic Syntax instead
@@ -92,18 +92,18 @@ class vfcAccess
 
     /**
      * @param string $imagePath
-     * @return vfcAccess
+     * @return access_vfc
      */
-    public function setImageByPath(string $imagePath): vfcAccess
+    public function setImageByPath(string $imagePath): access_vfc
     {
         return $this->setImage(file_get_contents($imagePath));
     }
 
     /**
      * @param float $width
-     * @return vfcAccess
+     * @return access_vfc
      */
-    public function setWidth(float $width): vfcAccess
+    public function setWidth(float $width): access_vfc
     {
         $this->width = $width;
         return $this;
@@ -111,10 +111,10 @@ class vfcAccess
 
     /**
      * @param string $meta
-     * @return vfcAccess
+     * @return access_vfc
      * @throws VuforiaAccessAPIException
      */
-    public function setMeta(string $meta): vfcAccess
+    public function setMeta(string $meta): access_vfc
     {
         // Docu: Apparently Vuforia only accepts a MetaData of less than 2mb,
         // and we'll give  a bit of tolerance to reduce required testing time of the VWS
@@ -128,9 +128,9 @@ class vfcAccess
 
     /**
      * @param bool $activeflag
-     * @return vfcAccess
+     * @return access_vfc
      */
-    public function setActiveflag(bool $activeflag): vfcAccess
+    public function setActiveflag(bool $activeflag): access_vfc
     {
         $this->activeflag = $activeflag;
         return $this;

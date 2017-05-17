@@ -1,5 +1,5 @@
 <?php
-include_once 'vfcAccess.php';
+include_once '../access_vfc.php';
 /**
  * Created by PhpStorm.
  * User: User
