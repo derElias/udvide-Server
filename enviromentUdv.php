@@ -7,6 +7,7 @@ class enviromentUdv
     private $sqlDbUserName;
     private $sqlDbPassword;
     private $sqlDbName;
+    private $sqlCharset;
 
     /**
      * enviroment constructor.
@@ -18,11 +19,13 @@ class enviromentUdv
         $this->externalBasePath = $ip;
         $this->internalBasePath = "C:\\Users\\User\\Documents\\udvide-Server";
         $this->sqlDbServerName = "localhost";
-        $this->sqlDbUserName = "username";
-        $this->sqlDbPassword = "password";
+        $this->sqlDbUserName = "root";
+        $this->sqlDbPassword = "";
         $this->sqlDbName = "udvide";
+        $this->sqlCharset = 'utf8mb4';
     }
 
+    //<editor-fold desc="Getters">
     /**
      * @return string
      */
@@ -70,4 +73,14 @@ class enviromentUdv
     {
         return $this->sqlDbName;
     }
+
+    /**
+     * @return string
+     */
+    public function getSqlCharset(): string
+    {
+        return $this->sqlCharset;
+    }
+    //</editor-fold>
 }
+

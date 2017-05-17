@@ -10,7 +10,12 @@ http://pear.php.net/package/HTTP_Request2/docs/latest/HTTP_Request2/HTTP_Request
 
 ToDos:
 Done: VuFoAccess API (to get CORRECT response)
-WIP: ToDo DBaccess implementation
+WIP: ToDo dbAccess implementation
+       Done: Implement and WIP: ToDo: Debug
+       ToDo Testing
+            Passed: Creating a Datadefinition
+            Passed: Creating a Dataset
+            Querying for said Dataset AND evaluating the response
 WIP: ToDo DB-VuFo connector (offer common methods to frontend) incl. form
     1. Send Vuforia the dataset
     2. Sync own dataset
@@ -22,11 +27,13 @@ ToDo SVG to JPG method
 ToDo Crop picture to replace width as user input
 
 StretchGoals:
-ToDo Optimize VuFoAccess (merge Workers with class etc.)
+
+To be proposed Stretch goals:
+ToDo: ClientSide ActionCache (if server is unavailable set put to 3 minute trigger, add site-close stopper and ping to server)
 
 VuFo untold requirements:
-Max metadata filesize = 2mb?
-No support for PNG images apparently (API docu says something else)
+Max metadata file size = 2mb?
+No support for PNG images apparently (API docu says something else) but we can convert pngs to jpgs in js code so.....
 
 Options for User in CMS:
 Generate printable marker
