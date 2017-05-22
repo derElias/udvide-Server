@@ -9,18 +9,32 @@ I want to handle these errors custom:
 http://pear.php.net/package/HTTP_Request2/docs/latest/HTTP_Request2/HTTP_Request2_Response.html
 
 ToDos:
-Done: VuFoAccess API (to get response)
-WIP: ToDo DBaccess implementation
-ToDo DB-VuFo connector (offer common methods to frontend)
-ToDo SVG Marker Generator
-ToDo SVG to PNG method
+Done: VuFoAccess API (to get CORRECT response)
+Done: dbAccess implementation
+       Done: Implement and Debug
+       Done Testing
+            Passed: Creating a Datadefinition
+            Passed: Creating a Dataset
+            Passed: Querying for said Dataset AND evaluating the response
+WIP: ToDo DB-VuFo connector (offer common methods to frontend) helper
+WIP: ToDo Form accept
+    1. Send Vuforia the dataset
+    2. Sync own dataset
+    3. give positive answer
 ToDo manage.php template builder (using connector and templates to generate CMS UI)
+ToDo check Form submission
+ToDo SVG Marker Generator
+ToDo SVG to JPG method
+ToDo Crop picture to replace width as user input
 
 StretchGoals:
-ToDo Optimize VuFoAccess (merge Workers with class etc.)
 
+To be proposed Stretch goals:
+ToDo: ClientSide ActionCache (if server is unavailable set put to 3 minute trigger, add site-close stopper and ping to server)
 
-Max metadata filesize = 2mb?
+VuFo untold requirements:
+Max metadata file size = 2mb?
+No support for PNG images apparently (API docu says something else) but we can convert pngs to jpgs in js code so.....
 
 Options for User in CMS:
 Generate printable marker
@@ -28,3 +42,25 @@ Generate printable marker
 
 Ez HTTP API:
 call crudForm for actions towards the DB
+
+
+Choices:
+NetBeans folding style: seems arbitrary and i thought it looks nicer
+
+Cache Client sided to minimize traffic ToDo
+
+Trust:
+Docu: we kinda trust hte vuforia servers to not send malicious data...
+DON'T FORGET that the image and name is generated at the client!
+
+We trust:
+Vuforias answers to Post, Update and Delete
+DB stored peppered PassHash
+DB stored t_id
+DB stored role nad all other integers
+DB stored tr_id
+
+We do not trust:
+(Vuforias answer to Get, Summarize, etc: targetname, image;)
+(DB stored username)
+Everything sent directly from the client
