@@ -13,6 +13,8 @@ class access_vfc
     private $targetRequestPath = "/targets";
     private $targetSummaryPath = "/summary";
 
+    private $accessMethod;
+
     private $targetId;
     private $targetName;
     private $image;
@@ -49,7 +51,7 @@ class access_vfc
     public function setTargetId(string $targetId): access_vfc
     {
         if (strlen($targetId) != 32)
-            throw new VuforiaAccessAPIException('TargetID invalid (length != 32)');
+            throw new VuforiaAccessAPIException('TargetID invalid (length != 32)',200);
         $this->targetId = $targetId;
         return $this;
     }
@@ -62,9 +64,9 @@ class access_vfc
     public function setTargetName(string $targetName): access_vfc
     {
         if ($targetName === '')
-            throw new VuforiaAccessAPIException('Recoverable Error: TargetName empty', 1);
+            throw new VuforiaAccessAPIException('Recoverable Error: TargetName empty', 110);
         if (strlen($this->targetName) > 64)
-            throw new VuforiaAccessAPIException('Recoverable Error: targetName longer then 64 characters', 1);
+            throw new VuforiaAccessAPIException('Recoverable Error: targetName longer then 64 characters', 111);
         $this->targetName = $targetName;
         return $this;
     }
@@ -86,7 +88,7 @@ class access_vfc
         if ($isJpg) {
             $this->image = $image;
         } else {
-            throw new VuforiaAccessAPIException('Recoverable Error: Image set to non JPEG / JPG file', 1);
+            throw new VuforiaAccessAPIException('Recoverable Error: Image set to non JPEG / JPG file', 120);
         }
         return $this;
     }
@@ -112,7 +114,7 @@ class access_vfc
         if (strlen($meta)<2000000) {
             $this->meta = $meta;
         } else {
-            throw new VuforiaAccessAPIException('Human Interaction required - Error: The Meta you\'re trying to set is larger than 2mb',2);
+            throw new VuforiaAccessAPIException('Human Interaction required - Error: The Meta you\'re trying to set is larger than 2mb',230);
         }
         return $this;
     }
@@ -127,18 +129,26 @@ class access_vfc
         return $this;
     }
 
+    /**
+     * @param string $accessMethod
+     * @return access_vfc
+     */
+    public function setAccessMethod($accessMethod)
+    {
+        $this->accessMethod = strtoupper($accessMethod);
+        return $this;
+    }
     //</editor-fold>
 
     /**
      * Selects based on $accessMethod which call to send
-     * @param $accessmethod
      * @return HTTP_Request2_Response
      * @throws VuforiaAccessAPIException
      */
-    public function execute($accessmethod):HTTP_Request2_Response
+    public function execute():HTTP_Request2_Response
     {
         // Docu: We try to offer as much freedom to the frontend as possible here
-        $accessmethod = strtoupper($accessmethod);
+        $accessmethod = $this->accessMethod;
         $alternatives = [
             'POST'       =>  ['C', 'CREATE', 'POST'],
             'GET'        =>  ['R', 'READ', 'GET'],
@@ -147,7 +157,7 @@ class access_vfc
             'DELETE'     =>  ['D', 'DEL', 'DELETE'],
             'SUMMARY'    =>  ['S', 'SUM', 'SUMMARIZE', 'SUMMARY'],
             'SUMMARYALL' =>  ['SA', 'SUMALL','SUMMARIZEALL','SUMMARYALL']
-        ]; // ToDo: Decision: Load from Json? Make more strict?
+        ];
 
         $response = null;
         $valid = false;
@@ -182,7 +192,7 @@ class access_vfc
                         $response = $this->callSummaryAll();
                         break;
                     default:
-                        throw new VuforiaAccessAPIException('Can not happen. Seriously.',3);
+                        throw new VuforiaAccessAPIException('Can not happen. Seriously.',300);
                 }
                 break;
             }
@@ -190,7 +200,7 @@ class access_vfc
         if (!$valid) {
             throw new VuforiaAccessAPIException("UserError: INVALID VUFORIAACCESS OPERATION!\n
                 Got $accessmethod instead of POST, GET, GETALL, UPDATE, UPD, DELETE, DEL,\n
-                SUM, SUMMARIZE, SUMMARY, SUMALL, SUMMARIZEALL, SUMMARYALL!", 2);
+                SUM, SUMMARIZE, SUMMARY, SUMALL, SUMMARIZEALL, SUMMARYALL!", 251);
         }
         return $response;
     }
@@ -213,7 +223,7 @@ class access_vfc
         if (isset($this->targetName)) {
             $send['name'] = $this->targetName;
         } else {
-            throw new VuforiaAccessAPIException('Human Interaction required - Error: target name required to post',2);
+            throw new VuforiaAccessAPIException('Human Interaction required - Error: target name required to post',110);
         }
         // optional stuff
         if (isset($this->image)) {

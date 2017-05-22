@@ -47,4 +47,20 @@ call crudForm for actions towards the DB
 Choices:
 NetBeans folding style: seems arbitrary and i thought it looks nicer
 
-Cache Clientsided to minimize traffic ToDo
+Cache Client sided to minimize traffic ToDo
+
+Trust:
+Docu: we kinda trust hte vuforia servers to not send malicious data...
+DON'T FORGET that the image and name is generated at the client!
+
+We trust:
+Vuforias answers to Post, Update and Delete
+DB stored peppered PassHash
+DB stored t_id
+DB stored role nad all other integers
+DB stored tr_id
+
+We do not trust:
+(Vuforias answer to Get, Summarize, etc: targetname, image;)
+(DB stored username)
+Everything sent directly from the client

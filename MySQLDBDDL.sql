@@ -19,7 +19,7 @@ CREATE TABLE Targets (
 CREATE TABLE Editors (
 	t_id VARCHAR(32) NOT NULL,
   username VARCHAR(127) NOT NULL,
-  CONSTRAINT Editor PRIMARY KEY (t_id, userID),
+  CONSTRAINT Editor PRIMARY KEY (t_id, username),
   FOREIGN KEY (username) REFERENCES Users(username),
 	FOREIGN KEY (t_id) REFERENCES Targets(t_id)
 );
