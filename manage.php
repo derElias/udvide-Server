@@ -7,14 +7,6 @@ $template = file_get_contents('temp/manageTempl.html');
     $template = str_replace('<!--eintrag-->',$svg,$template);
 
 
-$temp = file_get_contents('temp/MitarbeiterTempl.html');
-$template = str_replace('<!--Mitarbeiter-->',$temp,$template);
-
-    $svg = file_get_contents('res/Marker.svg');
-    $template = str_replace('<!--marker-->',$svg,$template);
-
-
-
 $temp = file_get_contents('temp/AdminTempl.html');
 $template = str_replace('<!--Admin-->',$temp,$template);
 
