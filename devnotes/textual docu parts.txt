@@ -1,0 +1,57 @@
+Requirements:
+    PHP 7.1.5+
+    PEAR
+    HTTP_Response2
+Apis:
+    VuforiaServer:
+        We follow the guidelines described at ToDo
+
+    Form submit: (ToDo make this a table)
+        If you want to send Form submits to the System from your own site to create, update or delete entries,
+         you have to follow the following requirements:
+        Send a POST request to /crudForm.php
+        the submission must include certain values based on the operation you want to perform:
+
+        1. You have to send your login credentials as following:
+            A string username as 'username'
+            A sha-256 hash string from your password as 'passHash'
+        2. To specify the action you have to provide
+            create, update or delete as 'udvideVerb'
+        3. For deleting and updating you have to provide
+            The respective Target ID as 't_id' (you get it from a Get on manage.php)
+        4. For updating and creating you can include any of the following attributes: *tagged are neccessary for create
+            A string target name as 't_name'
+            A JPG/PNG/... image* as 't_image'
+            A boolean to indicate weather the target should be active on creation as 'activeFlag'
+            A integer for the map positions 'xPos'
+            and 'yPos'
+            and a (integer) map identifier 'map'
+            A json string to define the content as 'content'
+                It's syntax looks like this: ToDo a bit ambitious, but why not start a html inspired json standard // still subject of QA
+                {
+                    style = [
+                        {
+                            "text-color" = "#ff0000",
+                            "link-color" = "#ffff00"
+                        }
+                    ],
+                    elements = [
+                        {
+                            "text" = "your text",
+                            "lf" = "false"
+                        },
+                        {
+                            "text" = "a link",
+                            "href" = "http://fhws.de",
+                            "lf" = "true"
+                        },
+                        {
+                            "text" = "alternative text",
+                            "img" = "http://example.com/image.png",
+                            "lf" = "true"
+                        }
+                    ]
+                }
+
+    udvide-mobile-Client replacement:
+        ...
