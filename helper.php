@@ -66,8 +66,7 @@ SQL;
  * @param int $quality accepts 1-100; defines JPEG compression quality (100% == best quality)
  * @return string
  */
-function toJPG(string $imgString,int $quality = 100):string
-{
+function toJPG(string $imgString,int $quality = 100):string {
     return jpgAssistant($imgString,['quality'=>$quality]);
 }
 
@@ -76,15 +75,14 @@ function toJPG(string $imgString,int $quality = 100):string
  * @param int $size
  * @return string
  */
-function compressToJpg(string $imgString, int $size):string
-{
+function compressToJpg(string $imgString, int $size):string {
     return jpgAssistant($imgString,['maxFileSize'=>$size]);
 }
 
 /**
- * @param string $imgString
- * @param array $options
- * @return string
+ * @param string $imgString accepts gd2, gd2part, gd, gif, png, wbmp, webp, xbm and xpm. bmp supported if php 7.2.0+ is used
+ * @param array $options supports quality, maxFileSize, doNotCrop, minQuality, minShortestSide
+ * @return string|false (smaller) JPG | false on failure
  */
 function jpgAssistant (string $imgString, array $options):string {
     // to image instance
@@ -128,23 +126,27 @@ function jpgAssistant (string $imgString, array $options):string {
         // find minimal multiplier to not undershoot min shorter side
         $minMul =  $minS / (imagesy($img) < imagesx($img) ? imagesy($img) : imagesx($img));
 
+        // set quality to 95 / the minimum Quality
+        $quality = 95; //
+        if ($quality < $minQ) {
+            $quality = $minQ;
+        }
+
         // get current size
         $cSize = imgJpgSize($img,$quality);
         $cMul = 1;
+
         while ($cSize > $maxFSize) {
-            $quality = $maxFSize / $cSize;
-            $quality = (int) $quality-1;
-
-            if ($quality < $minQ) {
-                $quality = $minQ;
+            $cMul /= 2;
+            if ($cMul < $minMul) {
+                return false;
             }
-
-
+            $img = imagescale($img,imagesx($img)*$cMul);
             $cSize = imgJpgSize($img,$quality);
         }
     }
 
-    // to JPEG stream (by capturing output from imagejpeg())
+    // to JPEG string (by capturing output from imagejpeg())
     ob_start();
     imagejpeg( $img, NULL, $quality );
     imagedestroy( $img ); // memory cleanup asap

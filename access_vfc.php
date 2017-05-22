@@ -135,7 +135,7 @@ class access_vfc
      */
     public function setAccessMethod($accessMethod)
     {
-        $this->accessMethod = strtoupper($accessMethod);
+        $this->accessMethod = strtolower($accessMethod);
         return $this;
     }
     //</editor-fold>
@@ -147,60 +147,31 @@ class access_vfc
      */
     public function execute():HTTP_Request2_Response
     {
-        // Docu: We try to offer as much freedom to the frontend as possible here
-        $accessmethod = $this->accessMethod;
-        $alternatives = [
-            'POST'       =>  ['C', 'CREATE', 'POST'],
-            'GET'        =>  ['R', 'READ', 'GET'],
-            'GETALL'     =>  ['RA', 'READALL', 'GETALL'],
-            'UPDATE'     =>  ['U', 'UPD', 'PUT', 'UPDATE'],
-            'DELETE'     =>  ['D', 'DEL', 'DELETE'],
-            'SUMMARY'    =>  ['S', 'SUM', 'SUMMARIZE', 'SUMMARY'],
-            'SUMMARYALL' =>  ['SA', 'SUMALL','SUMMARIZEALL','SUMMARYALL']
-        ];
-
-        $response = null;
-        $valid = false;
-        foreach ($alternatives as $optName => $option) {
-            foreach ($option as $command) {
-                if ($accessmethod == $command) {
-                    $valid = true;
-                    break; // end search if result is found
-                }
-            }
-            if ($valid) {
-                switch ($optName) {
-                    case 'POST':
-                        $response = $this->callPost();
-                        break;
-                    case 'GET':
-                        $response = $this->callGet();
-                        break;
-                    case 'GETALL':
-                        $response = $this->callGetAll();
-                        break;
-                    case 'UPDATE':
-                        $response = $this->callUpdate();
-                        break;
-                    case 'DELETE':
-                        $response = $this->callDelete();
-                        break;
-                    case 'SUMMARY':
-                        $response = $this->callSummary();
-                        break;
-                    case 'SUMMARYALL':
-                        $response = $this->callSummaryAll();
-                        break;
-                    default:
-                        throw new VuforiaAccessAPIException('Can not happen. Seriously.',300);
-                }
+        switch ($this->accessMethod) {
+            case 'create':
+                $response = $this->callPost();
                 break;
-            }
-        }
-        if (!$valid) {
-            throw new VuforiaAccessAPIException("UserError: INVALID VUFORIAACCESS OPERATION!\n
-                Got $accessmethod instead of POST, GET, GETALL, UPDATE, UPD, DELETE, DEL,\n
-                SUM, SUMMARIZE, SUMMARY, SUMALL, SUMMARIZEALL, SUMMARYALL!", 251);
+            case 'get':
+                $response = $this->callGet();
+                break;
+            case 'getall':
+                $response = $this->callGetAll();
+                break;
+            case 'update':
+                $response = $this->callUpdate();
+                break;
+            case 'delete':
+                $response = $this->callDelete();
+                break;
+            case 'summarize':
+                $response = $this->callSummary();
+                break;
+            case 'summarizeall':
+                $response = $this->callSummaryAll();
+                break;
+            default:
+                throw new VuforiaAccessAPIException("UserError: INVALID VUFORIAACCESS OPERATION!\n
+                    Got $this->accessMethod instead of post, get, getAll, update, delete, summarize, summarizeAll!", 251);
         }
         return $response;
     }

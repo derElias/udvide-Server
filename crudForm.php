@@ -30,6 +30,7 @@ class crudFormHandler
 
             // don't trust the client: purify data
             $this->postData = purifyUserData();
+            $this->postData['udvideVerb'] = mb_strtolower($this->postData['udvideVerb']);
 
             $perm = getPermissions($this->postData['username'], $this->postData['passHash']);
             // is login invalid? -> Error
@@ -40,8 +41,8 @@ class crudFormHandler
 
             // is client or admin? (->editPerm)
             $editPerm = $perm[0] > 0; // true when Admin or Client
-            // post if $editPerm
-            if ($this->postData['udvideVerb'] == 'POST' && $editPerm) { // ToDo #26
+            // create if $editPerm
+            if ($this->postData['udvideVerb'] == 'create' && $editPerm) {
                 do {
                     $retry = false;
                     try {
@@ -237,7 +238,7 @@ class crudFormHandler
     /**
      * @return bool|null
      */
-    private function errorHandlePreRequest(): bool
+    private function errorHandlePreRequest(): bool // ToDo
     {
         $this->callCounter++;
         $return = false;
