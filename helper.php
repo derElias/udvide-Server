@@ -130,6 +130,7 @@ function jpgAssistant (string $imgString, array $options):string {
 
         // get current size
         $cSize = imgJpgSize($img,$quality);
+        $cMul = 1;
         while ($cSize > $maxFSize) {
             $quality = $maxFSize / $cSize;
             $quality = (int) $quality-1;
@@ -138,9 +139,6 @@ function jpgAssistant (string $imgString, array $options):string {
                 $quality = $minQ;
             }
 
-            if ((imagesx($img) * $wMulti) *  < $minS) {
-
-            }
 
             $cSize = imgJpgSize($img,$quality);
         }

@@ -25,7 +25,7 @@ CREATE TABLE Editors (
 );
 CREATE TABLE TransactionLog (
   tr_id VARCHAR(32) NOT NULL UNIQUE,
-  username VARCHAR(32),
+  username VARCHAR(127),
   t_id VARCHAR(32) NOT NULL,
   PRIMARY KEY (tr_id),
   FOREIGN KEY (username) REFERENCES Users(username),
