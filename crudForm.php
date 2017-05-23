@@ -30,6 +30,7 @@ class crudFormHandler
 
             // don't trust the client: purify data
             $this->postData = purifyUserData();
+            $this->errorPrevention();
             $this->postData['udvideVerb'] = mb_strtolower($this->postData['udvideVerb']);
 
             $perm = getPermissions($this->postData['username'], $this->postData['passHash']);
@@ -61,39 +62,8 @@ class crudFormHandler
                 }
             }
 
-            if ($this->postData['access'] == 'update' && $editPerm) { // ToDo Accept more variants? RFC!
-                $vwsa = new access_vfc();
-                $vwsa->setTargetId($this->postData['t_id']);
-
-                $updateVWS = false;
-                if (isset($this->postData['t_name'])) {
-                    $vwsa->setTargetName($this->postData['t_name']);
-                    $updateVWS = true;
-                }
-                if (isset($this->postData['t_image'])) {
-                    $vwsa->setImage($this->postData['t_image']);
-                    $updateVWS = true;
-                }
-                if (isset($this->postData['activeFlag'])) {
-                    $vwsa->setActiveflag($this->postData['activeFlag']);
-                    $updateVWS = true;
-                }
-
-                if ($updateVWS) {
-                    //ToDo refactor to method etc.
-                    $vwsResponse = $vwsa->execute('put');
-
-                    // ToDo: Error handling etc.
-
-                    $vwsResponseBody = json_decode($vwsResponse->getBody());
-
-                    // ToDo: Log Transaction IDs
-                }
-
-                $sql = "UPDATE udvide.Targets SET xpos = '?' WHERE t_id = ?;"; // ToDo
-                access_DB::prepareExecuteGetStatement($sql, ['xpos', $this->postData['t_id']]);
-
-                return 'Update Successful';
+            if ($this->postData['access'] == 'update' && $editPerm) {
+                return $this->updateTarget();
             }
             $this->echoMessage .= 'Invalid command?';
             return false;
@@ -105,71 +75,9 @@ class crudFormHandler
     }
 
     /**
-     * @return bool|null
-     */
-    private function errorHandleVFResponse(): bool
-    {
-        $this->callCounter++;
-        $return = false;
-
-        switch ($this->vwsResponse->getStatus()) {
-            case 200: // ok
-            case 201: // TargetCreated
-                return null; // no error
-            case 403:
-                switch (json_decode($this->vwsResponse->getBody())->status) {
-                    case 'TargetNameExists':
-                        $this->postData['t_name'] = $this->postData['t_name'].' 2';
-                        $this->vwsRequest->setTargetName($this->postData['t_name']);
-                        $return = false;
-                        break;
-                }
-                break;
-            case 404: // UnknownTarget
-                // Target deleted from other source? Sync DB! ToDo
-                break;
-            case 422:
-                switch (json_decode($this->vwsResponse->getBody())->status) {
-                    case 'BadImage':
-                        // No JPG and no PNG
-                        $this->echoMessage .= 'Image seems bad. please submit only in JPG or PNG format';
-                        $return = false;
-                        break;
-                    case 'ImageTooLarge': // ToDo this should be preventive
-                        // retry /w JPG to JPG conversion (or output)
-                        $img = $this->postData['t_image'];
-                        $img = compressToJpg($img,2000000);
-                        $this->postData['t_image'] = $img;
-                        $return = true;
-                        break;
-                    case 'MetadataTooLarge':
-                        // shouldn't happen... like really -> output
-                        $return = false;
-                        break;
-                }
-                break;
-            case 500: // VuFo Server internal
-                $return = true;
-                break;
-            default:
-                $this->echoMessage .= 'Vuforia Encountered an Error: ' . $this->vwsResponse->getStatus() . $this->vwsResponse->getBody();
-        }
-        if ($this->callCounter > 3 && $return) {
-            $this->echoMessage .= var_dump($this->vwsResponse)." not fixed after trying 3 times.";
-            $return = false;
-        }
-        return $return; // retry? or null == no error
-    }
-
-    private function errorPrevention()
-    {
-        // ToDo refactor any easy stuff into here like empty names no jpg images that are
-    }
-
-    /**
      * @return bool
      */
-    private function createTarget():bool
+    private function createTarget(): bool
     {
         do {
             $retry = false;
@@ -180,7 +88,6 @@ class crudFormHandler
                     ->setMeta('/error.php?error=targetNotLinkedToDbYet')// redirect marker to Inform the marker still needs a moment (max 15 min according to API Doc)
                     ->setActiveflag(false)// Target Inactive until DB synced
                     ->setAccessMethod('create');
-                $this->errorPrevention();
                 $this->vwsResponse = $this->vwsRequest->execute();
             } catch (VuforiaAccessAPIException $e) { // Errors we can potentially fix before the request is actually sent out
                 if ($this->handleVAAPIE($e)) {
@@ -190,11 +97,11 @@ class crudFormHandler
                 }
             } catch (HttpRequestException $e) {
                 $retry = $this->handleHTTPRE($e);
-            }
-            $this->callCounter++;
-            if ($this->callCounter > 5) {
-                $this->echoMessage .= var_dump($this->vwsRequest) . " not fixed after trying 5 times.";
-                return false;
+                $this->callCounter++;
+                if ($this->callCounter > 5) {
+                    $this->echoMessage .= var_dump($this->vwsRequest) . " not fixed after trying 5 times.";
+                    return false;
+                }
             }
         } while ($retry);
 
@@ -226,7 +133,6 @@ class crudFormHandler
                     ->setMeta("/clientRequest.php?t=$t_id")
                     ->setActiveflag($this->postData['activeFlag'])
                     ->setAccessMethod('update');
-                $this->errorPrevention();
                 $this->vwsResponse = $this->vwsRequest->execute();
             } catch (VuforiaAccessAPIException $e) { // Errors we can potentially fix before the request is actually sent out
                 if ($this->handleVAAPIE($e)) {
@@ -236,11 +142,11 @@ class crudFormHandler
                 }
             } catch (HttpRequestException $e) {
                 $retry = $this->handleHTTPRE($e);
-            }
-            $this->callCounter++;
-            if ($this->callCounter > 5) {
-                $this->echoMessage .= var_dump($this->vwsRequest) . " not fixed after trying 5 times.";
-                return false;
+                $this->callCounter++;
+                if ($this->callCounter > 5) {
+                    $this->echoMessage .= var_dump($this->vwsRequest) . " not fixed after trying 5 times.";
+                    return false;
+                }
             }
         } while($retry);
 
@@ -257,6 +163,230 @@ class crudFormHandler
         $tr_id = $vwsResponseBody['transaction_id'];
         $this->logTransaction($tr_id,$t_id);
         return true;
+    }
+
+    /**
+     * @return bool
+     */
+    private function updateTarget(): bool
+    {
+        do {
+            $updateVWS = false;
+            $retry = false;
+            try {
+                $vwsa = new access_vfc();
+                $vwsa->setTargetId($this->postData['t_id'])
+                    ->setAccessMethod('update');
+
+                if (isset($this->postData['t_name'])) {
+                    $vwsa->setTargetName($this->postData['t_name']);
+                    $updateVWS = true;
+                }
+                if (isset($this->postData['t_image'])) {
+                    $vwsa->setImage($this->postData['t_image']);
+                    $updateVWS = true;
+                }
+                if (isset($this->postData['activeFlag'])) {
+                    $vwsa->setActiveflag($this->postData['activeFlag']);
+                    $updateVWS = true;
+                }
+
+                if ($updateVWS) {
+                    $this->vwsResponse = $vwsa->execute();
+                }
+            } catch (VuforiaAccessAPIException $e) {
+                if ($this->handleVAAPIE($e)) {
+                    $this->vwsResponse = $this->vwsRequest->execute();
+                } else {
+                    return false;
+                }
+            } catch (HttpRequestException $e) {
+                $retry = $this->handleHTTPRE($e);
+                $this->callCounter++;
+                if ($this->callCounter > 5) {
+                    $this->echoMessage .= var_dump($this->vwsRequest) . " not fixed after trying 5 times.";
+                    return false;
+                }
+            }
+        } while ($retry);
+
+        $this->callCounter = 0;
+        while ($this->errorHandleVFResponse() === true) {
+            $this->vwsResponse = $this->vwsRequest->execute();
+        }
+        if ($this->errorHandleVFResponse() === false) {
+            $this->echoMessage .= "Please review your input!";
+            return false;
+        }
+
+        if ($updateVWS) {
+            $vwsResponseBody = json_decode($this->vwsResponse->getBody());
+            $t_id = $vwsResponseBody['target_id'];
+            $tr_id = $vwsResponseBody['transaction_id'];
+
+            $this->logTransaction($tr_id,$t_id);
+        }
+
+        if ((!empty($this->postData['xPos']))
+            || (!empty($this->postData['yPos']))
+            || (!empty($this->postData['map']))) {
+
+            $sql = /** @lang text */
+                "UPDATE udvide.Targets SET ";
+
+            $ins = [];
+            if (!empty($this->postData['xPos'])) {
+                $sql .= "xpos = '?'";
+                $ins[0] = $this->postData['xPos'];
+
+                if (!empty($this->postData['yPos'])) {
+                    $sql .= ", ypos = '?'";
+                    $ins[1] = $this->postData['yPos'];
+
+                    if (!empty($this->postData['map'])) {
+                        $sql .= ", map = '?'";
+                        $ins[2] = $this->postData['map'];
+                    }
+                } else {
+                    $sql .= ", map = '?'";
+                    $ins[1] = $this->postData['map'];
+                }
+            } elseif (!empty($this->postData['yPos'])) {
+                $sql .= "ypos = '?'";
+                $ins[0] = $this->postData['yPos'];
+
+                if (!empty($this->postData['map'])) {
+                    $sql .= ", map = '?'";
+                    $ins[1] = $this->postData['map'];
+                }
+            } else {
+                $sql .= "map = '?'";
+                $ins[0] = $this->postData['map'];
+            }
+
+            $sql .= " WHERE t_id = ?;";
+            $ins[] = $this->postData['t_id'];
+            access_DB::prepareExecuteGetStatement($sql, $ins);
+        }
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
+    private function deleteTarget(): bool
+    {
+        do {
+            $retry = false;
+            try {
+                $vwsa = new access_vfc();
+                $vwsa->setTargetId($this->postData['t_id'])
+                    ->setAccessMethod('delete');
+            } catch (VuforiaAccessAPIException $e) {
+                if ($this->handleVAAPIE($e)) {
+                    $this->vwsResponse = $this->vwsRequest->execute();
+                } else {
+                    return false;
+                }
+            } catch (HttpRequestException $e) {
+                $retry = $this->handleHTTPRE($e);
+                $this->callCounter++;
+                if ($this->callCounter > 5) {
+                    $this->echoMessage .= var_dump($this->vwsRequest) . " not fixed after trying 5 times.";
+                    return false;
+                }
+            }
+        } while ($retry);
+
+        $this->callCounter = 0;
+        while ($this->errorHandleVFResponse() === true) {
+            $this->vwsResponse = $this->vwsRequest->execute();
+        }
+        if ($this->errorHandleVFResponse() === false) {
+            $this->echoMessage .= "Please review your input!";
+            return false;
+        }
+
+        $sql = 'DELETE FROM udvide.Targets WHERE t_id = ?';
+        access_DB::prepareExecuteGetStatement($sql,$this->postData['t_id']);
+
+        return true;
+    }
+
+    /**
+     * @return bool|null
+     */
+    private function errorHandleVFResponse(): bool
+    {
+        $this->callCounter++;
+        $return = false;
+
+        switch ($this->vwsResponse->getStatus()) {
+            case 200: // ok
+            case 201: // TargetCreated
+                return null; // no error
+            case 403:
+                switch (json_decode($this->vwsResponse->getBody())->status) {
+                    case 'TargetNameExists':
+                        $this->postData['t_name'] = $this->postData['t_name'].' 2';
+                        $this->vwsRequest->setTargetName($this->postData['t_name']);
+                        $return = false;
+                        break;
+                }
+                break;
+            case 404: // UnknownTarget
+                $this->echoMessage .= 'Image has been deleted from other source.';
+                $return = false;
+                break;
+            case 422:
+                switch (json_decode($this->vwsResponse->getBody())->status) {
+                    case 'BadImage':
+                        $this->echoMessage .= 'Image seems bad. please submit only in a <a href="wiki.php?a=supportedImageFormats">supported format</a>'; //ToDo
+                        $return = false;
+                        break;
+                    case 'ImageTooLarge': // ToDo this should be preventive
+                        $this->echoMessage .= 'Image seems too large and we couldn\'t fix it automatically.';
+                        $return = false;
+                        break;
+                    case 'MetadataTooLarge':
+                        $this->echoMessage .= 'Metadata seems too large. This should not happen.';
+                        $return = false;
+                        break;
+                }
+                break;
+            case 500: // VuFo Server internal
+                $return = true;
+                break;
+            default:
+                $this->echoMessage .= 'Vuforia Encountered an Error: ' . $this->vwsResponse->getStatus() . $this->vwsResponse->getBody();
+        }
+        if ($this->callCounter > 3 && $return) {
+            $this->echoMessage .= var_dump($this->vwsResponse)." not fixed after trying 3 times.";
+            $return = false;
+        }
+        return $return; // retry? or null == no error
+    }
+
+    /**
+     *
+     */
+    private function errorPrevention()
+    {
+        // empty name filler
+        if (empty($this->postData['t_name'])) {
+            $this->postData['t_name'] = 'Anonymous Target '. random_int(1000000,9999999);
+        }
+
+        // image to jpg with 2000000byte limit
+        $img = $this->postData['t_image'];
+        $isJpg = (ord($img{0}) == 255)
+            && (ord($img{1}) == 216)
+            && (ord($img[strlen($img)-2]) == 255)
+            && (ord($img[strlen($img)-1]) == 217);
+        if (!$isJpg || strlen($img)) {
+            $img = jpgAssistant($img, ['maxFileSize'=>2000000]);
+            $this->postData['t_image'] = $img;
+        }
     }
 
     /**
@@ -294,10 +424,11 @@ class crudFormHandler
     }
 
     /**
-     * @param $e
+     * @param HttpRequestException $e
      * @return bool
+     * @throws HttpRequestException
      */
-    private function handleHTTPRE($e)
+    private function handleHTTPRE(HttpRequestException $e)
     {
         throw $e; // Yep you can do that
         return false; // to calm PHP for the moment

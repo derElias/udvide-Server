@@ -7,6 +7,10 @@ Apis:
         We follow the guidelines described at ToDo
 
     Form submit: (ToDo make this a table)
+
+        First we suggest that you take care of a few potential errors or performance issues
+         when writing a client like this especially the fields targetName and image. e.g. duplicate names
+
         If you want to send Form submits to the System from your own site to create, update or delete entries,
          you have to follow the following requirements:
         Send a POST request to /crudForm.php
@@ -18,7 +22,7 @@ Apis:
         2. To specify the action you have to provide
             create, update or delete as 'udvideVerb'
         3. For deleting and updating you have to provide
-            The respective Target ID as 't_id' (you get it from a Get on manage.php)
+            The respective Target ID as 't_id' (you get it from manage.php?rawGet=true) // ToDo
         4. For updating and creating you can include any of the following attributes: *tagged are neccessary for create
             A string target name as 't_name'
             A JPG/PNG/... image* as 't_image'
