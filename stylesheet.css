@@ -38,14 +38,28 @@ body{
 }
 
 .content{
-    height: 80%;
+    background-color: lightblue;
+    width: 100%;
+    height: 100px;
 }
 
 .contentBox {
     background-color: lightblue;
     width: 100%;
-    height: 80%;
+    height: 1010px;
 }
+
+.centerHeight{
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    text-align: center;
+}
+
+.background{
+    background-color: white;
+}
+
 .Namefield{
     width: 100%;
     height: 5vw;
@@ -69,25 +83,32 @@ body{
 }
 .mediumButtons{
     width: 100%;
+    height: 90%;
+    margin-top: 1%;
+    margin-bottom: 5%;
 }
 .suche{
 
     float: right;
     padding:15px;
     border: 1px solid orange;
-    width: 30%;
+    width: 500px;
     background-color: gray;
+    padding 15px;
 }
 
 .searchfield{
+    float: right;
     height: 40px;
-
+    width: 400px;
 }
 .searchfield:hover{
     color: lightgrey;
     text-decoration: underline;
 }
 .searchbutton{
+    float: right;
+    margin-left: 10px;
     background-color: lightgrey;
     height: 40px;
     width: 40px;
@@ -97,6 +118,14 @@ body{
     width: 90%;
     height: 90%;
 }
+
+.Entrybox{
+    width: 50%;
+    height: 100px;
+    margin: auto;
+    background-color: darkgray;
+}
+
 .Markerbutto{
 }
 
@@ -107,6 +136,11 @@ body{
     width: 100%;
     height: 870px;
     font-size: 3vw;
+}
+
+.Entryname{
+    font-size: 25px;
+    font: bold;
 }
 
 footer {
@@ -132,6 +166,15 @@ footer {
     color: black;
     text-decoration: underline;
 }
+
+.pic{
+    height: 100%;
+    align-self: center;
+    margin: auto;
+    border: solid black 1px;
+    float: left;
+}
+
 
 [class*="col-"]{
     float: left;
@@ -183,7 +226,24 @@ footer {
     display: table;
 }
 
+.right-2{
+    float: right;
+    width: 20%;
+}
+
+.special-col-1{
+    float: left;
+    width: 10%;
+}
 .special-col-2{
     float: left;
     width: 20%;
+}
+.special-col-3{
+    float: left;
+    width: 30%;
+}
+.special-col-5{
+    float: left;
+    width: 50%;
 }
