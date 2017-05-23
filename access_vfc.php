@@ -26,7 +26,7 @@ class access_vfc
 
     /**
      * vfcAccess constructor.
-     * reads VWS keys from keys.json in root directory
+     * reads VWS keys from keys.json in same directory
      */
     public function __construct()
     {

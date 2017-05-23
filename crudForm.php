@@ -3,41 +3,72 @@ require_once 'access_vfc.php';
 require_once 'access_DB.php';
 require_once 'helper.php';
 
-echo (new crudFormHandler())->handleForm();
+echo '<!DOCTYPE html><html><head></head><body>';
+$handlerResponse = (new crudFormHandler())->handleForm();
+echo '<p>In future versions the software will handle the form async and not replace the page</p></br>';
+if ($handlerResponse->success) {
+    echo '<p>';
+    echo $handlerResponse->message;
+    echo '</br>';
+    echo $handlerResponse->t_id;
+    echo '</p>';
+} else {
+    echo '<div class="popmsg"><p>';
+    echo $handlerResponse->message;
+    echo '</p></div>';
+}
+echo '</body></html>';
+
 class crudFormHandler
 {
     private $postData;
+
     /** @var  access_vfc */
     private $vwsRequest;
+
     /** @var  HTTP_Request2_Response */
     private $vwsResponse;
+
     private $callCounter = 0;
     private $echoMessage = '';
 
-     public function handleForm()
+    private $prevIgnoreUserAbort;
+
+    private $handlerResponse;
+
+    public function __construct()
     {
         // this stops users from aborting the script execution when the Vuforia Cloud and the Server are out of sync
-        $prevIgnoreUserAbort = ignore_user_abort(true);
-        $result = $this->DoNotTouchHandleForm();
-        ignore_user_abort($prevIgnoreUserAbort);
-        return $result === false ? $this->echoMessage : $result;
+        $this->prevIgnoreUserAbort = ignore_user_abort(true);
+
+        $this->postData = purifyUserData();
+
+        $this->handlerResponse = new handlerResponse();
+        $this->handlerResponse->success = false;
     }
 
-    private function DoNotTouchHandleForm()
+    public function __destruct()
     {
-        $this->postData = purifyUserData();
+        ignore_user_abort($this->prevIgnoreUserAbort);
+    }
+
+    /**
+     * @return handlerResponse
+     */
+    public function handleForm()
+    {
         if ($_SERVER["REQUEST_METHOD"] == "POST") { // if form submit
 
-            // don't trust the client: purify data
+            // streamline input
             $this->postData = purifyUserData();
-            $this->errorPrevention();
+            $this->preProcessing();
             $this->postData['udvideVerb'] = mb_strtolower($this->postData['udvideVerb']);
 
             $perm = getPermissions($this->postData['username'], $this->postData['passHash']);
             // is login invalid? -> Error
             if ($perm === false) {
-                $this->echoMessage .= 'Invalid login (Bad password or username)';
-                return false;
+                $this->handlerResponse->message = 'Invalid login (Bad password or username)';
+                return $this->handlerResponse;
             }
 
             // is client or admin? (->editPerm)
@@ -45,12 +76,25 @@ class crudFormHandler
 
             // create if $editPerm
             if ($this->postData['udvideVerb'] == 'create' && $editPerm) {
-                return $this->createTarget();
+                $ct = $this->createTarget();
+                if ($ct === true) {
+                    $this->handlerResponse->success = true;
+                    $this->handlerResponse->t_id = $this->postData['t_id'];
+                } else {
+                    $this->handlerResponse->message = $ct;
+                }
+                return $this->handlerResponse;
             }
 
             // delete if editPerm
             if ($this->postData['udvideVerb'] == 'delete' && $editPerm) {
-                return $this->deleteTarget();
+                $ct = $this->deleteTarget();
+                if ($ct === true) {
+                    $this->handlerResponse->success = true;
+                } else {
+                    $this->handlerResponse->message = $ct;
+                }
+                return $this->handlerResponse;
             }
 
             // also grant editPerm if Editor for specified marker
@@ -63,21 +107,27 @@ class crudFormHandler
             }
 
             if ($this->postData['access'] == 'update' && $editPerm) {
-                return $this->updateTarget();
+                $ct = $this->updateTarget();
+                if ($ct === true) {
+                    $this->handlerResponse->success = true;
+                } else {
+                    $this->handlerResponse->message = $ct;
+                }
+                return $this->handlerResponse;
             }
-            $this->echoMessage .= 'Invalid command?';
-            return false;
+            $this->handlerResponse->message = 'Invalid command?';
+            return $this->handlerResponse;
         } else {
-            $this->echoMessage .= "This site is used to evaluate CRUD Form requests.\n
-            Please use the form or consult the Documentation for more information";
-            return false;
+            $this->handlerResponse->message = "This site is used to evaluate CRUD Form requests.\n
+                Please use the form or consult the Documentation for more information";
+            return $this->handlerResponse;
         }
     }
 
     /**
-     * @return bool
+     * @return true|string
      */
-    private function createTarget(): bool
+    private function createTarget()
     {
         do {
             $retry = false;
@@ -93,14 +143,13 @@ class crudFormHandler
                 if ($this->handleVAAPIE($e)) {
                     $this->vwsResponse = $this->vwsRequest->execute();
                 } else {
-                    return false;
+                    return $this->echoMessage;
                 }
             } catch (HttpRequestException $e) {
                 $retry = $this->handleHTTPRE($e);
                 $this->callCounter++;
                 if ($this->callCounter > 5) {
-                    $this->echoMessage .= var_dump($this->vwsRequest) . " not fixed after trying 5 times.";
-                    return false;
+                    return var_dump($this->vwsRequest) . " not fixed after trying 5 times.";
                 }
             }
         } while ($retry);
@@ -110,12 +159,12 @@ class crudFormHandler
             $this->vwsResponse = $this->vwsRequest->execute();
         }
         if ($this->errorHandleVFResponse() === false) {
-            $this->echoMessage .= "Please review your input!";
-            return false;
+            return "Please review your input!";
         }
 
         $vwsResponseBody = json_decode($this->vwsResponse->getBody());
         $t_id = $vwsResponseBody['target_id'];
+        $this->postData['t_id'] = $t_id;
         $tr_id = $vwsResponseBody['transaction_id'];
 
         $this->logTransaction($tr_id,$t_id);
@@ -138,14 +187,13 @@ class crudFormHandler
                 if ($this->handleVAAPIE($e)) {
                     $this->vwsResponse = $this->vwsRequest->execute();
                 } else {
-                    return false;
+                    return $this->echoMessage;
                 }
             } catch (HttpRequestException $e) {
                 $retry = $this->handleHTTPRE($e);
                 $this->callCounter++;
                 if ($this->callCounter > 5) {
-                    $this->echoMessage .= var_dump($this->vwsRequest) . " not fixed after trying 5 times.";
-                    return false;
+                    return var_dump($this->vwsRequest) . " not fixed after trying 5 times.";
                 }
             }
         } while($retry);
@@ -155,8 +203,7 @@ class crudFormHandler
             $this->vwsResponse = $this->vwsRequest->execute();
         }
         if ($this->errorHandleVFResponse()===false) {
-            $this->echoMessage .= "Please review your input!";
-            return false;
+            return "Please review your input!";
         }
         $vwsResponseBody = json_decode($this->vwsResponse->getBody());
         $t_id = $vwsResponseBody['target_id'];
@@ -166,9 +213,9 @@ class crudFormHandler
     }
 
     /**
-     * @return bool
+     * @return true|string
      */
-    private function updateTarget(): bool
+    private function updateTarget()
     {
         do {
             $updateVWS = false;
@@ -198,14 +245,13 @@ class crudFormHandler
                 if ($this->handleVAAPIE($e)) {
                     $this->vwsResponse = $this->vwsRequest->execute();
                 } else {
-                    return false;
+                    return $this->echoMessage;
                 }
             } catch (HttpRequestException $e) {
                 $retry = $this->handleHTTPRE($e);
                 $this->callCounter++;
                 if ($this->callCounter > 5) {
-                    $this->echoMessage .= var_dump($this->vwsRequest) . " not fixed after trying 5 times.";
-                    return false;
+                    return var_dump($this->vwsRequest) . " not fixed after trying 5 times.";
                 }
             }
         } while ($retry);
@@ -215,8 +261,7 @@ class crudFormHandler
             $this->vwsResponse = $this->vwsRequest->execute();
         }
         if ($this->errorHandleVFResponse() === false) {
-            $this->echoMessage .= "Please review your input!";
-            return false;
+            return "Please review your input!";
         }
 
         if ($updateVWS) {
@@ -272,9 +317,9 @@ class crudFormHandler
     }
 
     /**
-     * @return bool
+     * @return true|string
      */
-    private function deleteTarget(): bool
+    private function deleteTarget()
     {
         do {
             $retry = false;
@@ -286,14 +331,13 @@ class crudFormHandler
                 if ($this->handleVAAPIE($e)) {
                     $this->vwsResponse = $this->vwsRequest->execute();
                 } else {
-                    return false;
+                    return $this->echoMessage;
                 }
             } catch (HttpRequestException $e) {
                 $retry = $this->handleHTTPRE($e);
                 $this->callCounter++;
                 if ($this->callCounter > 5) {
-                    $this->echoMessage .= var_dump($this->vwsRequest) . " not fixed after trying 5 times.";
-                    return false;
+                    return var_dump($this->vwsRequest) . " not fixed after trying 5 times.";
                 }
             }
         } while ($retry);
@@ -303,14 +347,32 @@ class crudFormHandler
             $this->vwsResponse = $this->vwsRequest->execute();
         }
         if ($this->errorHandleVFResponse() === false) {
-            $this->echoMessage .= "Please review your input!";
-            return false;
+            return "Please review your input!";
         }
 
         $sql = 'DELETE FROM udvide.Targets WHERE t_id = ?';
         access_DB::prepareExecuteGetStatement($sql,$this->postData['t_id']);
 
         return true;
+    }
+
+    private function preProcessing()
+    {
+        // empty name filler
+        if (empty($this->postData['t_name'])) {
+            $this->postData['t_name'] = 'Anonymous Target '. random_int(1000000,9999999);
+        }
+
+        // image to jpg with 2000000byte limit
+        $img = $this->postData['t_image'];
+        $isJpg = (ord($img{0}) == 255)
+            && (ord($img{1}) == 216)
+            && (ord($img[strlen($img)-2]) == 255)
+            && (ord($img[strlen($img)-1]) == 217);
+        if (!$isJpg || strlen($img)) {
+            $img = jpgAssistant($img, ['maxFileSize'=>2000000]);
+            $this->postData['t_image'] = $img;
+        }
     }
 
     /**
@@ -341,11 +403,11 @@ class crudFormHandler
             case 422:
                 switch (json_decode($this->vwsResponse->getBody())->status) {
                     case 'BadImage':
-                        $this->echoMessage .= 'Image seems bad. please submit only in a <a href="wiki.php?a=supportedImageFormats">supported format</a>'; //ToDo
+                        $this->echoMessage .= 'Image seems bad. please submit only in a <a href="wiki.php?a=supportedImageFormats">supported format</a>';
                         $return = false;
                         break;
-                    case 'ImageTooLarge': // ToDo this should be preventive
-                        $this->echoMessage .= 'Image seems too large and we couldn\'t fix it automatically.';
+                    case 'ImageTooLarge':
+                        $this->echoMessage .= 'Image seems too large and we could not fix it automatically.';
                         $return = false;
                         break;
                     case 'MetadataTooLarge':
@@ -368,28 +430,6 @@ class crudFormHandler
     }
 
     /**
-     *
-     */
-    private function errorPrevention()
-    {
-        // empty name filler
-        if (empty($this->postData['t_name'])) {
-            $this->postData['t_name'] = 'Anonymous Target '. random_int(1000000,9999999);
-        }
-
-        // image to jpg with 2000000byte limit
-        $img = $this->postData['t_image'];
-        $isJpg = (ord($img{0}) == 255)
-            && (ord($img{1}) == 216)
-            && (ord($img[strlen($img)-2]) == 255)
-            && (ord($img[strlen($img)-1]) == 217);
-        if (!$isJpg || strlen($img)) {
-            $img = jpgAssistant($img, ['maxFileSize'=>2000000]);
-            $this->postData['t_image'] = $img;
-        }
-    }
-
-    /**
      * @param VuforiaAccessAPIException $e
      * @return bool
      */
@@ -404,7 +444,8 @@ class crudFormHandler
                     $this->postData['t_name'] = substr($this->postData['t_name'], 0, 60) . '...';
                     break;
                 case 120:
-                    $this->postData['t_image'] = toJPG($this->postData['t_image'],95);
+                    // shouldn't happen
+                    $this->postData['t_image'] = jpgAssistant($this->postData['t_image'],['quality'=>95]);
                     break;
                 default:
                     $this->echoMessage .= "Please contact a developer.\n
@@ -424,11 +465,11 @@ class crudFormHandler
     }
 
     /**
-     * @param HttpRequestException $e
+     * @param Exception $e
      * @return bool
-     * @throws HttpRequestException
+     * @throws Exception
      */
-    private function handleHTTPRE(HttpRequestException $e)
+    private function handleHTTPRE(Exception $e)
     {
         throw $e; // Yep you can do that
         return false; // to calm PHP for the moment
@@ -443,4 +484,13 @@ class crudFormHandler
         $sql = "INSERT INTO udvide.TransactionLog VALUES ($tr_id,?,$t_id)";
         access_DB::prepareExecuteGetStatement($sql, [$this->postData['username']]);
     }
+}
+
+class handlerResponse {
+    /** @var  bool */
+    public $success;
+    /** @var  string */
+    public $message;
+    /** @var  int */
+    public $t_id;
 }
