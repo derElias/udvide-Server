@@ -19,6 +19,9 @@ $template = str_replace('<!--Admin-->',$temp,$template);
 $temp = file_get_contents('temp/entrytableTempl.html');
 $template = str_replace('<!--content-->',$temp,$template);
 
+    $svg = file_get_contents('res/Create.svg');
+    $template = str_replace('<!--Create-->',$svg,$template);
+
     $svg = file_get_contents('res/Delete.svg');
     $template = str_replace('<!--Delete-->',$svg,$template);
 
