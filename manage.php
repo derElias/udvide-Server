@@ -15,8 +15,16 @@ $template = str_replace('<!--Admin-->',$temp,$template);
     $svg = file_get_contents('res/Map.svg');
     $template = str_replace('<!--karten-->',$svg,$template);
 
+
 $temp = file_get_contents('temp/entrytableTempl.html');
 $template = str_replace('<!--content-->',$temp,$template);
+
+    $svg = file_get_contents('res/Delete.svg');
+    $template = str_replace('<!--Delete-->',$svg,$template);
+
+    $svg = file_get_contents('res/Entry.svg');
+    $template = str_replace('<!--Update-->',$svg,$template);
+
 
 
 $temp = file_get_contents('temp/contentTempl.html');
