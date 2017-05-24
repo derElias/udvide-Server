@@ -29,7 +29,7 @@ function purifyUserData():array {
  */
 function pepperedPassCheck(string $userPassHash,string $serverPassHash):bool
 {
-    $keys = json_decode(file_get_contents('../keys.json'));
+    $keys = json_decode(file_get_contents('keys.json'));
     return password_verify(sha1($userPassHash . $keys->pepper), $serverPassHash);
 }
 
@@ -43,11 +43,11 @@ function getPermissions(string $user, string $pass)
     $sql = <<<'SQL'
 SELECT u.passHash, u.role, e.t_id
 FROM udvide.Users u
-JOIN Editors e
+LEFT JOIN Editors e
 ON u.username = e.username
 WHERE u.username = ?
 SQL;
-    $db = access_DB::prepareExecuteGetStatement($sql, [$user]); // Documentation: this is how to follow Don't trust the user with dbaccess in addition to purify
+    $db = access_DB::prepareExecuteFetchStatement($sql, [$user]); // Documentation: this is how to follow Don't trust the user with dbaccess in addition to purify
     if ($db === false)
         return false; // user doesn't exist
     if (!pepperedPassCheck($pass, $db[0]['passHash']))
@@ -144,4 +144,85 @@ function imgJpgSize(resource $img, int $quality):int {
     $size = ob_get_length(); // get size of buffer (in bytes)
     ob_end_clean();          // trash the buffer
     return $size;
+}
+
+/**
+ * @param string $user
+ * @param int $page
+ * @param int $pageSize
+ * @return array|false
+ * @throws Exception
+ */
+function getTargetPageByUser(string $user, int $page = 0, int $pageSize = 5)
+{
+    if (empty($user))
+        throw new Exception('Please Log in to view your targets!');
+    $sql = <<<'SQL'
+SELECT t.t_id, t.t_owner, t.xpos, t.ypos, t.map, t.content
+FROM udvide.Targets t
+LEFT JOIN Editors e
+ON t.t_id = e.t_id
+WHERE e.username = ?
+ORDER BY t_id
+LIMIT ?
+OFFSET ?
+SQL;
+    $db = access_DB::prepareExecuteFetchStatement($sql, [$user, $pageSize, $page*$pageSize]);
+    if ($db === false)
+        return false; // no targets for $user
+    $result = [];
+    foreach ($db as $value) {
+        $vw = json_decode((new access_vfc())
+            ->setAccessMethod('summary')
+            ->setTargetId($value['t_id'])
+            ->execute()
+            ->getBody());
+        logTransaction($vw->transaction_id,$value['t_id']);
+
+        $value['t_name'] = $vw->target_name;
+        $value['active'] = $vw->active_flag;
+        $value['database'] = $vw->database_name;
+        $value['track_rating'] = $vw->tracking_rating;
+        $value['upl_date'] = $vw->upload_date;
+        $value['recos_total'] = $vw->total_recos;
+        $value['recos_this_month'] = $vw->current_month_recos;
+        $value['recos_last_month'] = $vw->previous_month_recos;
+        $result[] = $value;
+    }
+    return $result;
+}
+
+/**
+ * @param $tr_id
+ * @param $t_id
+ */
+function logTransaction($tr_id, $t_id = 'no specific')
+{
+    $sql = "INSERT INTO udvide.TransactionLog VALUES ($tr_id,?,$t_id)";
+    access_DB::prepareExecuteFetchStatement($sql, [$this->postData['username']]);
+}
+
+define('PERMISSIONS_ROOT',4);
+define('PERMISSIONS_DEVELOPER',3);
+define('PERMISSIONS_CLIENT',2);
+define('PERMISSIONS_ADMIN',1);
+define('PERMISSIONS_EDITOR',0);
+/**
+ * @param string $new_users_name
+ * @param string $new_users_password
+ * @param int $new_users_role
+ * @param string $username the username of the submitting person
+ * @param string $password the password of the submitting person
+ * @throws Exception
+ */
+function addUser(string $new_users_name,string $new_users_password, int $new_users_role, string $username, string $password) {
+    // Everyone can create accounts only below their permissions -> we make a root with perm = 4
+    $perm = getPermissions($username, $password)[0];
+    if ($new_users_role >= $perm) {
+        throw new Exception("Insufficient Permissions! you $username have permission level $perm");
+    }
+    $keys = json_decode(file_get_contents('keys.json'));
+    $new_users_password = password_hash(sha1($new_users_password . $keys->pepper),PASSWORD_DEFAULT);
+    $sql= 'INSERT INTO udvide.Users VALUES (?,?,?)';
+    access_DB::prepareExecuteFetchStatement($sql,[$new_users_name,$new_users_password,$new_users_role]);
 }

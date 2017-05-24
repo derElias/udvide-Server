@@ -9,9 +9,9 @@ require_once '/xampp/php/pear/HTTP/Request2.php'; // change this line to the HTT
  */
 class access_vfc
 {
-    private $url = "https://vws.vuforia.com";
-    private $targetRequestPath = "/targets";
-    private $targetSummaryPath = "/summary";
+    const url = "https://vws.vuforia.com";
+    const targetRequestPath = "/targets";
+    const targetSummaryPath = "/summary";
 
     private $accessMethod;
 
@@ -208,7 +208,7 @@ class access_vfc
         }
         $request->setBody(json_encode($send));
 
-        $request->setURL( $this->url . $this->targetRequestPath );
+        $request->setURL( self::url . self::targetRequestPath );
 
         $request->setHeader("Content-Type", "application/json");
 
@@ -223,7 +223,7 @@ class access_vfc
         $request = new HTTP_Request2();
         $request->setMethod( HTTP_Request2::METHOD_GET );
 
-        $request->setURL( $this->url . $this->targetRequestPath . '/' . $this->targetId );
+        $request->setURL( self::url . self::targetRequestPath . '/' . $this->targetId );
 
         return $this->setCommonValuesAndSend($request); // un-clutter
     }
@@ -236,7 +236,7 @@ class access_vfc
         $request = new HTTP_Request2();
         $request->setMethod( HTTP_Request2::METHOD_GET );
 
-        $request->setURL( $this->url . $this->targetRequestPath );
+        $request->setURL( self::url . self::targetRequestPath );
 
         return $this->setCommonValuesAndSend($request); // un-clutter
     }
@@ -266,7 +266,7 @@ class access_vfc
         }
         $request->setBody(json_encode($send));
 
-        $request->setURL( $this->url . $this->targetRequestPath . '/' . $this->targetId );
+        $request->setURL( self::url . self::targetRequestPath . '/' . $this->targetId );
 
         $request->setHeader("Content-Type", "application/json");
 
@@ -281,7 +281,7 @@ class access_vfc
         $request = new HTTP_Request2();
         $request->setMethod( HTTP_Request2::METHOD_DELETE );
 
-        $request->setURL( $this->url . $this->targetRequestPath . '/' . $this->targetId );
+        $request->setURL( self::url . self::targetRequestPath . '/' . $this->targetId );
 
         return $this->setCommonValuesAndSend($request); // un-clutter
     }
@@ -294,7 +294,7 @@ class access_vfc
         $request = new HTTP_Request2();
         $request->setMethod( HTTP_Request2::METHOD_GET );
 
-        $request->setURL( $this->url . $this->targetSummaryPath . '/' . $this->targetId );
+        $request->setURL( self::url . self::targetSummaryPath . '/' . $this->targetId );
 
         return $this->setCommonValuesAndSend($request); // un-clutter
     }
@@ -307,7 +307,7 @@ class access_vfc
         $request = new HTTP_Request2();
         $request->setMethod( HTTP_Request2::METHOD_GET );
 
-        $request->setURL( $this->url . $this->targetSummaryPath );
+        $request->setURL( self::url . self::targetSummaryPath );
 
         return $this->setCommonValuesAndSend($request); // un-clutter
     }

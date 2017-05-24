@@ -11,22 +11,23 @@ require_once "enviromentUdv.php";
 class access_DB implements dbaccessUdv {
 
     /**
-     * This class should offer fallback mechanisms to various DB Access concepts, should one fail
+     * This class could offer fallback mechanisms to various DB Access concepts, should one fail
      * @param string $preparesql
      * @param array|null $executesql
      * @return array|false empty -> false
      */
-    public static function prepareExecuteGetStatement($preparesql, $executesql = null)
+    public static function prepareExecuteFetchStatement($preparesql, $executesql = null)
     {
         try {
-            if (is_array($executesql) && !isset($executesql[1]))
-                $executesql = $executesql[0]; // QoL
-            return dbaccessPDOUdv::prepareExecuteGetStatement($preparesql, $executesql);
+            if (!is_array($executesql) && isset($executesql))
+                $executesql[0] = $executesql; // QoL
+            return dbaccessPDOUdv::prepareExecuteFetchStatement($preparesql, $executesql);
         } catch (exception $e) {
             $msg = 'Exception ' . $e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . "\n"
-                . 'Caused Fallback to STUB db results';
+                . 'when trying to prepare/execute/fetch query' . $preparesql . "\n"
+                . 'continuing to run script with empty result';
             trigger_error($msg);
-            return dbaccessSTUBUdv::prepareExecuteGetStatement($preparesql, $executesql);
+            return false;
         }
     }
 }
@@ -36,7 +37,7 @@ interface dbaccessUdv {
      * @param array|null $executesql
      * @return array|false empty -> false
      */
-    public static function prepareExecuteGetStatement($preparesql, $executesql = null);
+    public static function prepareExecuteFetchStatement($preparesql, $executesql = null);
 }
 
 class dbaccessPDOUdv implements dbaccessUdv
@@ -69,7 +70,7 @@ class dbaccessPDOUdv implements dbaccessUdv
      * @param array|null $executesql
      * @return array|false empty -> false
      */
-    public static function prepareExecuteGetStatement($preparesql,$executesql = null)
+    public static function prepareExecuteFetchStatement($preparesql, $executesql = null)
     {
         $dbaccessobj = isset(self::$singleton) ? self::$singleton : new dbaccessPDOUdv();
         $stmt = $dbaccessobj->connection->prepare($preparesql);
@@ -99,7 +100,7 @@ class dbaccessSTUBUdv implements dbaccessUdv
         echo 'destruct';
     }
 
-    public static function prepareExecuteGetStatement($preparesql,$executesql = null)
+    public static function prepareExecuteFetchStatement($preparesql, $executesql = null)
     {
         $dbaccessobj = null;
         /*$dbaccessobj = */isset(dbaccessSTUBUdv::$singleton) ? dbaccessSTUBUdv::$singleton : new dbaccessSTUBUdv();

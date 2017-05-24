@@ -1,11 +1,3 @@
-I want to handle these errors custom:
-403:TargetNameExists POST/PUT
-404:UnknownTarget POST/PUT/DELETE
-422:BadImage POST/PUT
-422:ImageTooLarge POST/PUT
-422:MetadataTooLarge POST/PUT
-500:Fail --> retry once? twice with delay?
-
 http://pear.php.net/package/HTTP_Request2/docs/latest/HTTP_Request2/HTTP_Request2_Response.html
 
 ToDos:
@@ -31,10 +23,43 @@ StretchGoals:
 
 To be proposed Stretch goals:
 ToDo: ClientSide ActionCache (if server is unavailable set put to 3 minute trigger, add site-close stopper and ping to server)
+ToDo: use Company field to have multiple companies in the same system
 
 VuFo untold requirements:
 Max metadata file size = 2mb?
 No support for PNG images apparently (API docu says something else) but we can convert pngs to jpgs in js code so.....
+
+
+{
+  "summarize": {
+    "result_code": "Success",
+    "transaction_id": "d4a716446655440663390e8400e29b41",
+    "database_name": "RecoTest",
+    "target_name": "tarmac",
+    "upload_date": "2012-03-31",
+    "active_flag": true,
+    "status": "success",
+    "tracking_rating": 4,
+    "reco_rating": "",
+    "total_recos": 0,
+    "current_month_recos": 0,
+    "previous_month_recos": 0
+  },
+"get": {
+  "result_code": "Success",
+  "transaction_id": "e29b41550e8400d4a716446655440000",
+  "target_record": {
+    "target_id": "550b41d4a7164466554e8400e2949364",
+    "active_flag": true,
+    "name": "tarmac",
+    "width": 100.0,
+    "tracking_rating": 4,
+    "reco_rating": ""
+  },
+  "status": "Success"
+}
+}
+
 
 Options for User in CMS:
 Generate printable marker

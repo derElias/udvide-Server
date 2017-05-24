@@ -13,7 +13,7 @@ if ($handlerResponse->success) {
     echo $handlerResponse->t_id;
     echo '</p>';
 } else {
-    echo '<div class="popmsg"><p>';
+    echo '<div class="popMessage"><p>';
     echo $handlerResponse->message;
     echo '</p></div>';
 }
@@ -167,11 +167,11 @@ class crudFormHandler
         $this->postData['t_id'] = $t_id;
         $tr_id = $vwsResponseBody['transaction_id'];
 
-        $this->logTransaction($tr_id,$t_id);
+        logTransaction($tr_id,$t_id);
 
         // Sync DBs and insert our own stuff
         $sql = "INSERT INTO udvide.Targets (t_id,t_owner,xpos,ypos,map) VALUES ($t_id,?,?,?,?);";
-        access_DB::prepareExecuteGetStatement($sql, [$this->postData['username'], $this->postData['xPos'], $this->postData['yPos'], $this->postData['map']]);
+        access_DB::prepareExecuteFetchStatement($sql, [$this->postData['username'], $this->postData['xPos'], $this->postData['yPos'], $this->postData['map']]);
 
         // Update VF DB to the now named target page
         do {
@@ -208,7 +208,7 @@ class crudFormHandler
         $vwsResponseBody = json_decode($this->vwsResponse->getBody());
         $t_id = $vwsResponseBody['target_id'];
         $tr_id = $vwsResponseBody['transaction_id'];
-        $this->logTransaction($tr_id,$t_id);
+        logTransaction($tr_id,$t_id);
         return true;
     }
 
@@ -269,7 +269,7 @@ class crudFormHandler
             $t_id = $vwsResponseBody['target_id'];
             $tr_id = $vwsResponseBody['transaction_id'];
 
-            $this->logTransaction($tr_id,$t_id);
+            logTransaction($tr_id,$t_id);
         }
 
         if ((!empty($this->postData['xPos']))
@@ -311,7 +311,7 @@ class crudFormHandler
 
             $sql .= " WHERE t_id = ?;";
             $ins[] = $this->postData['t_id'];
-            access_DB::prepareExecuteGetStatement($sql, $ins);
+            access_DB::prepareExecuteFetchStatement($sql, $ins);
         }
         return true;
     }
@@ -351,7 +351,7 @@ class crudFormHandler
         }
 
         $sql = 'DELETE FROM udvide.Targets WHERE t_id = ?';
-        access_DB::prepareExecuteGetStatement($sql,$this->postData['t_id']);
+        access_DB::prepareExecuteFetchStatement($sql,$this->postData['t_id']);
 
         return true;
     }
@@ -472,18 +472,10 @@ class crudFormHandler
     private function handleHTTPRE(Exception $e)
     {
         throw $e; // Yep you can do that
+        // ToDo
         return false; // to calm PHP for the moment
     }
 
-    /**
-     * @param $tr_id
-     * @param $t_id
-     */
-    private function logTransaction($tr_id, $t_id)
-    {
-        $sql = "INSERT INTO udvide.TransactionLog VALUES ($tr_id,?,$t_id)";
-        access_DB::prepareExecuteGetStatement($sql, [$this->postData['username']]);
-    }
 }
 
 class handlerResponse {
