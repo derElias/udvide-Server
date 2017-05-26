@@ -18,17 +18,23 @@ class access_DB implements dbaccessUdv {
      */
     public static function prepareExecuteFetchStatement($preparesql, $executesql = null)
     {
-        try {
+        //try {
             if (!is_array($executesql) && isset($executesql))
                 $executesql[0] = $executesql; // QoL
+
+        echo $preparesql;
+        foreach ($executesql as $value)
+            echo ',  ' . $value;
+        echo '<br/>';
+
             return dbaccessPDOUdv::prepareExecuteFetchStatement($preparesql, $executesql);
-        } catch (exception $e) {
+        /*} catch (exception $e) {
             $msg = 'Exception ' . $e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . "\n"
                 . 'when trying to prepare/execute/fetch query' . $preparesql . "\n"
                 . 'continuing to run script with empty result';
             trigger_error($msg);
             return false;
-        }
+        }*/
     }
 }
 interface dbaccessUdv {

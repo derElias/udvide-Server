@@ -24,6 +24,7 @@ StretchGoals:
 To be proposed Stretch goals:
 ToDo: ClientSide ActionCache (if server is unavailable set put to 3 minute trigger, add site-close stopper and ping to server)
 ToDo: use Company field to have multiple companies in the same system
+ToDo: If an editor has become owner of a target he can delete it -> new field owner; arrayToTarget; doStuff();
 
 VuFo untold requirements:
 Max metadata file size = 2mb?

@@ -1,4 +1,5 @@
 <?php
+require_once 'enviromentUdv.php';
 require_once 'access_DB.php';
 require_once 'access_vfc.php';
 
@@ -62,13 +63,14 @@ SQL;
 }
 
 /**
- * @param string $imgString accepts gd2, gd2part, gd, gif, png, wbmp, webp, xbm and xpm. bmp supported if php 7.2.0+ is used
+ * @param string|resource $img accepts gd2, gd2part, gd, gif, png, wbmp, webp, xbm and xpm. bmp supported if php 7.2.0+ is used
  * @param array $options supports quality, maxFileSize, doNotCrop, minQuality, minShortestSide
  * @return string|false (smaller) JPG | false on failure
  */
-function jpgAssistant (string $imgString, array $options):string {
-    // to image instance
-    $img = imagecreatefromstring($imgString);
+function jpgAssistant ($img, array $options):string {
+    // to image resource if not already
+    if (is_string($img))
+        $img = imagecreatefromstring($img);
 
     // get options
     $quality = 100;
@@ -132,9 +134,14 @@ function jpgAssistant (string $imgString, array $options):string {
     }
 
     // to JPEG string (by capturing output from imagejpeg())
+    $ret = imgResToJpgString($img,$quality);
+    imagedestroy( $img ); // memory cleanup asap
+    return $ret;
+}
+
+function imgResToJpgString($img,$quality) {
     ob_start();
     imagejpeg( $img, NULL, $quality );
-    imagedestroy( $img ); // memory cleanup asap
     return ob_get_clean(); // clears memory and gives back output stream content
 }
 
@@ -193,13 +200,14 @@ SQL;
 }
 
 /**
- * @param $tr_id
- * @param $t_id
+ * @param string $tr_id
+ * @param string $user
+ * @param string $t_id
  */
-function logTransaction($tr_id, $t_id = 'no specific')
+function logTransaction($tr_id, $user, $t_id = "no specific")
 {
-    $sql = "INSERT INTO udvide.TransactionLog VALUES ($tr_id,?,$t_id)";
-    access_DB::prepareExecuteFetchStatement($sql, [$this->postData['username']]);
+    $sql = "INSERT INTO udvide.TransactionLog VALUES (?,?,?)";
+    access_DB::prepareExecuteFetchStatement($sql, [$tr_id,$user,$t_id]);
 }
 
 define('PERMISSIONS_ROOT',4);
@@ -223,6 +231,24 @@ function addUser(string $new_users_name,string $new_users_password, int $new_use
     }
     $keys = json_decode(file_get_contents('keys.json'));
     $new_users_password = password_hash(sha1($new_users_password . $keys->pepper),PASSWORD_DEFAULT);
-    $sql= 'INSERT INTO udvide.Users VALUES (?,?,?)';
+    $sql= "INSERT INTO udvide.Users VALUES (?,?,?)";
     access_DB::prepareExecuteFetchStatement($sql,[$new_users_name,$new_users_password,$new_users_role]);
+}
+
+/**
+ * @param string|target $targetIdentifier
+ * @param string $user
+ * @param string $username the username of the submitting person
+ * @param string $password the password of the submitting person
+ * @throws Exception
+ */
+function assignEditorAs($targetIdentifier, string $user, string $username, string $password) {
+    if ($targetIdentifier instanceof target)
+        $targetIdentifier = $targetIdentifier->id;
+
+    if (getPermissions($username, $password)[0] < 1)
+        throw new Exception("Insufficient Permissions to make $user an Editor of $targetIdentifier!");
+
+    $sql = "INSERT INTO udvide.Editors VALUES (?,?)";
+    access_DB::prepareExecuteFetchStatement($sql,[$targetIdentifier,$user]);
 }
