@@ -22,10 +22,12 @@ class access_DB implements dbaccessUdv {
             if (!is_array($executesql) && isset($executesql))
                 $executesql[0] = $executesql; // QoL
 
+        /*/ For Debugging
         echo $preparesql;
         foreach ($executesql as $value)
             echo ',  ' . $value;
         echo '<br/>';
+        /**/
 
             return dbaccessPDOUdv::prepareExecuteFetchStatement($preparesql, $executesql);
         /*} catch (exception $e) {

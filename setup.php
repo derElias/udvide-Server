@@ -61,6 +61,6 @@ $targets[] = (new target())
     ->setOwner($user);
 
 foreach ($targets as $target)
-    $cud->doTargetManipulationAs('create',$target,$user,$pass);
+    var_dump($cud->doTargetManipulationAs('create',$target,$user,$pass));
 
 assignEditorAs($targets[2], 'test/tEditor',$user,$pass);

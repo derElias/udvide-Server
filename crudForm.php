@@ -220,7 +220,9 @@ class crudFormHandler
         } while($retry);
 
         $this->callCounter = 0;
+        var_dump($this->vwsResponse);
         $re = $this->errorHandleVFResponse($target);
+        var_dump($re);
         while ($re === true) {
             $this->vwsResponse = $this->vwsRequest->execute();
             $re = $this->errorHandleVFResponse($target);
