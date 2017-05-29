@@ -189,7 +189,7 @@ class crudFormHandler
         $tr_id = $vwsResponseBody->transaction_id;
 
         // Sync DBs and insert our own stuff
-        $sql = "INSERT INTO udvide.Targets (t_id,t_owner,xpos,ypos,map) VALUES (?,?,?,?,?);";
+        $sql = 'INSERT INTO udvide.Targets (t_id,t_owner,xpos,ypos,map) VALUES (?,?,?,?,?);';
         access_DB::prepareExecuteFetchStatement($sql, [$t_id,$target->owner, $target->xPos, $target->yPos, $target->map]);
 
         logTransaction($tr_id,$user,$t_id);
