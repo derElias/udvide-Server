@@ -8,14 +8,16 @@ CREATE TABLE Users (
   PRIMARY KEY (username)
 );
 CREATE TABLE Targets (
-  t_id VARCHAR(32) NOT NULL UNIQUE,
+  t_id LONG AUTO_INCREMENT NOT NULL UNIQUE,
+  vw_id VARCHAR(32) NOT NULL UNIQUE,
   t_owner VARCHAR(127),
   content TEXT,
   xpos INT,
   ypos INT,
   map INT,
   PRIMARY KEY (t_id),
-  FOREIGN KEY (t_owner) REFERENCES Users(username)
+  FOREIGN KEY (t_owner) REFERENCES Users(username),
+  FOREIGN KEY (map) REFERENCES Maps(map_id)
 );
 CREATE TABLE Editors (
   t_id VARCHAR(32) NOT NULL,
@@ -31,4 +33,10 @@ CREATE TABLE TransactionLog (
   PRIMARY KEY (tr_id),
   FOREIGN KEY (username) REFERENCES Users(username),
   FOREIGN KEY (t_id) REFERENCES Targets(t_id)
+);
+CREATE TABLE Maps (
+  map_id VARCHAR(32) NOT NULL UNIQUE,
+  image LONGBLOB,
+  name VARCHAR(127),
+  PRIMARY KEY (map_id)
 );
