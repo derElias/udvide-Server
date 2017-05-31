@@ -15,7 +15,7 @@ $template = str_replace('<!--Admin-->',$temp,$template);
     $svg = file_get_contents('res/Map.svg');
     $template = str_replace('<!--karten-->',$svg,$template);
 
-
+/*
 $temp = file_get_contents('templates/entrytableTempl.html');
 $template = str_replace('<!--content-->',$temp,$template);
     if(true) {
@@ -35,14 +35,14 @@ $template = str_replace('<!--content-->',$temp,$template);
     $svg = file_get_contents('res/Entry.svg');
     $template = str_replace('<!--Update-->',$svg,$template);
 
+    $svg = file_get_contents('res/search.svg');
+    $template = str_replace('<!--searchicon-->',$svg,$template);
 
-
-
+*/
 $temp = file_get_contents('templates/contentTempl.html');
 $template = str_replace('<!--content-->',$temp,$template);
 
-    $svg = file_get_contents('res/search.svg');
-    $template = str_replace('<!--searchicon-->',$svg,$template);
+
 
 $temp = file_get_contents('templates/footerTempl.html');
 $template = str_replace('<!--footer-->',$temp,$template);
