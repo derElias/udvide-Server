@@ -6,4 +6,4 @@ require_once '../access_DB.php';
  * Date: 17.05.2017
  * Time: 17:58
  */
-echo access_DB::prepareExecuteGetStatement('SELECT * FROM users');
+echo access_DB::prepareExecuteFetchStatement('SELECT * FROM users');

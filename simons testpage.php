@@ -1,9 +1,7 @@
 <?php
-require_once 'access_vfc.php';
-/**
- * Created by PhpStorm.
- * User: User
- * Date: 16.05.2017
- * Time: 17:09
- */
+require_once 'access_DB.php';
+require_once 'helper.php';
+
 echo time();
+
+var_dump(false < 0);
