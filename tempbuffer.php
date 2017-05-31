@@ -10,7 +10,7 @@ header('Content-Type: application/xhtml+xml');
 <body>
 <p>first 5 entries</p><br/>
 <?php
-$ar = getTargetPageByUser('dev/simon');
+$ar = (new udvide())->getTargetPageByUser('dev/simon');
 foreach ($ar as $target) {
     echo '<div class="target"><p>';
     foreach ($target as $key=>$value) {

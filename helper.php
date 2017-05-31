@@ -1,5 +1,5 @@
 <?php
-require_once 'enviromentUdv.php';
+require_once 'settings.php';
 require_once 'access_DB.php';
 require_once 'access_vfc.php';
 
@@ -11,58 +11,7 @@ require_once 'access_vfc.php';
  */
 
 /**
- * @return array
- */
-function purifyUserData():array {
-    // if every input gets the same treatment, operations on the server side
-    // should always give the same result for identical client input
-    $result = [];
-    foreach ($_POST as $item => $value) {
-        $result[$item] = htmlspecialchars(stripslashes(trim($_POST[$item])));
-    }
-    return $result;
-}
-
-/**
- * @param string $userPassHash
- * @param string $serverPassHash
- * @return bool
- */
-function pepperedPassCheck(string $userPassHash,string $serverPassHash):bool
-{
-    $keys = json_decode(file_get_contents('keys.json'));
-    return password_verify(sha1($userPassHash . $keys->pepper), $serverPassHash);
-}
-
-/**
- * @param string $user
- * @param string $pass
- * @return bool|array false on invalid login, integer if admin/client or array of targetIds
- */
-function getPermissions(string $user, string $pass)
-{
-    $sql = <<<'SQL'
-SELECT u.passHash, u.role, e.t_id
-FROM udvide.Users u
-LEFT JOIN Editors e
-ON u.username = e.username
-WHERE u.username = ?
-SQL;
-    $db = access_DB::prepareExecuteFetchStatement($sql, [$user]); // Documentation: this is how to follow Don't trust the user with dbaccess in addition to purify
-    if ($db === false)
-        return false; // user doesn't exist
-    if (!pepperedPassCheck($pass, $db[0]['passHash']))
-        return false; // password incorrect
-    if ($db[0]['role'] > 0)
-        return [$db[0]['role']]; // returns role if not editor 1:admin 2:client
-    $allMarkers = [];
-    foreach ($db as $i=>$row) { // since each row is indexed with an integer (starting at 0) $i will just iterate
-        $allMarkers[$i] = $row['t_id'];
-    }
-    return [0,$allMarkers]; // return an array like [0,['tid1','tid2']]
-}
-
-/**
+ * Takes an GD image resource or an image string and converts it to a potentially smaller jpg string with given options
  * @param string|resource $img accepts gd2, gd2part, gd, gif, png, wbmp, webp, xbm and xpm. bmp supported if php 7.2.0+ is used
  * @param array $options supports quality, maxFileSize, doNotCrop, minQuality, minShortestSide
  * @return string|false (smaller) JPG | false on failure
@@ -139,13 +88,25 @@ function jpgAssistant ($img, array $options):string {
     return $ret;
 }
 
-function imgResToJpgString($img,$quality) {
+/**
+ * Convert an image resource to an jpg string
+ * @param resource $img
+ * @param int $quality
+ * @return string
+ */
+function imgResToJpgString(resource $img, int $quality = 95) {
     ob_start();
     imagejpeg( $img, NULL, $quality );
     return ob_get_clean(); // clears memory and gives back output stream content
 }
 
-function imgJpgSize(resource $img, int $quality):int {
+/**
+ * Get the size a image resource would have as a jpg
+ * @param resource $img
+ * @param int $quality
+ * @return int
+ */
+function imgJpgSize(resource $img, int $quality = 95):int {
     ob_start();              // start the buffer
     imagejpeg($img, NULL, $quality);         // output image to buffer
     $size = ob_get_length(); // get size of buffer (in bytes)
@@ -153,102 +114,194 @@ function imgJpgSize(resource $img, int $quality):int {
     return $size;
 }
 
-/**
- * @param string $user
- * @param int $page
- * @param int $pageSize
- * @return array|false
- * @throws Exception
- */
-function getTargetPageByUser(string $user, int $page = 0, int $pageSize = 5)
-{
-    if (empty($user))
-        throw new Exception('Please Log in to view your targets!');
-    $sql = <<<'SQL'
-SELECT t.t_id, t.t_owner, t.xpos, t.ypos, t.map, t.content
-FROM udvide.Targets t
-LEFT JOIN Editors e
-ON t.t_id = e.t_id
-WHERE e.username = ?
-ORDER BY t_id
-LIMIT ?
-OFFSET ?
-SQL;
-    $db = access_DB::prepareExecuteFetchStatement($sql, [$user, $pageSize, $page*$pageSize]);
-    if ($db === false)
-        return false; // no targets for $user
-    $result = [];
-    foreach ($db as $value) {
-        $vw = json_decode((new access_vfc())
-            ->setAccessMethod('summary')
-            ->setTargetId($value['t_id'])
-            ->execute()
-            ->getBody());
-        logTransaction($vw->transaction_id,$value['t_id']);
 
-        $value['t_name'] = $vw->target_name;
-        $value['active'] = $vw->active_flag;
-        $value['database'] = $vw->database_name;
-        $value['track_rating'] = $vw->tracking_rating;
-        $value['upl_date'] = $vw->upload_date;
-        $value['recos_total'] = $vw->total_recos;
-        $value['recos_this_month'] = $vw->current_month_recos;
-        $value['recos_last_month'] = $vw->previous_month_recos;
-        $result[] = $value;
-    }
-    return $result;
-}
 
 /**
+ * Log a tansaction into the database
  * @param string $tr_id
  * @param string $user
  * @param string $t_id
  */
 function logTransaction($tr_id, $user, $t_id = "no specific")
 {
-    $sql = "INSERT INTO udvide.TransactionLog VALUES (?,?,?)";
+    $sql = "INSERT INTO udvide.TransactionLog (tr_id, username, t_id) VALUES (?,?,?)";
     access_DB::prepareExecuteFetchStatement($sql, [$tr_id,$user,$t_id]);
 }
 
-define('PERMISSIONS_ROOT',4);
-define('PERMISSIONS_DEVELOPER',3);
-define('PERMISSIONS_CLIENT',2);
-define('PERMISSIONS_ADMIN',1);
-define('PERMISSIONS_EDITOR',0);
 /**
- * @param string $new_users_name
- * @param string $new_users_password
- * @param int $new_users_role
- * @param string $username the username of the submitting person
- * @param string $password the password of the submitting person
- * @throws Exception
+ * Convert an assoc. array to a target object
+ * @param array $array_in associative array with opt: activeFlag map yPos xPos username t_image t_name t_id content
+ * @return target
  */
-function addUser(string $new_users_name,string $new_users_password, int $new_users_role, string $username, string $password) {
-    // Everyone can create accounts only below their permissions -> we make a root with perm = 4
-    $perm = getPermissions($username, $password)[0];
-    if ($new_users_role >= $perm) {
-        throw new Exception("Insufficient Permissions! you $username have permission level $perm");
+function arrayToTarget(array $array_in):target
+{
+    $response = new target();
+    if (isset($array_in['activeFlag'])) {
+        $response->active = $array_in['activeFlag'];
     }
-    $keys = json_decode(file_get_contents('keys.json'));
-    $new_users_password = password_hash(sha1($new_users_password . $keys->pepper),PASSWORD_DEFAULT);
-    $sql= "INSERT INTO udvide.Users VALUES (?,?,?)";
-    access_DB::prepareExecuteFetchStatement($sql,[$new_users_name,$new_users_password,$new_users_role]);
+    if (isset($array_in['map'])) {
+        $response->map = $array_in['map'];
+    }
+    if (isset($array_in['yPos'])) {
+        $response->yPos = $array_in['yPos'];
+    }
+    if (isset($array_in['xPos'])) {
+        $response->xPos = $array_in['xPos'];
+    }
+    if (isset($array_in['username'])) {
+        $response->owner = $array_in['username'];
+    }
+    if (isset($array_in['t_image'])) {
+        $response->image = $array_in['t_image'];
+    }
+    if (isset($array_in['t_name'])) {
+        $response->name = $array_in['t_name'];
+    }
+    if (isset($array_in['t_id'])) {
+        $response->id = $array_in['t_id'];
+    }
+    if (isset($array_in['content'])) {
+        $response->content = $array_in['content'];
+    }
+    return $response;
 }
 
 /**
- * @param string|target $targetIdentifier
- * @param string $user
- * @param string $username the username of the submitting person
- * @param string $password the password of the submitting person
- * @throws Exception
+ * Represents a target with all it's keys
+ * Class target
  */
-function assignEditorAs($targetIdentifier, string $user, string $username, string $password) {
-    if ($targetIdentifier instanceof target)
-        $targetIdentifier = $targetIdentifier->id;
+class target {
+    /** @var  string */
+    public $name;
+    /** @var  string|resource */
+    public $image;
+    /** @var  bool */
+    public $active;
+    /** @var  string */
+    public $content;
+    /** @var  string */
+    public $owner;
+    /** @var  int */
+    public $xPos;
+    /** @var  int */
+    public $yPos;
+    /** @var  string */
+    public $map;
+    /** @var  int */
+    public $id;
+    /** @var  string */
+    public $vw_id;
 
-    if (getPermissions($username, $password)[0] < 1)
-        throw new Exception("Insufficient Permissions to make $user an Editor of $targetIdentifier!");
+    //<editor-fold desc="Fluent Setters (set null if omitted param)">
+    /**
+     * @param string $name
+     * @return target
+     */
+    public function setName(string $name = null): target
+    {
+        $this->name = $name;
+        return $this;
+    }
 
-    $sql = "INSERT INTO udvide.Editors VALUES (?,?)";
-    access_DB::prepareExecuteFetchStatement($sql,[$targetIdentifier,$user]);
+    /**
+     * @param resource|string $image
+     * @return target
+     */
+    public function setImage($image = null)
+    {
+        $this->image = $image;
+        return $this;
+    }
+
+    /**
+     * @param bool $active
+     * @return target
+     */
+    public function setActive(bool $active = null): target
+    {
+        $this->active = $active;
+        return $this;
+    }
+
+    /**
+     * @param string $content
+     * @return target
+     */
+    public function setContent(string $content = null): target
+    {
+        $this->content = $content;
+        return $this;
+    }
+
+    /**
+     * @param string $owner
+     * @return target
+     */
+    public function setOwner(string $owner = null): target
+    {
+        $this->owner = $owner;
+        return $this;
+    }
+
+    /**
+     * @param int $xPos
+     * @return target
+     */
+    public function setXPos(int $xPos = null): target
+    {
+        $this->xPos = $xPos;
+        return $this;
+    }
+
+    /**
+     * @param int $yPos
+     * @return target
+     */
+    public function setYPos(int $yPos = null): target
+    {
+        $this->yPos = $yPos;
+        return $this;
+    }
+
+    /**
+     * @param string $map
+     * @return target
+     */
+    public function setMap(string $map = null): target
+    {
+        $this->map = $map;
+        return $this;
+    }
+
+    /**
+     * @param string $id
+     * @return target
+     */
+    public function setId(string $id = null): target
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    /**
+     * @param string $vw_id
+     * @return target
+     */
+    public function setVwId(string $vw_id = null): target
+    {
+        $this->vw_id = $vw_id;
+        return $this;
+    }
+    //</editor-fold>
+}
+
+class PermissionException extends Exception {}
+
+class handlerResponse {
+    /** @var  bool */
+    public $success;
+    /** @var  string */
+    public $message;
+    /** @var  int */
+    public $t_id;
 }

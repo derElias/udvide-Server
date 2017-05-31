@@ -2,7 +2,8 @@ Requirements:
     PHP 7.1.5+ (lower could work but is not officially supported. e.g. PHP 7 should)
     PEAR
     HTTP_Response2
-    basically any GD library (the one usually bundled with PHP is sufficient) (you can expand the image support of the udvide system with this)
+    a GD library (usually bundled with PHP) (you could expand the image support of the udvide system with this)
+    a PDO driver for your Database (tested with InnoDB) (usually bundled with PHP)
 
 To keep in mind:
     When switching PHP versions, keep in mind that the login system uses password_hash and sha1;

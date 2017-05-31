@@ -1,5 +1,6 @@
 <?php
 require_once '/xampp/php/pear/HTTP/Request2.php'; // change this line to the HTTP/Request2.php path e.g. /xampp/php/pear/... or /php/...
+require_once 'settings.php';
 
 /**
  * Created by: Simon Janssen
@@ -7,7 +8,6 @@ require_once '/xampp/php/pear/HTTP/Request2.php'; // change this line to the HTT
  * Date: 10.05.2017
  * Time: 19:53
  */
-define('VUFORIA_DATA_SIZE_LIMIT', 2000000);
 class access_vfc
 {
     const url = "https://vws.vuforia.com";

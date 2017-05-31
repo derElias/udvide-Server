@@ -1,13 +1,13 @@
 <?php
 require_once 'helper.php';
-require_once 'crudForm.php';
+require_once 'udvide.php';
 $img = file_get_contents('img/img.jpg');
 $new_users_password = "imGoingToBePepperedAndSalted";
 $default_password = "iAmBad";
 
 // manually setup root
 $sql = <<<'SQL'
-INSERT INTO udvide.Users
+INSERT INTO udvide.Users (username,passHash,role)
 VALUES (?,?,?)
 SQL;
 $keys = json_decode(file_get_contents('keys.json'));
@@ -15,21 +15,22 @@ $new_users_peppered_salted_password = password_hash(sha1($new_users_password . $
 access_DB::prepareExecuteFetchStatement($sql,['root',$new_users_peppered_salted_password,PERMISSIONS_ROOT]);
 echo "root created! \n<br/>";
 // add devs as root
-addUser("dev/simon",$default_password,PERMISSIONS_DEVELOPER,'root',$new_users_password);
-addUser("dev/elias",$default_password,PERMISSIONS_DEVELOPER,'root',$new_users_password);
-addUser("dev/lukas",$default_password,PERMISSIONS_DEVELOPER,'root',$new_users_password);
-addUser("dev/niky",$default_password,PERMISSIONS_DEVELOPER,'root',$new_users_password);
-addUser("dev/siggi",$default_password,PERMISSIONS_DEVELOPER,'root',$new_users_password);
+$cu = new udvide();
+$cu->createUser("dev/simon",$default_password,PERMISSIONS_DEVELOPER,'root',$new_users_password);
+$cu->createUser("dev/elias",$default_password,PERMISSIONS_DEVELOPER,'root',$new_users_password);
+$cu->createUser("dev/lukas",$default_password,PERMISSIONS_DEVELOPER,'root',$new_users_password);
+$cu->createUser("dev/niky",$default_password,PERMISSIONS_DEVELOPER,'root',$new_users_password);
+$cu->createUser("dev/siggi",$default_password,PERMISSIONS_DEVELOPER,'root',$new_users_password);
 // add test ppl as root
-addUser("test/tClient", $default_password,PERMISSIONS_CLIENT,'root',$new_users_password);
-addUser("test/tAdmin", $default_password,PERMISSIONS_ADMIN,'root',$new_users_password);
-addUser("test/tEditor", $default_password,PERMISSIONS_EDITOR,'root',$new_users_password);
+$cu->createUser("test/tClient", $default_password,PERMISSIONS_CLIENT,'root',$new_users_password);
+$cu->createUser("test/tAdmin", $default_password,PERMISSIONS_ADMIN,'root',$new_users_password);
+$cu->createUser("test/tEditor", $default_password,PERMISSIONS_EDITOR,'root',$new_users_password);
 echo "devs and test users created!\n<br/>";
-
+// Add maps
+$cu->
 // add test targets
 $user = 'test/tClient';
 $pass = $default_password;
-$cud = (new crudFormHandler());
 $targets[] = (new target())
     ->setName('test/t_01_client')
     ->setImage($img)
@@ -61,6 +62,6 @@ $targets[] = (new target())
     ->setOwner($user);
 
 foreach ($targets as $target)
-    $cud->doTargetManipulationAs('create',$target,$user,$pass);
+    $cu->doTargetManipulationAs('create',$target,$user,$pass);
 
-assignEditorAs($targets[2], 'test/tEditor',$user,$pass);
+$cu->assignEditorAs($targets[2], 'test/tEditor',$user,$pass);
