@@ -157,12 +157,13 @@ class udvide
     private function createTarget(target &$target, string $user)
     {
         // create on DB
-        $sql = 'INSERT INTO udvide.Targets (t_owner,xpos,ypos,map) VALUES (?,?,?,?);';
+        $sql = 'INSERT INTO udvide.Targets (t_owner,xpos,ypos,map,content) VALUES (?,?,?,?,?);';
         $exeValues = [
             isset($target->owner) ? $target->owner : null,
             isset($target->xPos) ? $target->xPos : null,
             isset($target->yPos) ? $target->yPos : null,
-            isset($target->map) ? $target->map : null
+            isset($target->map) ? $target->map : null,
+            isset($target->content) ? $target->content : null
         ];
         $target->id = access_DB::prepareExecuteStatementGetAffected($sql, $exeValues);
 
@@ -284,6 +285,12 @@ class udvide
         $updateDB = false;
         $sql = /** @lang text <- prevent IDE to hate us because it's not valid sql yet */
             'UPDATE udvide.Targets SET ';
+
+        if (isset($target->content)) {
+            $sql .= " content = ? , ";
+            $ins[] = $target->content;
+            $updateDB = true;
+        }
 
         if (isset($target->xPos)) {
             $sql .= " xPos = ? , ";

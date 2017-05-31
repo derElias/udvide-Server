@@ -94,7 +94,7 @@ function jpgAssistant ($img, array $options):string {
  * @param int $quality
  * @return string
  */
-function imgResToJpgString(resource $img, int $quality = 95) {
+function imgResToJpgString($img, int $quality = 95) {
     ob_start();
     imagejpeg( $img, NULL, $quality );
     return ob_get_clean(); // clears memory and gives back output stream content
@@ -106,7 +106,7 @@ function imgResToJpgString(resource $img, int $quality = 95) {
  * @param int $quality
  * @return int
  */
-function imgJpgSize(resource $img, int $quality = 95):int {
+function imgJpgSize($img, int $quality = 95):int {
     ob_start();              // start the buffer
     imagejpeg($img, NULL, $quality);         // output image to buffer
     $size = ob_get_length(); // get size of buffer (in bytes)
