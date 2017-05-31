@@ -2,13 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e5874ff8-d329-446d-9770-a3d3600cdf40" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/easyAccess.js" afterPath="$PROJECT_DIR$/easyAccess.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/manage.php" afterPath="$PROJECT_DIR$/manage.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/stylesheet.css" afterPath="$PROJECT_DIR$/stylesheet.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/AdminTempl.html" afterPath="$PROJECT_DIR$/templates/AdminTempl.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/Entry.html" afterPath="$PROJECT_DIR$/templates/Entry.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/home.html" afterPath="$PROJECT_DIR$/templates/home.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/manageTempl.html" afterPath="$PROJECT_DIR$/templates/manageTempl.html" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -46,8 +42,8 @@
       <file leaf-file-name="stylesheet.css" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/stylesheet.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="75">
-              <caret line="60" column="16" lean-forward="false" selection-start-line="60" selection-start-column="16" selection-end-line="60" selection-end-column="16" />
+            <state relative-caret-position="408">
+              <caret line="24" column="16" lean-forward="true" selection-start-line="24" selection-start-column="16" selection-end-line="24" selection-end-column="16" />
               <folding />
             </state>
           </provider>
@@ -56,8 +52,8 @@
       <file leaf-file-name="manage.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/manage.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="19" column="0" lean-forward="true" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
+            <state relative-caret-position="289">
+              <caret line="17" column="0" lean-forward="true" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -88,8 +84,8 @@
       <file leaf-file-name="manageTempl.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/manageTempl.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
-              <caret line="10" column="17" lean-forward="false" selection-start-line="10" selection-start-column="17" selection-end-line="10" selection-end-column="17" />
+            <state relative-caret-position="323">
+              <caret line="19" column="8" lean-forward="false" selection-start-line="19" selection-start-column="8" selection-end-line="19" selection-end-column="8" />
               <folding />
             </state>
           </provider>
@@ -98,8 +94,8 @@
       <file leaf-file-name="AdminTempl.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/AdminTempl.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="13" column="10" lean-forward="true" selection-start-line="13" selection-start-column="10" selection-end-line="13" selection-end-column="10" />
+            <state relative-caret-position="0">
+              <caret line="0" column="4" lean-forward="false" selection-start-line="0" selection-start-column="4" selection-end-line="0" selection-end-column="4" />
               <folding />
             </state>
           </provider>
@@ -153,6 +149,7 @@
       <find>such</find>
       <find>hea</find>
       <find>svg</find>
+      <find>head</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -201,9 +198,9 @@
         <option value="$PROJECT_DIR$/templates/entrytableTempl.html" />
         <option value="$PROJECT_DIR$/templates/home.html" />
         <option value="$PROJECT_DIR$/easyAccess.js" />
-        <option value="$PROJECT_DIR$/templates/AdminTempl.html" />
         <option value="$PROJECT_DIR$/templates/Entry.html" />
         <option value="$PROJECT_DIR$/manage.php" />
+        <option value="$PROJECT_DIR$/templates/AdminTempl.html" />
         <option value="$PROJECT_DIR$/templates/manageTempl.html" />
         <option value="$PROJECT_DIR$/stylesheet.css" />
       </list>
@@ -433,12 +430,12 @@
       <workItem from="1496221018466" duration="604000" />
       <workItem from="1496236046861" duration="609000" />
       <workItem from="1496237394597" duration="5138000" />
-      <workItem from="1496242556316" duration="4489000" />
+      <workItem from="1496242556316" duration="5054000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="113743000" />
+    <option name="totallyTimeSpent" value="114308000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -743,38 +740,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/entrytableTempl.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="10" column="42" lean-forward="false" selection-start-line="10" selection-start-column="42" selection-end-line="10" selection-end-column="42" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/EntryPopup.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="595">
-          <caret line="35" column="6" lean-forward="false" selection-start-line="35" selection-start-column="6" selection-end-line="35" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/AdminTempl.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="13" column="10" lean-forward="true" selection-start-line="13" selection-start-column="10" selection-end-line="13" selection-end-column="10" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/Entry.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="10" column="37" lean-forward="true" selection-start-line="10" selection-start-column="37" selection-end-line="10" selection-end-column="37" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/home.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
@@ -793,26 +758,58 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/manageTempl.html">
+    <entry file="file://$PROJECT_DIR$/templates/entrytableTempl.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="170">
-          <caret line="10" column="17" lean-forward="false" selection-start-line="10" selection-start-column="17" selection-end-line="10" selection-end-column="17" />
+          <caret line="10" column="42" lean-forward="false" selection-start-line="10" selection-start-column="42" selection-end-line="10" selection-end-column="42" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/manage.php">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="17" column="0" lean-forward="true" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/EntryPopup.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="595">
+          <caret line="35" column="6" lean-forward="false" selection-start-line="35" selection-start-column="6" selection-end-line="35" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/Entry.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="10" column="37" lean-forward="true" selection-start-line="10" selection-start-column="37" selection-end-line="10" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/AdminTempl.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="4" lean-forward="false" selection-start-line="0" selection-start-column="4" selection-end-line="0" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/manageTempl.html">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="323">
-          <caret line="19" column="0" lean-forward="true" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
+          <caret line="19" column="8" lean-forward="false" selection-start-line="19" selection-start-column="8" selection-end-line="19" selection-end-column="8" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/stylesheet.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="60" column="16" lean-forward="false" selection-start-line="60" selection-start-column="16" selection-end-line="60" selection-end-column="16" />
+        <state relative-caret-position="408">
+          <caret line="24" column="16" lean-forward="true" selection-start-line="24" selection-start-column="16" selection-end-line="24" selection-end-column="16" />
           <folding />
         </state>
       </provider>
