@@ -39,7 +39,7 @@ $template = str_replace('<!--content-->',$temp,$template);
     $template = str_replace('<!--searchicon-->',$svg,$template);
 
 
-$temp = file_get_contents('templates/contentTempl.html');
+$temp = file_get_contents('templates/EntryPopup.html');
 $template = str_replace('<!--content-->',$temp,$template);
 
 

@@ -1,35 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
 <div class="row"></br></div>
 <div class="row">
     <div class="col-10 , Entrybox">
-
-        <!--<img class="pic" src="img/First.png">-->
         <div class="row">
             <div class="Entryname">
                 Beispielname
             </div>
 
             <div class="right-1">
-                <button class="mediumButtons">
-                    <div class="svg"><!--Delete--></div>
+                <button onclick="deleteEntry()" class="mediumButtons">
+                    <div onclick="deleteEntry()" class="svg">
+                        <img src="res/Delete.svg">
+                    </div>
                 </button>
             </div>
 
             <div class="right-1">
-                <button class="mediumButtons">
-                    <div class="svg"><!--Update--></div>
+                <button onclick="updateEntry()" class="mediumButtons">
+                    <div class="svg">
+                        <img src="res/Update">
+                    </div>
                 </button>
             </div>
         </div>
     </div>
 </div>
-
-</body>
-</html>
