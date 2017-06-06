@@ -1,6 +1,3 @@
-/**
- * Created by Elias on 31.05.2017.
- */
 function searchForEntry(){
 
 }
@@ -16,6 +13,17 @@ function createEntry() {
 
 function updateEntry() {
 
+}
+
+function createUser() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("content").innerHTML = this.responseText;
+        }
+    };
+    xhttp.open("GET", "templates/CreateUser.html", true);
+    xhttp.send();
 }
 
 function getPermissionList() {
@@ -35,7 +43,7 @@ function setUserEditor() {
 }
 
 function saveUser() {
-    /*create or update the User with new Settings*/
+    /* TODO create or update the User with new Settings*/
 }
 
 function getEntryTable() {
@@ -78,6 +86,28 @@ function getUserList() {
             document.getElementById("content").innerHTML = this.responseText;
         }
     };
-    xhttp.open("GET", "templates/UserManagementTempl.html", true);
+    xhttp.open("GET", "templates/User.html", true);
+    xhttp.send();
+}
+
+
+
+function test() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("entrylist").innerHTML = this.responseText;
+        }
+    };
+    xhttp.open("GET", "templates/Entry.html", true);
+    xhttp.send();
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("userlist").innerHTML = this.responseText;
+        }
+    };
+    xhttp.open("GET", "templates/User.html", true);
     xhttp.send();
 }

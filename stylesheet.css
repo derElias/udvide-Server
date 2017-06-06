@@ -170,6 +170,14 @@ footer {
      height: 65px;
  }
 
+.pic{
+    height: 100%;
+    align-self: center;
+    margin: auto;
+    border: solid black 1px;
+    float: left;
+}
+
 .suche{
     float: left;
     padding:15px;
@@ -211,13 +219,12 @@ footer {
     height: 50px;
 }
 
-.pic{
-    height: 100%;
-    align-self: center;
-    margin: auto;
-    border: solid black 1px;
-    float: left;
+.table{
+    background-color: white;
+    border: solid grey 2px;
 }
+
+
 
 
 [class*="col-"]{
@@ -288,6 +295,10 @@ footer {
     margin-left: 10px;
 }
 
+.left-1{
+    float: left;
+    width: 10%;
+}
 .left-2{
     float: left;
     width: 20%;

@@ -8,17 +8,38 @@
                 </button>
                 <input  type="text"  name="searchfield" placeholder="Eintragssuche" class="searchfield">
             </div>
-            <button onclick="createEntry()" class="mediumButtons , right-1">
-                <div class="svg">
-                    <img src="res/Create.svg">
-                </div>
-            </button>
+
         </div>
         <div class="row"></br></div>
         <div class="row">
-            <!--Entry-->
+            <div class="col-5 , table">
+                <div class="row">
+                    <button onclick="createUser()" class="mediumButtons , left-1">
+                        <div class="svg">
+                            <img src="res/Create.svg">
+                        </div>
+                    </button>
+                </div>
+                </br>
+                <div id="userlist">
+                    <!--User-->
+                </div>
+            </div>
+            <div class="col-5 , table">
+                <div class="row">
+                    <button onclick="createEntry()" class="mediumButtons , left-1">
+                        <div class="svg">
+                            <img src="res/Create.svg">
+                        </div>
+                    </button>
+                </div>
+                </br>
+                <div id="entrylist">
+                    <!--Entry-->
+                </div>
+            </div>
         </div>
 
     </div>
-    <div class="col-1"></div>
+    <div class="col-1" onclick="test()"> test</div>
 </div>

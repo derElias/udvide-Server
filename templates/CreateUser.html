@@ -4,27 +4,32 @@
             <input type="text" name="username" placeholder=" username" class="Namefield">
         </div>
     </div>
-
-    <div class="row">
-        <div class="col-3">
-            <div class="dropdown">
-                <div onclick="getPermissionList()" class="dropdown-button , row">
-                    <div id="permissionsUser" class="left-7">Editor</div>
-                    <img src="res/Dropdown.svg">
-                </div>
-                <div id="Userpermissions" class="dropdown-content">
-                    <div onclick="setUserClient()">Client</div>
-                    <div onclick="setUserAdmin()">Admin</div>
-                    <div onclick="setUserEditor()">Editor</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-8"></div>
-    </div>
     <div class="row">
         <div class="col-10">
             <input type="text" name="password" placeholder=" password" class="Namefield">
         </div>
     </div>
+    <div class="row">
+    <div class="col-3">
+        <div class="dropdown">
+            <div onclick="getPermissionList()" class="dropdown-button , row">
+                <div id="permissionsUser" class="left-7">Editor</div>
+                <img src="res/Dropdown.svg">
+            </div>
+            <div id="Userpermissions" class="dropdown-content">
+                <div onclick="setUserClient()">Client</div>
+                <div onclick="setUserAdmin()">Admin</div>
+                <div onclick="setUserEditor()">Editor</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-4"></div>
+        <button onclick="saveUser()" class="col-2 , Mediumbuttons">
+            <div class="svg">
+                <img src="res/Save.svg">
+            </div>
+        </button>
+        <div class="col-1"></div>
+</div>
 
 </div>
