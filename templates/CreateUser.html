@@ -1,0 +1,41 @@
+<form>
+    <div class="row">
+        <div class="col-10">
+            <input type="text" name="username" placeholder=" username" class="Namefield">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-10">
+            <input type="text" name="password" placeholder=" password" class="Namefield">
+        </div>
+    </div>
+    <div class="row">
+    <div class="col-3">
+        <div class="dropdown">
+            <div onclick="getPermissionList()" class="dropdown-button , row">
+                <div id="permissionsUser" class="left-7">Editor</div>
+                <img src="res/Dropdown.svg">
+            </div>
+            <div id="Userpermissions" class="dropdown-content">
+                <div onclick="setUserClient()">Client</div>
+                <div onclick="setUserAdmin()">Admin</div>
+                <div onclick="setUserEditor()">Editor</div>
+            </div>
+            <select name="usersPermissions" onchange="showUser(this.value)">
+                <option value="">Select permissions:</option>
+                <option value="1">Client</option>
+                <option value="2">Admin</option>
+                <option value="3">Editor</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-4"></div>
+        <button type="submit" onclick="saveUser()" class="col-2 , Mediumbuttons">
+            <div class="svg">
+                <img src="res/Save.svg">
+            </div>
+        </button>
+        <div class="col-1"></div>
+</div>
+
+</form>

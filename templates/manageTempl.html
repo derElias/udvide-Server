@@ -8,31 +8,25 @@
 <body>
 <header class="header , row">
 
-    <img class="special-col-2" src="img/logo.PNG">
+    <img id="logo" src="img/logo.PNG">
 
-    <div class="special-col-2">
-        <div class="headerbutton">
-            <!--home-->
+        <div  onclick="getHome()" class="headerbutton">
+            <img src="res/Home.svg" class="svg">
         </div>
-    </div>
-    <div class="special-col-2">
-        <div class="headerbutton">
-            <!--eintrag-->
+        <div onclick="getEntryTable()" class="headerbutton">
+               <img class="svg" src="res/Entry.svg">
         </div>
-    </div>
-        <!--Admin-->
-
 </header>
 
-<div class="content">
-
+<div  id="content" class="content">
     <!--content-->
-
 </div>
 
 <footer>
     <!--footer-->
 </footer>
+
+<script src="easyAccess.js"></script>
 
 </body>
 </html>
