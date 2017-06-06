@@ -23,15 +23,19 @@ function getPermissionList() {
 }
 
 function setUserClient() {
-
+    document.getElementById("permissionsUser").innerHTML = "Clien" ;
 }
 
 function setUserAdmin() {
-
+    document.getElementById("permissionsUser").innerHTML = "Admin" ;
 }
 
 function setUserEditor() {
+    document.getElementById("permissionsUser").innerHTML = "Editor" ;
+}
 
+function saveUser() {
+    /*create or update the User with new Settings*/
 }
 
 function getEntryTable() {
