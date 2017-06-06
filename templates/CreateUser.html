@@ -1,4 +1,4 @@
-<div>
+<form>
     <div class="row">
         <div class="col-10">
             <input type="text" name="username" placeholder=" username" class="Namefield">
@@ -21,10 +21,16 @@
                 <div onclick="setUserAdmin()">Admin</div>
                 <div onclick="setUserEditor()">Editor</div>
             </div>
+            <select name="usersPermissions" onchange="showUser(this.value)">
+                <option value="">Select permissions:</option>
+                <option value="1">Client</option>
+                <option value="2">Admin</option>
+                <option value="3">Editor</option>
+            </select>
         </div>
     </div>
     <div class="col-4"></div>
-        <button onclick="saveUser()" class="col-2 , Mediumbuttons">
+        <button type="submit" onclick="saveUser()" class="col-2 , Mediumbuttons">
             <div class="svg">
                 <img src="res/Save.svg">
             </div>
@@ -32,4 +38,4 @@
         <div class="col-1"></div>
 </div>
 
-</div>
+</form>
