@@ -52,7 +52,7 @@ class access_vfc
     public function setTargetId(string $targetId): access_vfc
     {
         if (strlen($targetId) != 32)
-            throw new VuforiaAccessAPIException('TargetID invalid (length != 32)',200);
+            throw new VuforiaAccessAPIException('TargetID invalid (length != 32)',201);
         $this->targetId = $targetId;
         return $this;
     }
@@ -81,7 +81,7 @@ class access_vfc
     {
         // Jpg is hinted and checked by FF D8 @start and FF D9 @end as magic numbers
         // Docu: $image[-x] requires PHP 7.1+; but doesn'T seem to work in test env. using classic Syntax instead
-        // Validation method chosen to get a compromise between performance (could've checked file endings) and accuracy (use internal function)
+        // Validation method chosen to get a compromise between performance (check file endings) and accuracy (use gd function)
         $isJpg = (ord($image{0}) == 255)
             && (ord($image{1}) == 216)
             && (ord($image[strlen($image)-2]) == 255)

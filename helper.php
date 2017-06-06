@@ -94,7 +94,7 @@ function jpgAssistant ($img, array $options):string {
  * @param int $quality
  * @return string
  */
-function imgResToJpgString(resource $img, int $quality = 95) {
+function imgResToJpgString($img, int $quality = 95) {
     ob_start();
     imagejpeg( $img, NULL, $quality );
     return ob_get_clean(); // clears memory and gives back output stream content
@@ -106,7 +106,7 @@ function imgResToJpgString(resource $img, int $quality = 95) {
  * @param int $quality
  * @return int
  */
-function imgJpgSize(resource $img, int $quality = 95):int {
+function imgJpgSize($img, int $quality = 95):int {
     ob_start();              // start the buffer
     imagejpeg($img, NULL, $quality);         // output image to buffer
     $size = ob_get_length(); // get size of buffer (in bytes)
@@ -173,6 +173,8 @@ function arrayToTarget(array $array_in):target
 class target {
     /** @var  string */
     public $name;
+    /** @var  bool */
+    public $deleted;
     /** @var  string|resource */
     public $image;
     /** @var  bool */
@@ -192,7 +194,7 @@ class target {
     /** @var  string */
     public $vw_id;
 
-    //<editor-fold desc="Fluent Setters (set null if omitted param)">
+    //<editor-fold desc="Fluent Setters (set null if omitted param except $deleted)">
     /**
      * @param string $name
      * @return target
@@ -290,6 +292,16 @@ class target {
     public function setVwId(string $vw_id = null): target
     {
         $this->vw_id = $vw_id;
+        return $this;
+    }
+
+    /**
+     * @param bool $deleted
+     * @return target
+     */
+    public function setDeleted(bool $deleted = false): target
+    {
+        $this->deleted = $deleted;
         return $this;
     }
     //</editor-fold>

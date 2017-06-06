@@ -27,7 +27,8 @@ $cu->createUser("test/tAdmin", $default_password,PERMISSIONS_ADMIN,'root',$new_u
 $cu->createUser("test/tEditor", $default_password,PERMISSIONS_EDITOR,'root',$new_users_password);
 echo "devs and test users created!\n<br/>";
 // Add maps
-$cu->
+$mapImg = imagecreatetruecolor(1000,1000);
+$cu->createMap('test/1',$mapImg,'root',$new_users_password);
 // add test targets
 $user = 'test/tClient';
 $pass = $default_password;
