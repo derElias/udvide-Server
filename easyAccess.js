@@ -26,6 +26,7 @@ function createUser() {
     xhttp.send();
 }
 
+
 function getPermissionList() {
         document.getElementById("Userpermissions").classList.toggle("show");
 }
@@ -44,6 +45,18 @@ function setUserEditor() {
 
 function saveUser() {
     /* TODO create or update the User with new Settings*/
+}
+
+function saveEntry() {
+    var target = JSON.stringify({});
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("content").innerHTML = this.responseText;
+        }
+    };
+    xhttp.open("POST", "ajax.php?subject=target&verb=" + method + target +, true);
+    xhttp.send();
 }
 
 function getEntryTable() {
