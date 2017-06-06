@@ -173,6 +173,8 @@ function arrayToTarget(array $array_in):target
 class target {
     /** @var  string */
     public $name;
+    /** @var  bool */
+    public $deleted;
     /** @var  string|resource */
     public $image;
     /** @var  bool */
@@ -192,7 +194,7 @@ class target {
     /** @var  string */
     public $vw_id;
 
-    //<editor-fold desc="Fluent Setters (set null if omitted param)">
+    //<editor-fold desc="Fluent Setters (set null if omitted param except $deleted)">
     /**
      * @param string $name
      * @return target
@@ -290,6 +292,16 @@ class target {
     public function setVwId(string $vw_id = null): target
     {
         $this->vw_id = $vw_id;
+        return $this;
+    }
+
+    /**
+     * @param bool $deleted
+     * @return target
+     */
+    public function setDeleted(bool $deleted = false): target
+    {
+        $this->deleted = $deleted;
         return $this;
     }
     //</editor-fold>

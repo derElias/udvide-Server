@@ -17,6 +17,10 @@ class access_DB implements dbaccessUdv {
      */
     public static function prepareExecuteFetchStatement(string $preparesql, $executesql = null)
     {
+        if (DEBUG_ACCESS_DB) {
+            var_dump($preparesql);
+            var_dump($executesql);
+        }
         if (!is_array($executesql) && isset($executesql))
             $executesql[0] = $executesql; // QoL
         return dbaccessPDOUdv::prepareExecuteFetchStatement($preparesql,$executesql);

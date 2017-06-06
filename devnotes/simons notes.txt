@@ -10,8 +10,8 @@ Done: dbAccess implementation
             Passed: Querying for said Dataset AND evaluating the response
 WIP: ToDo DB-VuFo connector (offer common methods to frontend) helper
 WIP: ToDo Form accept
-    1. Send Vuforia the dataset
-    2. Sync own dataset
+    1. Send Vuforia the data set
+    2. Sync own data set
     3. give positive answer
 ToDo manage.php template builder (using connector and templates to generate CMS UI)
 ToDo check Form submission
@@ -92,3 +92,21 @@ We do not trust:
 (Vuforias answer to Get, Summarize, etc: targetname, image;)
 (DB stored username)
 Everything sent directly from the client
+
+
+Braun API:
+https://apistaging.fiw.fhws.de/mo/api
+link-header:
+<https://apistaging.fiw.fhws.de/mo/api>;rel="self";type="*/*"
+<https://apistaging.fiw.fhws.de/mo/api/modules/?q={Q}&semester={SEMESTER}&program={PROGRAM}&offset={OFFSET}&size={SIZE}>;
+    rel="searchForModules";
+    type="application/vnd.fhws-module.default+json",
+<https://apistaging.fiw.fhws.de/mo/api/freerooms/?from={FROM}&to={TO}&duration={DURATION}&offset={OFFSET}&size={SIZE}>;
+    rel="findFreeRooms";
+    type="application/vnd.fhws-freeroom.simple+json",
+<https://apistaging.fiw.fhws.de/mo/api/events/today?&offset={OFFSET}&size={SIZE}>;rel="eventsToday";
+    type="application/vnd.fhws-event.eventview+json",
+<https://apistaging.fiw.fhws.de/mo/api/events/?day={DAY}&offset={OFFSET}&size={SIZE}>;
+    rel="eventsOnDay";
+    type="application/vnd.fhws-event.eventview+json"
+

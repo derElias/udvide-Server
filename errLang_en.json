@@ -1,4 +1,16 @@
 {
-  "100":"Error description for user",
-  "110":"You did bad"
+  "PreFixedSampleErrorCode":"Description for User!",
+
+  "VW1..":"Human Interaction required!",
+  "VW100":"Unknown Error!",
+  "VW110":"Target name (Empty) required to post!",
+  "VW111":"Target name too long for Vuforia",
+  "VW120":"Image obv. no JPG",
+
+  "VW2..":"Semantic System Error",
+  "VW201":"Vuforia target ID obviously invalid! (length != 32)!",
+  "VW230":"Meta too large!",
+  "VW251":"Invalid access_vfc operation triggered!",
+
+  "..999":"Shit?"
 }

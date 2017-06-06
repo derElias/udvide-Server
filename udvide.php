@@ -55,7 +55,7 @@ class udvide
             return $this->handlerResponse;
         }
 
-        $editPerm = $perm[0] > MIN_ALLOW_TARGET_CREATE;
+        $editPerm = $perm[0] > MIN_ALLOW_TARGET_CREATE-1;
 
         // create if $editPerm
         if ($verb == 'create' && $editPerm) {
@@ -71,7 +71,26 @@ class udvide
             return $this->handlerResponse;
         }
 
-        $editPerm = $perm[0] > MIN_ALLOW_TARGET_DELETE;
+        $editPerm = $perm[0] > MIN_ALLOW_TARGET_DEACTIVATE-1;
+        if (!$editPerm && ALLOW_ASSIGNED_TARGET_DEACTIVATE && $verb == 'deactivate') {
+            foreach ($perm[1] as $tid) {
+                $editPerm = $tid === $target->id;
+                if ($editPerm)
+                    break;
+            }
+        }
+        // deactivate if editPerm
+        if ($verb == 'deactivate' && $editPerm) {
+            $ct = $this->deactivateTarget($target,$username);
+            if ($ct === true) {
+                $this->handlerResponse->success = true;
+            } else {
+                $this->handlerResponse->message = $ct;
+            }
+            return $this->handlerResponse;
+        }
+
+        $editPerm = $perm[0] > MIN_ALLOW_TARGET_DELETE-1;
         if (!$editPerm && ALLOW_ASSIGNED_TARGET_DELETE && $verb == 'delete') {
             foreach ($perm[1] as $tid) {
                 $editPerm = $tid === $target->id;
@@ -90,7 +109,7 @@ class udvide
             return $this->handlerResponse;
         }
 
-        $editPerm = $perm[0] > MIN_ALLOW_TARGET_UPDATE;
+        $editPerm = $perm[0] > MIN_ALLOW_TARGET_UPDATE-1;
         // also grant editPerm if Editor for specified marker
         if (!$editPerm && ALLOW_ASSIGNED_TARGET_UPDATE && $verb == 'update') {
             foreach ($perm[1] as $tid) {
@@ -144,7 +163,7 @@ class udvide
         $target->image = $img;
     }
 
-    //<editor-fold desc="Target: Create Update Delete">
+    //<editor-fold desc="Target: Create Update">
 
     /**
      * creates a new target in the system
@@ -157,7 +176,7 @@ class udvide
     private function createTarget(target &$target, string $user)
     {
         // create on DB
-        $sql = 'INSERT INTO udvide.Targets (t_owner,xpos,ypos,map,content) VALUES (?,?,?,?,?);';
+        $sql = 'INSERT INTO udvide.Targets (deleted,t_owner,xpos,ypos,map,content) VALUES (FALSE,?,?,?,?,?);';
         $exeValues = [
             isset($target->owner) ? $target->owner : null,
             isset($target->xPos) ? $target->xPos : null,
@@ -179,8 +198,8 @@ class udvide
                     ->setAccessMethod('create');
                 $this->vwsResponse = $this->vwsRequest->execute();
             } catch (VuforiaAccessAPIException $e) { // Errors we couldn't fix before creating and executing request, but detect before sending
-                $sql = 'DELETE FROM udvide.Targets WHERE t_id = ?';
-                access_DB::prepareExecuteFetchStatement($sql,[$target->id]); // manual revert ToDo t-sql?!?
+                $sql = 'DELETE FROM udvide.Targets WHERE t_id = ?'; // manual revert ToDo t-sql?!?
+                access_DB::prepareExecuteFetchStatement($sql,[$target->id]);
                 throw $e;
             } catch (HttpRequestException $e) {
                 $sql = 'DELETE FROM udvide.Targets WHERE t_id = ?';
@@ -221,16 +240,17 @@ class udvide
      * updates a target to all set values
      * @param target $target
      * @param string $user
+     * @param bool $isDeleting
      * @return string|true
      */
-    private function updateTarget(target $target,string $user)
+    private function updateTarget(target $target,string $user,bool $isDeleting = false)
     {
         do {
             $updateVWS = false;
             $retry = false;
             try {
                 $vwsa = new access_vfc();
-                $vwsa->setTargetId($target->vw_id)
+                $vwsa->setTargetId($target->vw_id) // as long as the client is programmed correctly this will work Docu
                     ->setAccessMethod('update');
 
                 if (isset($target->name)) {
@@ -276,15 +296,20 @@ class udvide
 
         if ($updateVWS) {
             $vwsResponseBody = json_decode($this->vwsResponse->getBody());
-            $t_id = $vwsResponseBody->target_id;
             $tr_id = $vwsResponseBody->transaction_id;
 
-            logTransaction($tr_id,$user,$t_id);
+            logTransaction($tr_id,$user,$target->id);
         }
 
         $updateDB = false;
         $sql = /** @lang text <- prevent IDE to hate us because it's not valid sql yet */
             'UPDATE udvide.Targets SET ';
+
+        if (isset($target->deleted) && $isDeleting) {
+            $sql .= " deleted = ? , ";
+            $ins[] = $target->deleted;
+            $updateDB = true;
+        }
 
         if (isset($target->content)) {
             $sql .= " content = ? , ";
@@ -319,6 +344,9 @@ class udvide
         return true;
     }
 
+    //</editor-fold>
+
+    //<editor-fold desc="Target: Delete">
     /**
      * deletes a Target based on its id from the whole system
      * @param target $target
@@ -330,9 +358,10 @@ class udvide
         do {
             $retry = false;
             try {
-                $vwsa = new access_vfc();
-                $vwsa->setTargetId($target->vw_id)
+                $this->vwsRequest = (new access_vfc())
+                    ->setTargetId($target->vw_id)
                     ->setAccessMethod('delete');
+                $this->vwsResponse = $this->vwsRequest->execute();
             } catch (VuforiaAccessAPIException $e) {
                 if ($this->handleVAAPIE($e, $target)) {
                     $this->vwsResponse = $this->vwsRequest->execute();
@@ -359,15 +388,25 @@ class udvide
         }
 
         $vwsResponseBody = json_decode($this->vwsResponse->getBody());
-        $t_id = $vwsResponseBody->target_id;
         $tr_id = $vwsResponseBody->transaction_id;
 
-        logTransaction($tr_id,$user,$t_id);
+        logTransaction($tr_id,$user,$target->id);
 
         $sql = 'DELETE FROM udvide.Targets WHERE t_id = ?';
-        access_DB::prepareExecuteFetchStatement($sql,$target->id);
+        access_DB::prepareExecuteFetchStatement($sql,[$target->id]);
 
         return true;
+    }
+
+    /**
+     * @param target $target
+     * @param string $user
+     * @return string|true
+     */
+    private function deactivateTarget(target &$target, string $user)
+    {
+        $target->setActive(false)->setDeleted(true);
+        return $this->updateTarget($target,$user,true);
     }
     //</editor-fold>
 
@@ -384,11 +423,12 @@ class udvide
         if (empty($user))
             throw new PermissionException('Please Log in to view your targets!');
         $sql = <<<'SQL'
-SELECT t.t_id, t.t_owner, t.xpos, t.ypos, t.map, t.content
+SELECT t.t_id, t.vw_id, t.t_owner, t.xpos, t.ypos, t.map, t.content
 FROM udvide.Targets t
 LEFT JOIN Editors e
 ON t.t_id = e.t_id
 WHERE e.username = ?
+AND t.deleted = FALSE
 ORDER BY t_id
 LIMIT ?
 OFFSET ?
@@ -399,11 +439,11 @@ SQL;
         $result = [];
         foreach ($db as $value) {
             $vw = json_decode((new access_vfc())
-                ->setAccessMethod('summary')
-                ->setTargetId($value['t_id'])
+                ->setAccessMethod('summarize')
+                ->setTargetId($value['vw_id'])
                 ->execute()
                 ->getBody());
-            logTransaction($vw->transaction_id,$value['t_id']);
+            logTransaction($vw->transaction_id,$user,$value['t_id']);
 
             $value['t_name'] = $vw->target_name;
             $value['active'] = $vw->active_flag;
@@ -435,9 +475,9 @@ SQL;
                 return null; // no error
             case 403:
                 switch (json_decode($this->vwsResponse->getBody())->result_code) {
-                    case 'TargetNameExists':
+                    case 'TargetNameExist':
                         if (strlen($target->name) > 62) {
-                            $this->echoMessage .= 'Image has been deleted from other source.';
+                            $this->echoMessage .= defined('ERR_VW111') ? ERR_VW111 : 'target name too long';
                             $return = false;
                         } else {
                             $target->name = $target->name . ' 2';
@@ -527,19 +567,21 @@ SQL;
      * @param int $new_users_role
      * @param string $username the username of the submitting person
      * @param string $password the password of the submitting person
+     * @return bool
      * @throws Exception
      */
-    public function createUser(string $new_users_name, string $new_users_password, int $new_users_role,
+    public function createUser(string $new_users_name, string $new_users_password, int $new_users_role = PERMISSIONS_EDITOR,
                                string $username, string $password)
     {
-        // Everyone can create accounts only below their permissions -> we make a root with perm = 4
         $perm = $this->getPermissions($username, $password)[0];
         if ($new_users_role >= $perm || $perm < MIN_ALLOW_USER_CREATE) {
             throw new Exception("Insufficient Permissions! you $username have permission level $perm");
         }
         $new_users_password = $this->pepperedPassGen($new_users_password);
-        $sql= 'INSERT INTO udvide.Users VALUES (?,?,?)';
-        access_DB::prepareExecuteFetchStatement($sql,[$new_users_name,$new_users_password,$new_users_role]);
+        $sql= 'INSERT INTO udvide.Users VALUES (?,?,?,?)';
+        access_DB::prepareExecuteFetchStatement($sql,[$new_users_name,false,$new_users_password,$new_users_role]);
+        $this->forcePermissionReload = true;
+        return true;
     }
     //</editor-fold>
 
@@ -556,16 +598,23 @@ SQL;
         }
 
         $sql = <<<'SQL'
-SELECT u.passHash, u.role, e.t_id
+SELECT u.passHash, u.deleted, u.role, e.t_id
 FROM udvide.Users u
 LEFT JOIN Editors e
 ON u.username = e.username
+LEFT JOIN Targets t
+ON e.t_id = t.t_id
 WHERE u.username = ?
+AND t.deleted = FALSE
 SQL;
         $db = access_DB::prepareExecuteFetchStatement($sql, [$subject]); // Don't trust the user!
         if ($db === false) {
             $this->perm = false;
             return false; // user doesn't exist
+        }
+        if ($db[0]['deleted'] === true) {
+            $this->perm = false;
+            return false; // user is marked for deletion
         }
         if (!$this->pepperedPassCheck($pass, $db[0]['passHash'])) {
             $this->perm = false;
@@ -580,6 +629,7 @@ SQL;
             $allMarkers[$i] = $row['t_id'];
         }
         $this->perm = [PERMISSIONS_EDITOR,$allMarkers];
+        $this->forcePermissionReload = false;
         return [PERMISSIONS_EDITOR,$allMarkers]; // return an array like [1,['tid1','tid2']]
     }
     //</editor-fold>
@@ -593,6 +643,7 @@ SQL;
      * @param string $user
      * @param string $username
      * @param string $password
+     * @return bool
      * @throws PermissionException
      */
     public function deleteUser(string $user, string $username, string $password)
@@ -606,6 +657,22 @@ SQL;
 
         $sql = 'DELETE FROM udvide.Users WHERE username = ?';
         access_DB::prepareExecuteFetchStatement($sql,[$user]);
+        $this->forcePermissionReload = true;
+        return true;
+    }
+
+    public function deactivateUser(string $user, string $username, string $password)
+    {
+        $perm = $this->getPermissions($username, $password)[0];
+        if ($perm === false) {
+            throw new PermissionException('Please log in to do that!');
+        }
+        if ($user !== $username && $perm < MIN_ALLOW_USER_DEACTIVATE)
+            throw new PermissionException("Insufficient Permissions to delete $user!");
+
+        // ToDo updateUser()
+        $this->forcePermissionReload = true;
+        return true;
     }
     //</editor-fold>
     //</editor-fold>
