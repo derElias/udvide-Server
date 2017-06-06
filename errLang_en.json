@@ -12,5 +12,7 @@
   "VW230":"Meta too large!",
   "VW251":"Invalid access_vfc operation triggered!",
 
+  "LOG01":"Invalid Login",
+
   "..999":"Shit?"
 }

@@ -419,15 +419,20 @@ class udvide
     //<editor-fold desc="Target: Read">
     /**
      * @param string $user
+     * @param string $password
      * @param int $page
      * @param int $pageSize
      * @return array|false
      * @throws PermissionException
      */
-    public function getTargetPageByUser(string $user, int $page = 0, int $pageSize = 5)
+    public function getTargetPageByUser(string $user, string $password, int $page = 0, int $pageSize = 5)
     {
         if (empty($user))
             throw new PermissionException('Please Log in to view your targets!');
+        $perm = $this->getPermissions($user,$password);
+        if ($perm === false)
+            throw new PermissionException(ERR_LOG01);
+
         $sql = <<<'SQL'
 SELECT t.t_id, t.vw_id, t.t_owner, t.xpos, t.ypos, t.map, t.content
 FROM udvide.Targets t
