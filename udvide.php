@@ -1,5 +1,7 @@
 <?php
 require_once 'helper.php'; // gets us also access to db, vfc and settings
+if (file_exists('pluginLoader.php'))
+    include_once 'pluginLoader.php';
 
 class udvide
 {
@@ -17,6 +19,7 @@ class udvide
     private $handlerResponse;
     private $forcePermissionReload;
     private $perm;
+    private $pluginLoader;
 
     public function __construct()
     {
@@ -25,6 +28,9 @@ class udvide
 
         $this->handlerResponse = new handlerResponse();
         $this->handlerResponse->success = false;
+        
+        if (class_exists('pluginLoader'))
+            $this->pluginLoader = new pluginLoader();
     }
 
     public function __destruct()

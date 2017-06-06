@@ -58,3 +58,5 @@ foreach ($errLang as $key=>$value) {
 define('MAP_WIDTH',1000);
 // Debug var dumps
 define('DEBUG_ACCESS_DB',false);
+
+define('DS', DIRECTORY_SEPARATOR);

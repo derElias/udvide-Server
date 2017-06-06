@@ -8,8 +8,8 @@ Done: dbAccess implementation
             Passed: Creating a Datadefinition
             Passed: Creating a Dataset
             Passed: Querying for said Dataset AND evaluating the response
-WIP: ToDo DB-VuFo connector (offer common methods to frontend) helper
-WIP: ToDo Form accept
+Done: DB-VuFo connector (offer common methods to frontend) helper
+Done: Form accept
     1. Send Vuforia the data set
     2. Sync own data set
     3. give positive answer
