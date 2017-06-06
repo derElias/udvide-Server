@@ -18,7 +18,21 @@ function updateEntry() {
 
 }
 
+function getPermissionList() {
+        document.getElementById("Userpermissions").classList.toggle("show");
+}
 
+function setUserClient() {
+
+}
+
+function setUserAdmin() {
+
+}
+
+function setUserEditor() {
+
+}
 
 function getEntryTable() {
     var xhttp = new XMLHttpRequest();

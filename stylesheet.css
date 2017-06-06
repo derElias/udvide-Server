@@ -6,35 +6,16 @@ body{
     width: 100%;
     margin: 0;
     padding: 0;
-}
-
-.header {
-    height: 5%;
-    overflow: hidden;
-    background-color: lightgrey;
     font-size: 17px;
 }
 
-.headerbutton{
-    margin: auto;
-    background-color: lightgrey;
-    text-align: center;
-    display: block;
-    padding: 5px;
-    width: 20%;
-    float: left;
-}
-
-.headerbutton:hover{
-    background-color: darkgray;
-    color: white;
-    fill: white;
+.background{
+    background-color: white;
 }
 
 .content{
     background-color: lightblue;
     width: 100%;
-    height: 100px;
 }
 
 .contentBox {
@@ -49,80 +30,60 @@ body{
     transform: translateY(-50%);
     text-align: center;
 }
-
-.background{
-    background-color: white;
-}
-
-#logo{
-    height: 50px;
-    float: left;
-}
-
-.Namefield{
+.dropdown {
     width: 100%;
-    height: 5vw;
-    font-size: 4vw;
-
-}
-#img{
-    width: 100%;
-    max-width: 680px;
-}
-
-.sicefield{
+    text-align: center;
     background-color: darkgray;
-    font-size: 17px;
-}
-.inputfield{
-    width: 100%;
-}
-.mediumButtons{
-    height: 65px;
-}
-.suche{
-
-    float: left;
-    padding:15px;
-    border: 1px solid lightgrey;
-    width: 500px;
-    background-color: gray;
-    padding 15px;
+    position: relative;
+    display: inline-block;
 }
 
-.searchfield{
+.dropdown-button{
+    padding: 15px;
+}
+
+.dropdown-button div{
     float: left;
-    height: 40px;
-    width: 400px;
 }
-.searchfield:hover{
-    color: lightgrey;
-    text-decoration: underline;
-}
-.searchbutton{
+
+.dropdown-button img{
     float: right;
-    margin-left: 10px;
-    background-color: lightgrey;
-    height: 40px;
     width: 40px;
-}
-#searchicon{
-    padding: 2px;
-    width: 90%;
-    height: 90%;
+    height: 20px;
+
 }
 
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+.dropdown-content div {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content div:hover {background-color: #f1f1f1}
+
+/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+
+.dropdown-content div:hover{
+    background-color: lightgrey;
+
+}
 .Entrybox{
     width: 50%;
     height: 100px;
+    height: 100px;
     margin: auto;
     background-color: darkgray;
-}
-
-.Markerbutto{
-}
-
-.Entryarea{
 }
 
 .Entryfield{
@@ -163,19 +124,99 @@ footer {
     text-decoration: underline;
 }
 
-.pic{
-    height: 100%;
-    align-self: center;
+.header {
+    height: 5%;
+    overflow: hidden;
+    background-color: lightgrey;
+    font-size: 17px;
+}
+
+.headerbutton{
     margin: auto;
-    border: solid black 1px;
+    background-color: lightgrey;
+    text-align: center;
+    display: block;
+    padding: 5px;
+    width: 20%;
     float: left;
 }
+
+.headerbutton:hover{
+    background-color: darkgray;
+    color: white;
+    fill: white;
+}
+#img{
+    width: 100%;
+    max-width: 680px;
+}
+.inputfield{
+    width: 100%;
+}
+
+#logo{
+    height: 50px;
+    float: left;
+}
+
+.Namefield{
+    width: 100%;
+    height: 5vw;
+    font-size: 4vw;
+
+}
+
+.mediumButtons{
+     height: 65px;
+ }
+
+.suche{
+    float: left;
+    padding:15px;
+    border: 1px solid lightgrey;
+    width: 500px;
+    background-color: gray;
+    padding 15px;
+}
+
+.searchfield{
+    float: left;
+    height: 40px;
+    width: 400px;
+}
+.searchfield:hover{
+    color: lightgrey;
+    text-decoration: underline;
+}
+.searchbutton{
+    float: right;
+    margin-left: 10px;
+    background-color: lightgrey;
+    height: 40px;
+    width: 40px;
+}
+#searchicon{
+    padding: 2px;
+    width: 90%;
+    height: 90%;
+}
+
+.show {display:block;}
+
 
 .svg{
 
     margin: auto;
     width: 50px;
     height: 50px;
+}
+
+.pic{
+    height: 100%;
+    align-self: center;
+    margin: auto;
+    border: solid black 1px;
+    float: left;
 }
 
 
@@ -250,6 +291,18 @@ footer {
 .left-2{
     float: left;
     width: 20%;
+}
+.left-6{
+    float: left;
+    width: 60%;
+}
+.left-7{
+    float: left;
+    width: 70%;
+}
+.left-8{
+    float: left;
+    width: 80%;
 }
 
 
