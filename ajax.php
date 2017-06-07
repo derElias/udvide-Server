@@ -94,5 +94,5 @@ function purifyUserData():array {
     foreach ($_POST as $item => $value) {
         $result[$item] = htmlspecialchars(stripslashes(trim($_POST[$item])));
     }
-    return $result;
+    return DIRECT_USERDATA ? $_POST : $result;
 }

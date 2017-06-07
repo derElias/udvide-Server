@@ -167,6 +167,18 @@ class udvide
             imgResToJpgString($img,95);
         }
         $target->image = $img;
+
+        //sync vw_id
+        $this->syncVWID($target);
+    }
+
+    /**
+     * @param target $target
+     */
+    private function syncVWID(target &$target) {
+        //sync vw_id
+        $sql = 'SELECT vw_id FROM udvide.targets WHERE t_id = ?';
+        $target->vw_id = access_DB::prepareExecuteFetchStatement($sql,[$target->id])[0]['vw_id'];
     }
 
     //<editor-fold desc="Target: Create Update">
