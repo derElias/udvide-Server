@@ -53,13 +53,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     case 'list':
                         $response = [];
                         if (!empty($cleanData['username']) || !empty($cleanData['passHash'])) {
-                            $response[] = ['t_id' => 2,'vw_id' => 'thisIsA32CharacterStringForVWCID',
+                            $response[] = ['t_id' => 2,
                                 't_owner' => 'dev/simon','xPos' => 80,'yPos' => 150,'map' => 'STUBMap',
                                 'content'=> 'The shit you can do anything with','t_name' => 'STUB Target',
                                 'active' => true ,'database' => 'cloudRecognition','track_rating' => 4,
                                 'upl_date' => 'format?6.6.17','recos_total' => 1,
                                 'recos_this_month'=>1,'recos_last_month' => 0];
-                            $response[] = ['t_id' => 3,'vw_id' => 'thisIsAnother32CharacterStringFo',
+                            $response[] = ['t_id' => 3,
                                 't_owner' => 'dev/elias','xPos' => 70,'yPos' => 80,'map' => 'STUBMap',
                                 'content'=> 'The shit you can do anything with... really','t_name' => 'STUB Target 2',
                                 'active' => true ,'database' => 'cloudRecognition','track_rating' => 5,
