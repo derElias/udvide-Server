@@ -1,11 +1,13 @@
 <?php
+require_once 'settings.php'; // we really need this - but it should be php 5 friendly
 /**
  * Created by PhpStorm.
  * User: User
  * Date: 29.05.2017
  * Time: 09:17
  */
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] == "POST" && !GET_INSTEAD_POST
+    || $_SERVER["REQUEST_METHOD"] == "GET" && GET_INSTEAD_POST) {
     try {
         $cleanData = purifyUserDataSTUB();
         $response = null;

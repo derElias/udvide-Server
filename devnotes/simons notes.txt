@@ -13,6 +13,9 @@ Done: Form accept
     1. Send Vuforia the data set
     2. Sync own data set
     3. give positive answer
+WIP: ToDo get frontend working AJAX API
+WIP: ToDo UnitTests for everything except the 3 lines in ajax.php
+
 ToDo manage.php template builder (using connector and templates to generate CMS UI)
 ToDo check Form submission
 ToDo SVG Marker Generator

@@ -14,5 +14,7 @@
 
   "LOG01":"Invalid Login",
 
+  "UD010":"Subject required to perform operation",
+
   "..999":"Shit?"
 }
