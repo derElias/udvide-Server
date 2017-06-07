@@ -434,7 +434,7 @@ class udvide
             throw new PermissionException(ERR_LOG01);
 
         $sql = <<<'SQL'
-SELECT t.t_id, t.vw_id, t.t_owner, t.xpos, t.ypos, t.map, t.content
+SELECT t.t_id, t.vw_id, t.t_owner, t.xPos, t.yPos, t.map, t.content
 FROM udvide.Targets t
 LEFT JOIN Editors e
 ON t.t_id = e.t_id
