@@ -55,7 +55,7 @@ function saveEntry() {
             document.getElementById("content").innerHTML = this.responseText;
         }
     };
-    xhttp.open("POST", "ajax.php?subject=target&verb=" + method + target +, true);
+    xhttp.open("POST", "ajax.php?subject=target&verb=" + method + target + true);
     xhttp.send();
 }
 
@@ -103,6 +103,21 @@ function getUserList() {
     xhttp.send();
 }
 
+function previewFile(){
+    var preview = document.querySelector('img'); //selects the query named img
+    var file    = document.querySelector('input[type=file]').files[0]; //sames as here
+    var reader  = new FileReader();
+
+    reader.onloadend = function () {
+        preview.src = reader.result;
+    }
+
+    if (file) {
+        reader.readAsDataURL(file); //reads the data as a URL
+    } else {
+        preview.src = "";
+    }
+}
 
 
 function test() {

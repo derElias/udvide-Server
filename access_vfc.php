@@ -1,5 +1,5 @@
 <?php
-require_once '/xampp/php/pear/HTTP/Request2.php'; // change this line to the HTTP/Request2.php path e.g. /xampp/php/pear/... or /php/...
+require_once HRRPREQUEST2PATH; // change this line to the HTTP/Request2.php path e.g. /xampp/php/pear/... or /php/...
 require_once 'settings.php';
 
 /**

@@ -1,4 +1,5 @@
 <?php
+require_once 'localsettings.php';
 // User friendly Settings
 define('LANGUAGE','en');
 
