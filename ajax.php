@@ -55,8 +55,8 @@ function performVerbForSubject() {
                     break;
                 case 'list':
                     $response = $udvide->getTargetPageByUser($cleanData['username'], $cleanData['passHash'],
-                        isset($cleanData['page']) ? $cleanData['page'] : null,
-                        isset($cleanData['pageSize']) ? $cleanData['pageSize'] : null);
+                        isset($cleanData['page']) ? $cleanData['page'] : 0,
+                        isset($cleanData['pageSize']) ? $cleanData['pageSize'] : 5);
                     break;
             }
             return json_encode($response);
@@ -106,9 +106,10 @@ function performVerbForSubject() {
 function purifyUserData():array {
     // if every input gets the same treatment, operations on the server side
     // should always give the same result for identical client input
+    $in = GET_INSTEAD_POST ? $_GET : $_POST;
     $result = [];
-    foreach ($_POST as $item => $value) {
-        $result[$item] = htmlspecialchars(stripslashes(trim($_POST[$item])));
+    foreach ($in as $item => $value) {
+        $result[$item] = htmlspecialchars(stripslashes(trim($in[$item])));
     }
-    return DIRECT_USERDATA ? $_POST : $result;
+    return DIRECT_USERDATA ? $in : $result;
 }

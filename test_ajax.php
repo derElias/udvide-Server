@@ -83,11 +83,12 @@ header('Content-Type: application/xhtml+xml');
         + "&subject=" + document . getElementById("subject") . value
         + "&verb=" + document . getElementById("verb") . value
         + "&target=" + JSON . stringify(target)';
+        $serverPage = 'ajax.php';
 if (GET_INSTEAD_POST) { // docu: issue #34
-    echo 'xhttp.open("POST", "simons testpage.php?' . $wwwForm . '", true)' . "\n";
+    echo 'xhttp.open("GET", "' . $serverPage . '?" + ' . $wwwForm . ', true);' . "\n";
     echo 'xhttp.send();';
 } else {
-    echo 'xhttp.open("POST", "simons testpage.php", true)' . "\n";
+    echo 'xhttp.open("POST", "' . $serverPage . '", true);' . "\n";
     echo 'xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded"); // One of the 2 possibilities for POST data to be transmitted via AJAX' . "\n";
     echo 'xhttp.send(' . "\n" . $wwwForm . ');';
 }
