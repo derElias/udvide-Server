@@ -11,8 +11,8 @@ define('INTERNAL_BASE_PATH','C:\Users\User\Documents\udvide-Server');
 
 // Where is my DB?
 define('SQL_DB_SERVER','localhost');
-define('SQL_DB_USERNAME','root');
-define('SQL_DB_PASSWORD','');
+define('SQL_DB_USERNAME','root'); // udvideDML
+define('SQL_DB_PASSWORD',''); // Udvide123
 define('SQL_DB_NAME','udvide');
 define('SQL_DB_CHARSET','utf8mb4');
 

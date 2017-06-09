@@ -194,6 +194,27 @@ class target {
     /** @var  string */
     public $vw_id;
 
+    public function __construct() {}
+
+    public static function fromJSON($json = false) {
+        $instance = new self();
+        if ($json) $instance->set(json_decode($json, true));
+        return $instance;
+    }
+
+    public function set($data) {
+        var_dump($data);
+        foreach ($data AS $key => $value) {
+            /*// snippet left from sample for object to custom object conversion
+            if (is_array($value)) {
+                $sub = new self();
+                $sub->set($value);
+                $value = $sub;
+            }//*/
+            $this->{$key} = $value;
+        }
+    }
+
     //<editor-fold desc="Fluent Setters (set null if omitted param except $deleted)">
     /**
      * @param string $name

@@ -39,10 +39,14 @@ function performVerbForSubject() {
     $response = null;
     switch ($cleanData['subject']) {
         case 'target':
-            $target = json_decode($cleanData['target']);
+            var_dump($cleanData['target']);
+            $target = target::fromJSON($cleanData['target']);
             switch ($cleanData['verb']) {
                 case 'create':
                     $response = $udvide->doTargetManipulationAs('create', $target, $cleanData['username'], $cleanData['passHash']);
+                    break;
+                case 'read':
+                    //$response = $udvide->readTarget($target);
                     break;
                 case 'update':
                     $response = $udvide->doTargetManipulationAs('update', $target, $cleanData['username'], $cleanData['passHash']);
@@ -56,7 +60,7 @@ function performVerbForSubject() {
                 case 'list':
                     $response = $udvide->getTargetPageByUser($cleanData['username'], $cleanData['passHash'],
                         isset($cleanData['page']) ? $cleanData['page'] : 0,
-                        isset($cleanData['pageSize']) ? $cleanData['pageSize'] : 5);
+                        isset($cleanData['pageSize']) ? $cleanData['pageSize'] : 25);
                     break;
             }
             return json_encode($response);

@@ -12,7 +12,7 @@ header('Content-Type: application/xhtml+xml');
 <p id="fillme"></p>
 <br/>
 <div>
-    <span style="width:25%">
+    <div style="width:25%;float: left">
         <label>username:<br/>
         <input type="text" id="username" value="root"/></label>
         <br/>
@@ -26,8 +26,8 @@ header('Content-Type: application/xhtml+xml');
         <input type="text" id="verb" value="create"/></label>
         <br/>
         <br/>
-    </span>
-    <span style="width:25%">
+    </div>
+    <div style="width:25%;float: left">
         target ID:<br/>
         <input type="text" id="t_id" value="will not be read"/>
         <br/>
@@ -35,7 +35,9 @@ header('Content-Type: application/xhtml+xml');
         <input type="text" id="t_name" value="imFromHTML"/>
         <br/>
         target Image:<br/>
-        <input type="file" id="t_image" value="string of PNG JPG or anything gd supported"/>
+        <div id="t_image" style="background-color: #777;width: 20vw;height: 20vw;position: relative">
+            <p style="margin: auto;text-align: center;top: 7vw;position: absolute">Drag and Drop A Target Marker here</p>
+        </div>
         <br/>
         active Flag:<br/>
         <input type="checkbox" id="activeFlag"/>
@@ -53,17 +55,41 @@ header('Content-Type: application/xhtml+xml');
         <input type="text" id="content" value="{'text'='hello world'}"/>
         <br/>
         <br/>
-    </span>
+    </div>
 </div>
-<button onclick="sendCmd()">Send</button>
+<button onclick="sendCmd()" style="float: left">Send</button>
 
 <script>
     //<![CDATA[
+    let image; // Stores the marker image
+    // Get file data on drop
+    document.getElementById('t_image').addEventListener('drop', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        let files = e.dataTransfer.files; // Array of all files
+        file=files[0]; // Take first
+
+        if (file.type.match(/image.*/)) {
+            let reader = new FileReader();
+
+            reader.onload = function(e2) {
+                // finished reading file data.
+                image = e2.target.result;
+
+                let img = document.createElement('img');
+                img.src= image;
+                document.body.appendChild(img);
+            };
+
+            reader.readAsDataURL(file); // start reading the file data.
+        }
+    }
+    });
     function sendCmd() {
         let target = {
             id:document.getElementById("t_id").value,
             name:document.getElementById("t_name").value,
-            image:document.getElementById("t_image").value,
+            image:image,
             activeFlag:document.getElementById("activeFlag").checked,
             xPos:document.getElementById("xPos").value,
             yPos:document.getElementById("yPos").value,
@@ -73,7 +99,7 @@ header('Content-Type: application/xhtml+xml');
 
         let xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
+            if (this.readyState === 4 && this.status === 200) {
                 document.getElementById("fillme").innerHTML = this.responseText;
             }
         };

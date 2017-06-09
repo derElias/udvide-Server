@@ -194,7 +194,7 @@ class udvide
     private function createTarget(target &$target, string $user)
     {
         // create on DB
-        $sql = 'INSERT INTO udvide.Targets (deleted,t_owner,xpos,ypos,map,content) VALUES (FALSE,?,?,?,?,?);';
+        $sql = 'INSERT INTO udvide.Targets (deleted,t_owner,xpos,ypos,map,content) VALUES (0,?,?,?,?,?);';
         $exeValues = [
             isset($target->owner) ? $target->owner : null,
             isset($target->xPos) ? $target->xPos : null,
@@ -433,30 +433,45 @@ class udvide
      * @param string $user
      * @param string $password
      * @param int $page
-     * @param int $pageSize
+     * @param int $pageSize default 25 range 1-200
      * @return array|false
      * @throws PermissionException
      */
-    public function getTargetPageByUser(string $user, string $password, int $page = 0, int $pageSize = 5)
+    public function getTargetPageByUser(string $user, string $password, int $page = 0, int $pageSize = 25)
     {
         if (empty($user))
             throw new PermissionException('Please Log in to view your targets!');
         $perm = $this->getPermissions($user,$password);
         if ($perm === false)
             throw new PermissionException(ERR_LOG01);
-
-        $sql = <<<'SQL'
+        if ($pageSize > 200)
+            $pageSize = 200;
+        if ($pageSize < 1)
+            $pageSize = 1;
+        if ($perm[0] > PERMISSIONS_ADMIN) {
+            $sql = <<<'SQL'
+SELECT t.t_id, t.vw_id, t.t_owner, t.xPos, t.yPos, t.map, t.content
+FROM udvide.Targets t
+WHERE t.deleted = 0
+ORDER BY t_id
+LIMIT ?
+OFFSET ?
+SQL;
+            $db = access_DB::prepareExecuteFetchStatement($sql, [$pageSize, $page * $pageSize]);
+        } else {
+            $sql = <<<'SQL'
 SELECT t.t_id, t.vw_id, t.t_owner, t.xPos, t.yPos, t.map, t.content
 FROM udvide.Targets t
 LEFT JOIN Editors e
 ON t.t_id = e.t_id
 WHERE e.username = ?
-AND t.deleted = FALSE
+AND t.deleted = 0
 ORDER BY t_id
 LIMIT ?
 OFFSET ?
 SQL;
-        $db = access_DB::prepareExecuteFetchStatement($sql, [$user, $pageSize, $page*$pageSize]);
+            $db = access_DB::prepareExecuteFetchStatement($sql, [$user, $pageSize, $page * $pageSize]);
+        }
         if ($db === false)
             return false; // no targets for $user
         $result = [];
@@ -621,14 +636,13 @@ SQL;
         }
 
         $sql = <<<'SQL'
-SELECT u.passHash, u.deleted, u.role, e.t_id
+SELECT u.passHash, case when t.deleted = 1 then true else false end as deleted, u.role, e.t_id
 FROM udvide.Users u
 LEFT JOIN Editors e
 ON u.username = e.username
 LEFT JOIN Targets t
 ON e.t_id = t.t_id
 WHERE u.username = ?
-AND t.deleted = FALSE
 SQL;
         $db = access_DB::prepareExecuteFetchStatement($sql, [$subject]); // Don't trust the user!
         if ($db === false) {
