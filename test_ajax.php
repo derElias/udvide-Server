@@ -35,9 +35,7 @@ header('Content-Type: application/xhtml+xml');
         <input type="text" id="t_name" value="imFromHTML"/>
         <br/>
         target Image:<br/>
-        <div id="t_image" style="background-color: #777;width: 20vw;height: 20vw;position: relative">
-            <p style="margin: auto;text-align: center;top: 7vw;position: absolute">Drag and Drop A Target Marker here</p>
-        </div>
+        <input type="text" id="t_image"/>
         <br/>
         active Flag:<br/>
         <input type="checkbox" id="activeFlag"/>
@@ -61,35 +59,11 @@ header('Content-Type: application/xhtml+xml');
 
 <script>
     //<![CDATA[
-    let image; // Stores the marker image
-    // Get file data on drop
-    document.getElementById('t_image').addEventListener('drop', function(e) {
-        e.stopPropagation();
-        e.preventDefault();
-        let files = e.dataTransfer.files; // Array of all files
-        file=files[0]; // Take first
-
-        if (file.type.match(/image.*/)) {
-            let reader = new FileReader();
-
-            reader.onload = function(e2) {
-                // finished reading file data.
-                image = e2.target.result;
-
-                let img = document.createElement('img');
-                img.src= image;
-                document.body.appendChild(img);
-            };
-
-            reader.readAsDataURL(file); // start reading the file data.
-        }
-    }
-    });
     function sendCmd() {
         let target = {
             id:document.getElementById("t_id").value,
             name:document.getElementById("t_name").value,
-            image:image,
+            image:document.getElementById("t_image").value,
             activeFlag:document.getElementById("activeFlag").checked,
             xPos:document.getElementById("xPos").value,
             yPos:document.getElementById("yPos").value,
