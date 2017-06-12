@@ -85,7 +85,6 @@ header('Content-Type: application/xhtml+xml');
         }
     });
 
-
     function sendCmd() {
         let target = {
             id:document.getElementById("t_id").value,
