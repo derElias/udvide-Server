@@ -28,31 +28,31 @@ header('Content-Type: application/xhtml+xml');
         <br/>
     </div>
     <div style="width:25%;float: left">
-        target ID:<br/>
-        <input type="text" id="t_id" value="will not be read"/>
+        <label>target ID:<br/>
+        <input type="text" id="t_id" value="will not be read"/></label>
         <br/>
-        target Name:<br/>
-        <input type="text" id="t_name" value="imFromHTML"/>
+        <label>target Name:<br/>
+        <input type="text" id="t_name" value="imFromHTML"/></label>
         <br/>
         target Image:<br/>
         <div id="t_image" style="background-color: #777;width: 20vw;height: 20vw;position: relative">
             <p style="margin: auto;text-align: center;top: 7vw;position: absolute">Drag and Drop A Target Marker here</p>
         </div>
         <br/>
-        active Flag:<br/>
-        <input type="checkbox" id="activeFlag"/>
+        <label>active Flag:<br/>
+        <input type="checkbox" id="activeFlag"/></label>
         <br/>
-        x position:<br/>
-        <input type="text" id="xPos" value="150"/>
+        <label>x position:<br/>
+        <input type="text" id="xPos" value="150"/></label>
         <br/>
-        y position:<br/>
-        <input type="text" id="yPos" value="80"/>
+        <label>y position:<br/>
+        <input type="text" id="yPos" value="80"/></label>
         <br/>
-        map index:<br/>
-        <input type="text" id="map" value="test/1"/>
+        <label>map index:<br/>
+        <input type="text" id="map" value="test/1"/></label>
         <br/>
-        content:<br/>
-        <input type="text" id="content" value="{'text'='hello world'}"/>
+        <label>content:<br/>
+        <input type="text" id="content" value="{'text'='hello world'}"/></label>
         <br/>
         <br/>
     </div>
@@ -67,7 +67,7 @@ header('Content-Type: application/xhtml+xml');
         e.stopPropagation();
         e.preventDefault();
         let files = e.dataTransfer.files; // Array of all files
-        file=files[0]; // Take first
+        let file = files[0]; // Take first
 
         if (file.type.match(/image.*/)) {
             let reader = new FileReader();
@@ -83,8 +83,9 @@ header('Content-Type: application/xhtml+xml');
 
             reader.readAsDataURL(file); // start reading the file data.
         }
-    }
     });
+
+
     function sendCmd() {
         let target = {
             id:document.getElementById("t_id").value,
@@ -103,22 +104,21 @@ header('Content-Type: application/xhtml+xml');
                 document.getElementById("fillme").innerHTML = this.responseText;
             }
         };
-        <?php
-        $wwwForm = '"username=" + document . getElementById("username") . value
-        + "&passHash=" + document . getElementById("passHash") . value
-        + "&subject=" + document . getElementById("subject") . value
-        + "&verb=" + document . getElementById("verb") . value
-        + "&target=" + JSON . stringify(target)';
-        $serverPage = 'ajax.php';
-if (GET_INSTEAD_POST) { // docu: issue #34
-    echo 'xhttp.open("GET", "' . $serverPage . '?" + ' . $wwwForm . ', true);' . "\n";
-    echo 'xhttp.send();';
-} else {
-    echo 'xhttp.open("POST", "' . $serverPage . '", true);' . "\n";
-    echo 'xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded"); // One of the 2 possibilities for POST data to be transmitted via AJAX' . "\n";
-    echo 'xhttp.send(' . "\n" . $wwwForm . ');';
-}
-?>
+        let wwwForm =
+            "username=" + document.getElementById("username").value
+            + "&passHash=" + document.getElementById("passHash").value
+            + "&subject=" + document.getElementById("subject").value
+            + "&verb=" + document.getElementById("verb").value
+            + "&target=" + JSON.stringify(target);
+        let serverPage = 'ajax.php';
+<? if (GET_INSTEAD_POST): // docu: issue #34 ?>
+        xhttp.open("GET", serverPage + "?" + wwwForm, true);
+        xhttp.send();
+<? else: ?>
+        xhttp.open("POST", serverPage, true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded"); // One of the 2 possibilities for POST data to be transmitted via AJAX
+        xhttp.send(wwwForm);
+<? endif; ?>
     }
     //]]>
 </script>

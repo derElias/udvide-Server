@@ -592,7 +592,7 @@ SQL;
     {
         throw $e; // Yep you can do that
         // ToDo
-        return false; // to calm PHP for the moment
+        //return false;
     }
     //</editor-fold>
     //</editor-fold>
