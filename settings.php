@@ -58,8 +58,9 @@ foreach ($errLang as $key=>$value) {
 }
 define('MAP_WIDTH',1000);
 // Debug var dumps (false for production)
-define('DEBUG_ACCESS_DB', false && !THIS_IS_PRODUCTIOOOON);
-define('DIRECT_USERDATA', true  && !THIS_IS_PRODUCTIOOOON);
-define('GET_INSTEAD_POST', true  && !THIS_IS_PRODUCTIOOOON);
+define('DEBUG_ACCESS_DB',  false && !THIS_IS_PRODUCTIOOOON);
+define('DIRECT_USERDATA',  false && !THIS_IS_PRODUCTIOOOON);
+define('GET_INSTEAD_POST', false && !THIS_IS_PRODUCTIOOOON);
+define('DEBUG_JS',         false && !THIS_IS_PRODUCTIOOOON);
 
 define('DS', DIRECTORY_SEPARATOR);
