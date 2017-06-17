@@ -6,6 +6,7 @@ CREATE TABLE Users (
   deleted BOOLEAN,
   passHash VARCHAR(255),
   role TINYINT(3) NOT NULL,
+  targetCreateLimit INT,
   PRIMARY KEY (username)
 );
 CREATE TABLE Maps (
@@ -22,6 +23,7 @@ CREATE TABLE Targets (
   xPos INT,
   yPos INT,
   map VARCHAR(127),
+  markerImageJPG LONGBLOB,
   PRIMARY KEY (t_id),
   FOREIGN KEY (t_owner) REFERENCES Users(username) ON DELETE SET NULL,
   FOREIGN KEY (map) REFERENCES Maps(name) ON DELETE SET NULL
