@@ -34,12 +34,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !GET_INSTEAD_POST
  * @return string
  */
 function performVerbForSubject() {
-    $cleanData = purifyUserData();
+    $cleanData = purifyUserData(); // doesn't escape target
     $udvide = new udvide();
     $response = null;
     switch ($cleanData['subject']) {
         case 'target':
-            var_dump($cleanData['target']);
             $target = target::fromJSON($cleanData['target']);
             switch ($cleanData['verb']) {
                 case 'create':
@@ -112,8 +111,13 @@ function purifyUserData():array {
     // should always give the same result for identical client input
     $in = GET_INSTEAD_POST ? $_GET : $_POST;
     $result = [];
-    foreach ($in as $item => $value) {
-        $result[$item] = htmlspecialchars(stripslashes(trim($in[$item])));
-    }
+    // only accept stuff that we really intend to accept
+    $result['subject'] = purifyValue($in['subject']);
+    $result['verb'] = purifyValue($in['verb']);
+    $result['username'] = purifyValue($in['username']);
+    $result['passHash'] = purifyValue($in['passHash']);
+    //var_dump($result);
+    $result['target'] = $in['target'];
+
     return DIRECT_USERDATA ? $in : $result;
 }
