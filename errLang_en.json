@@ -16,5 +16,11 @@
 
   "UD010":"Subject required to perform operation",
 
+  "TYPE_NOT_BASE64_IMAGE_MSG":"Invalid Base64 image! Expected input like 'data:image/jpeg;base64,/9j/4AAQSkZ...'",
+  "PERMISSION_INSUFFICIENT":"Permissions insufficient for task!",
+  "LOGIN_USERUNKNOWN":"We don't know that username",
+  "LOGIN_USERDELETED":"This User has been deleted",
+  "LOGIN_WRONGPASSWD":"That is not the correct password; please try harder!",
+
   "..999":"Shit?"
 }
