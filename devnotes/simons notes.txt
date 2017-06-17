@@ -25,11 +25,12 @@ ToDo Crop picture to replace width as user input
 StretchGoals:
 
 To be proposed Stretch goals:
+ToDo: Plugin API + FH-WS-Plugin (kinda promised)
+ToDo: store the marker at our side too
 ToDo: ClientSide ActionCache (if server is unavailable set put to 3 minute trigger, add site-close stopper and ping to server)
 ToDo: use Company field to have multiple companies in the same system
 ToDo: If an editor has become owner of a target he can delete it -> new field owner; arrayToTarget; doStuff();
 ToDo: instead of plain images use svgs for maps and add an editor to make rooms  reality
-ToDo: Plugin API + FH-WS-Plugin
 
 VuFo untold requirements:
 Max metadata file size = 2mb?
