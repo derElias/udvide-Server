@@ -36,6 +36,7 @@ class target
     /** @var  bool */
     private $active;
 
+    //<editor-fold desc="Constructors">
     /**
      * target constructor.
      */
@@ -78,6 +79,7 @@ class target
         }
         return $instance;
     }
+    //</editor-fold>
 
     public function read() {
         // ToDo from udvide
