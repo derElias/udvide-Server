@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !GET_INSTEAD_POST
         'templates' => isset($templ) ? $templ : ''
     ];
     
-    return json_encode($package);
+    echo json_encode($package);
 
 } else {
     echo "This site is providing a Resource Package for the Javascript application in <a href='manage.php'>the main site!</a> <br/>
