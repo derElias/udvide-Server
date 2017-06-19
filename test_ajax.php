@@ -4,7 +4,7 @@
 
 </head>
 <body>
-<img src="img/First.png" draggable="true"/>
+<img src="preview.png" draggable="true"/>
 <p>first 5 entries</p><br/>
 <p id="fillme"></p>
 <br/>

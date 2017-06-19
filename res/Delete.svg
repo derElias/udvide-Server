@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Svg Vector Icons : http://www.onlinewebfonts.com/icon -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve">
+<svg
+        version="1.1"
+        xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+        x="0px"
+        y="0px" viewBox="0 0 1000 1000"
+        enable-background="new 0 0 1000 1000" xml:space="preserve"
+        fill="#000000"
+>
 <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
 <g><path d="M767.3,308.1H745v559.4h-73.4V308.1H549v559.4h-73.5V308.1H353v559.4h-73.6V308.1h-46.8c-55.3,0-100.3-0.8-100.3,0v584.5c0,53.8,44.9,97.4,100.3,97.4h534.6c55.3,0,100.2-43.6,100.2-97.4V308.1C867.5,304,822.6,308.1,767.3,308.1L767.3,308.1z M915.7,132.5H696V72.7c0-34.7-61.9-62.7-98-62.7H402c-36.1,0-98,28.1-98,62.7v59.8H84.4c-27.6,0-49.9,22-49.9,49s22.3,49,49.9,49h831.3c27.6,0,49.9-21.9,49.9-49C965.6,154.4,943.2,132.5,915.7,132.5L915.7,132.5z M598,132.5H402V108h196V132.5L598,132.5z"/></g>
 </svg>

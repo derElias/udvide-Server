@@ -7,6 +7,7 @@ body{
     margin: 0;
     padding: 0;
     font-size: 17px;
+    background-color: lightgrey;
 }
 
 .background{
@@ -14,8 +15,7 @@ body{
 }
 
 .content{
-    background-color: lightblue;
-    width: 100%;
+    background-color: white;
 }
 
 .contentBox {
@@ -75,15 +75,20 @@ body{
 /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
 
 .dropdown-content div:hover{
-    background-color: lightgrey;
-
+    color: lightgrey;
 }
 .Entrybox{
-    width: 50%;
-    height: 100px;
-    height: 100px;
+    width: 100%;
+    min-height: 80px;
     margin: auto;
-    background-color: darkgray;
+    background-color: white;
+    border: solid 2px black;
+    padding: 5px;
+}
+
+.entrybutton{
+    float: right;
+    margin: 0 5px 0 5px;
 }
 
 .Entryfield{
@@ -93,17 +98,17 @@ body{
 }
 
 .Entryname{
-    font-size: 25px;
+    font-size: 20px;
     font: bold;
     width: 50%;
-    padding: 20px;
     float: left;
+    overflow: hidden;
 }
 
 footer {
-    height: 100px;
+    height: 50px;
     width: 100%;
-    background-color: lightgrey;
+    background-color: grey;
     bottom: 0;
     position: fixed;
     text-align: center;
@@ -112,8 +117,9 @@ footer {
 .footerlink{
     color:black;
     font-size: 17px;
-    margin-top: 1%;
+    padding: 15px;
 }
+
 .footerlink a {
     color: black;
     text-decoration: none;
@@ -127,24 +133,26 @@ footer {
 .header {
     height: 5%;
     overflow: hidden;
-    background-color: lightgrey;
+    background-color: grey;
     font-size: 17px;
+    border-bottom: solid 2px black;
 }
 
 .headerbutton{
-    margin: auto;
-    background-color: lightgrey;
-    text-align: center;
-    display: block;
-    padding: 5px;
-    width: 20%;
+    padding: 15px;
     float: left;
+    height: 100%;
 }
 
 .headerbutton:hover{
     background-color: darkgray;
-    color: white;
     fill: white;
+}
+
+.headertext{
+    width: 180px;
+    padding: 15px;
+    text-align: center;
 }
 #img{
     width: 100%;
@@ -166,10 +174,6 @@ footer {
 
 }
 
-.mediumButtons{
-     height: 65px;
- }
-
 .pic{
     height: 100%;
     align-self: center;
@@ -178,30 +182,29 @@ footer {
     float: left;
 }
 
-.suche{
-    float: left;
+.search{
+    float: right;
     padding:15px;
-    border: 1px solid lightgrey;
     width: 500px;
-    background-color: gray;
-    padding 15px;
 }
 
 .searchfield{
     float: left;
-    height: 40px;
-    width: 400px;
+    height: 30px;
+    width: 80%;
+    background-color: lightgrey;
+    boarder: solid 1px black;
 }
 .searchfield:hover{
     color: lightgrey;
     text-decoration: underline;
 }
 .searchbutton{
-    float: right;
+    float: left;
     margin-left: 10px;
     background-color: lightgrey;
-    height: 40px;
-    width: 40px;
+    height: 30px;
+    width: 30px;
 }
 #searchicon{
     padding: 2px;
@@ -212,16 +215,17 @@ footer {
 .show {display:block;}
 
 
-.svg{
 
-    margin: auto;
-    width: 50px;
-    height: 50px;
+
+
+.svg{
+    width: 20px;
+    height: 20px;
 }
 
-.table{
-    background-color: white;
-    border: solid grey 2px;
+.svg-header{
+    width: 30px;
+    height: 30px;
 }
 
 
@@ -276,13 +280,9 @@ footer {
     clear: both;
     display: table;
 }
-.right-1{
+.rigtht{
     float: right;
-    width: 10%;
-    margin-right: 10px;
-    margin-left: 10px;
 }
-
 .right-1{
     float: right;
     width: 10%;
@@ -294,6 +294,7 @@ footer {
     margin-right: 10px;
     margin-left: 10px;
 }
+.left{float: left}
 
 .left-1{
     float: left;
