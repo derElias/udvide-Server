@@ -14,9 +14,9 @@ require_once 'access_vfc.php';
  * Takes an GD image resource or an image string and converts it to a potentially smaller jpg string with given options
  * @param string|resource $img accepts gd2, gd2part, gd, gif, png, wbmp, webp, xbm and xpm. bmp supported if php 7.2.0+ is used
  * @param array $options supports quality, maxFileSize, doNotCrop, minQuality, minShortestSide
- * @return string|false (smaller) JPG | false on failure
+ * @return resource (smaller) JPG | false on failure
  */
-function imgAssistant (&$img, array $options):string {
+function imgAssistant (&$img, array $options) {
     // to image resource if not already
     if (is_string($img))
         $img = imagecreatefromstring($img);
@@ -74,8 +74,8 @@ function imgAssistant (&$img, array $options):string {
 
         while ($cSize > $maxFSize) {
             if ($t)
-                return false;
-            $cMul /= 2;
+                return $img; // Image couldn't hit the requirements - returning approximation
+            $cMul *= 0.8;
             if ($cMul <= $minMul) {
                 $cMul = $minMul;
                 $t = true;
@@ -194,6 +194,7 @@ function strIsJpg(string $img):bool {
 
 class LoginException extends Exception {}
 class PermissionException extends Exception {}
+class IncompleteObjectException extends Exception {}
 
 class handlerResponse {
     /** @var  bool */
