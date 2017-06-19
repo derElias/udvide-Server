@@ -27,11 +27,11 @@ Apis:
             A sha-256 hash string from your password as 'passHash'
         2. To specify the action you have to provide
             create, update or delete as 'udvideVerb'
-        3. For deleting and updating you have to provide
+        3. For deleting and updating you have to provide // ToDo: NOT UP TO DATE
             The respective Target ID as 't_id' (you get it from manage.php?rawGet=true) // ToDo
         4. For updating and creating you can include any of the following attributes: *tagged are necessary for create
             A string target name as 't_name'
-            A JPG/PNG/... image* as 't_image'
+            A JPG/PNG/... base64 encoded image as 't_image'
             A boolean to indicate weather the target should be active on creation as 'activeFlag'
             A integer for the map positions 'xPos'
             and 'yPos'

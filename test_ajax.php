@@ -1,10 +1,14 @@
-<?php require_once 'udvide.php'; header('Content-Type: application/xhtml+xml'); ?> <!DOCTYPE html>
+<?php
+require_once 'udvide.php';
+if (!SERVE_XHTML5_AS_HTML)
+    header('Content-Type: application/xhtml+xml');
+?>
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 
 </head>
 <body>
-<img src="img/First.png" draggable="true"/>
 <p>first 5 entries</p><br/>
 <p id="fillme"></p>
 <br/>
@@ -32,7 +36,7 @@
         <input type="text" id="t_name" value="imFromHTML"/></label>
         <br/>
         target Image:<br/>
-        <div id="imageDnD" style="background-color: #777;width: 20vw;height: 20vw;position: relative">
+        <div id="imageDnD" style="background-color: #777;width: 20vw;height: 20vw;position: relative;background-position: center;background-repeat: no-repeat;background-size: cover;">
             <p style="margin: auto;text-align: center;top: 7vw;position: absolute">Drag and Drop A Target Marker here</p>
         </div>
         <br/>
@@ -89,6 +93,8 @@
         e.preventDefault();
 <?php if (DEBUG_JS):?>console.log("DnD: drop");<?php endif; ?>
         let files = e.dataTransfer.files; // Array of all files
+        if (files[1])
+            customAlert("DnD: Multiple Files Droped: This Version can't process multiple - taking first file"); // ToDo: stretch: better solution?
         file = files[0]; // Take first
 
         if (file.type.match(/image.*/)) {
@@ -103,11 +109,11 @@
         // finished reading file data.
 <?php if (DEBUG_JS):?>console.log('DnD: Preview Handler');<?php endif; ?>
         DnDbox.style.backgroundImage = 'url(' + reader.result + ')';  // How to handle the Preview?
-
+        image = reader.result;
         reader.removeEventListener('load', readerEventToPreview);
 
-        reader.addEventListener('load', readerEventFileStringToImage);
-        reader.readAsText(file);
+        //reader.addEventListener('load', readerEventFileStringToImage);
+        //reader.readAsText(file);
     }
 
     function readerEventFileStringToImage(readEvent) {
@@ -144,6 +150,7 @@
             + "&subject=" + document.getElementById("subject").value
             + "&verb=" + document.getElementById("verb").value
             + "&target=" + JSON.stringify(target);
+        console.log(wwwForm);
         let serverPage = 'ajax.php';
 <?php if (GET_INSTEAD_POST): // docu: issue #34 ?>
         xhttp.open("GET", serverPage + "?" + wwwForm, true);
@@ -153,6 +160,11 @@
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded"); // One of the 2 possibilities for POST data to be transmitted via AJAX
         xhttp.send(wwwForm);
 <?php endif; ?>
+    }
+
+    function customAlert(info) {
+        console.log("alert: " + info);
+        alert(info); // ToDo - make costum popup and stuff
     }
     //]]>
 </script>
