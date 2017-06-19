@@ -15,15 +15,25 @@ function updateEntry() {
 
 }
 
+var creatingCurrendtly= false;
 function createUser() {
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            document.getElementById("content").innerHTML = this.responseText;
+    if (creatingCurrendtly == false) {
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                console.log(this.responseText);
+                var newItem = document.createElement("div");
+                newItem.innerHTML = this.responseText;
+
+                var list = document.getElementById("userList");
+                list.insertBefore(newItem, list.childNodes[0]);
+                creatingCurrendtly = true;
+            }
         }
-    };
-    xhttp.open("GET", "templates/CreateUser.html", true);
-    xhttp.send();
+        xhttp.open("GET", "templates/createUser.html", true);
+        xhttp.send();
+    }
 }
 
 
@@ -81,35 +91,27 @@ function getEntryUpdatePopup() {
     xhttp.send();
 }
 
-function getHome() {
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            document.getElementById("content").innerHTML = this.responseText;
-        }
-    };
-    xhttp.open("GET", "templates/home.html", true);
-    xhttp.send();
+function getMapTable() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("content").innerHTML = this.responseText;
+            }
+        };
+        xhttp.open("GET", "templates/mapTableTempl.html", true);
+        xhttp.send();
 }
 
-function getUserList() {
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            document.getElementById("content").innerHTML = this.responseText;
-        }
-    };
-    xhttp.open("GET", "templates/User.html", true);
-    xhttp.send();
-}
+var immage;
 
 function previewFile(){
-    var preview = document.querySelector('img'); //selects the query named img
-    var file    = document.querySelector('input[type=file]').files[0]; //sames as here
+    var preview = document.getElementById("t_imgPreview"); //selects the query named preview
+    var file    = document.querySelector('input[type=file]').files[0]; //same as here
     var reader  = new FileReader();
 
     reader.onloadend = function () {
         preview.src = reader.result;
+        immage =preview.src;
     }
 
     if (file) {
@@ -119,6 +121,18 @@ function previewFile(){
     }
 }
 
+var view = 0;
+function switchView() {
+    if(view == 0){
+       getMapTable();
+       view=1;
+    }
+    else
+    {
+        getEntryTable();
+        view=0;
+    }
+}
 
 function test() {
     var xhttp = new XMLHttpRequest();
@@ -133,7 +147,7 @@ function test() {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            document.getElementById("userlist").innerHTML = this.responseText;
+            document.getElementById("userList").innerHTML = this.responseText;
         }
     };
     xhttp.open("GET", "templates/User.html", true);

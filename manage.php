@@ -1,8 +1,10 @@
 <?php
 $template = file_get_contents('templates/manageTempl.html');
 
+$temp = file_get_contents('templates/header.html');
+$template = str_replace('<!--header-->',$temp,$template);
 
-$temp = file_get_contents('templates/home.html');
+$temp = file_get_contents('templates/entrytableTempl.html');
 $template = str_replace('<!--content-->',$temp,$template);
 
 

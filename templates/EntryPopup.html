@@ -1,45 +1,43 @@
-<div class="contentBox" >
-    <form action="" id="">
-
-        <div class="row">
-            <div class="col-10">
-                <input type="text" name="Entryname" placeholder=" Markername" class="Namefield">
-            </div>
+<div class="row">
+    <div class="col-5"> <input class="" type="checkbox" id="t-activeFlag">active</intput></div>
+    <button onclick="saveEntry()" class="saveButton">
+        <div class="svg">
+            <img src="res/Save.svg">
         </div>
+    </button>
+</div>
 
+<div class="row">
+    <div class="col-10">
+        <input type="text"  placeholder="name" class="TargetNamefield" id="t_id">
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-4">
         <div class="row">
-            <div class="col-4">
-                <input type="file" onchange="previewFile()"><br>
-                <img src="" height="200" alt="Image preview...">
-                </br>
-                </br>
-                <div class="row">
-                    <div class="col-1"></div>
-                    <button class="col-2 , Mediumbuttons">
-                        <div class="svg">
-                            <img src="res/Generate.svg">
-                        </div>
-                    </button>
-                    <div class="col-1"></div>
-                    <button class="col-2 , Mediumbuttons">
-                        <div class="svg">
-                            <img src="res/Upload.svg">
-                        </div>
-                    </button>
-                    <div class="col-1"></div>
-                    <button onclick="saveEntry()" class="col-2 , Mediumbuttons">
-                        <div class="svg">
-                            <img src="res/Save.svg">
-                        </div>
-                    </button>
-                    <div class="col-1"></div>
+        <img src="img/preview.png" class="previewPic" id="t_imgPreview">
+        </div>
+        <div class="row">
+        <input class="left" type="file" onchange="previewFile()">
+        </div>
+        <div class="row">
+            </br>
+            <button class="col-8">
+                <div class="svg">
+                    <img src="res/Generate.svg">
                 </div>
-            </div>
-            <div class="col-6">
-                <textarea class="Entryfield" placeholder=" MarkerInhalt"></textarea>
-            </div>
-
+            </button>
+            </br>
+            </br>
+            </br>
+            </br>
         </div>
-
-    </form>
+        <div class="row">
+            <img src="" class="previewPic"  id="map_imgPreview">
+        </div>
+    </div>
+    <div class="col-6">
+        <textarea class="TargetContentField" placeholder="content" id="t_content"></textarea>
+    </div>
 </div>

@@ -1,45 +1,34 @@
 <div class="row , background">
-    <div class="col-1"></div>
-    <div class="col-8 , contentBox">
         <div class="row">
-            <div onclick=""  class=" suche" >
-                <button onclick="searchForEntry()" class="searchbutton" >
-                    <img src="res/search.svg">
-                </button>
-                <input  type="text"  name="searchfield" placeholder="Eintragssuche" class="searchfield">
-            </div>
+            <div class="col-5">
 
-        </div>
-        <div class="row"></br></div>
-        <div class="row">
-            <div class="col-5 , table">
                 <div class="row">
-                    <button onclick="createUser()" class="mediumButtons , left-1">
+                    <div onclick="createUser()">
                         <div class="svg">
                             <img src="res/Create.svg">
                         </div>
-                    </button>
+                    </div>
                 </div>
-                </br>
-                <div id="userlist">
+
+                <div id="userList">
+
                     <!--User-->
                 </div>
             </div>
-            <div class="col-5 , table">
+
+
+            <div class="col-5">
                 <div class="row">
-                    <button onclick="createEntry()" class="mediumButtons , left-1">
+                    <div onclick="createEntry()">
                         <div class="svg">
                             <img src="res/Create.svg">
                         </div>
-                    </button>
+                    </div>
                 </div>
-                </br>
+
                 <div id="entrylist">
                     <!--Entry-->
                 </div>
             </div>
         </div>
-
-    </div>
-    <div class="col-1" onclick="test()"> test</div>
 </div>
