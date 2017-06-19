@@ -2,6 +2,7 @@
 require_once 'helper.php';
 
 /**
+ * Whole Class analog to user.php
  * Created by PhpStorm.
  * User: User
  * Date: 17.06.2017
@@ -17,7 +18,7 @@ class map
     //<editor-fold desc="Constructors">
     public function __construct(){}
 
-    public function fromDB(string $name):map
+    public static function fromDB(string $name):map
     {
         $instance = new self();
         if (isset($name)) {
@@ -26,10 +27,17 @@ class map
         return $instance;
     }
 
-    public function fromArray(array $array = null) {
+    public static function fromArray(array $array = null) {
         $instance = new self();
         if (!empty($array))
             $instance->set($array);
+        return $instance;
+    }
+
+    public static function fromJSON($json = '') {
+        $instance = new self();
+        if (!empty($json))
+            $instance->set(json_decode($json, true));
         return $instance;
     }
     //</editor-fold>
