@@ -4,7 +4,7 @@
 
 </head>
 <body>
-<img src="preview.png" draggable="true"/>
+<img src="img/preview.png" draggable="true"/>
 <p>first 5 entries</p><br/>
 <p id="fillme"></p>
 <br/>
@@ -125,11 +125,11 @@
             id:document.getElementById("t_id").value,
             name:document.getElementById("t_name").value,
             image:image,
-            activeFlag:document.getElementById("activeFlag").checked,
+            activeFlag:document.getElementById("t_activeFlag").checked,
             xPos:document.getElementById("xPos").value,
             yPos:document.getElementById("yPos").value,
             map:document.getElementById("map").value,
-            content:document.getElementById("content").value
+            content:document.getElementById("t_content").value
         };
 
         let xhttp = new XMLHttpRequest();

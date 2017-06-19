@@ -15,15 +15,25 @@ function updateEntry() {
 
 }
 
+var creatingCurrendtly= false;
 function createUser() {
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            document.getElementById("content").innerHTML = this.responseText;
+    if (creatingCurrendtly == false) {
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                console.log(this.responseText);
+                var newItem = document.createElement("div");
+                newItem.innerHTML = this.responseText;
+
+                var list = document.getElementById("userList");
+                list.insertBefore(newItem, list.childNodes[0]);
+                creatingCurrendtly = true;
+            }
         }
-    };
-    xhttp.open("GET", "templates/CreateUser.html", true);
-    xhttp.send();
+        xhttp.open("GET", "templates/createUser.html", true);
+        xhttp.send();
+    }
 }
 
 
@@ -92,14 +102,16 @@ function getMapTable() {
         xhttp.send();
 }
 
+var immage;
 
 function previewFile(){
-    var preview = document.getElementById("preview"); //selects the query named preview
+    var preview = document.getElementById("t_imgPreview"); //selects the query named preview
     var file    = document.querySelector('input[type=file]').files[0]; //same as here
     var reader  = new FileReader();
 
     reader.onloadend = function () {
         preview.src = reader.result;
+        immage =preview.src;
     }
 
     if (file) {
@@ -135,7 +147,7 @@ function test() {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            document.getElementById("userlist").innerHTML = this.responseText;
+            document.getElementById("userList").innerHTML = this.responseText;
         }
     };
     xhttp.open("GET", "templates/User.html", true);
