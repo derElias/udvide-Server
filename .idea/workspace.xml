@@ -2,16 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e5874ff8-d329-446d-9770-a3d3600cdf40" name="Default" comment="">
-      <change type="MOVED" beforePath="$PROJECT_DIR$/preview.png" afterPath="$PROJECT_DIR$/img/preview.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/templates/CreateUser.html" afterPath="$PROJECT_DIR$/templates/createUser.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/Web.iml" afterPath="$PROJECT_DIR$/.idea/Web.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/easyAccess.js" afterPath="$PROJECT_DIR$/easyAccess.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/stylesheet.css" afterPath="$PROJECT_DIR$/stylesheet.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/EntryPopup.html" afterPath="$PROJECT_DIR$/templates/EntryPopup.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/entrytableTempl.html" afterPath="$PROJECT_DIR$/templates/entrytableTempl.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/manageTempl.html" afterPath="$PROJECT_DIR$/templates/manageTempl.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ERM2.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/map.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/resourcePackage.php" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ERM.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ERM2.pdf" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MySQLDBDDL.sql" afterPath="$PROJECT_DIR$/MySQLDBDDL.sql" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ajax.php" afterPath="$PROJECT_DIR$/ajax.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/devnotes/textual docu parts.txt" afterPath="$PROJECT_DIR$/devnotes/textual docu parts.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/helper.php" afterPath="$PROJECT_DIR$/helper.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target.php" afterPath="$PROJECT_DIR$/target.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test_ajax.php" afterPath="$PROJECT_DIR$/test_ajax.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/user.php" afterPath="$PROJECT_DIR$/user.php" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -59,7 +61,7 @@
         <entry file="file://$PROJECT_DIR$/templates/entrytableTempl.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="153">
-              <caret line="9" column="26" lean-forward="true" selection-start-line="9" selection-start-column="26" selection-end-line="9" selection-end-column="26" />
+              <caret line="9" column="26" lean-forward="false" selection-start-line="9" selection-start-column="26" selection-end-line="9" selection-end-column="26" />
               <folding />
             </state>
           </provider>
@@ -69,8 +71,10 @@
         <entry file="file://$PROJECT_DIR$/easyAccess.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="421">
-              <caret line="35" column="5" lean-forward="true" selection-start-line="35" selection-start-column="5" selection-end-line="35" selection-end-column="5" />
-              <folding />
+              <caret line="35" column="5" lean-forward="false" selection-start-line="35" selection-start-column="5" selection-end-line="35" selection-end-column="5" />
+              <folding>
+                <marker date="1497886466270" expanded="true" signature="198:844" ph="{...}" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -78,8 +82,8 @@
       <file leaf-file-name="createUser.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/templates/createUser.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="772">
-              <caret line="52" column="9" lean-forward="true" selection-start-line="52" selection-start-column="9" selection-end-line="52" selection-end-column="9" />
+            <state relative-caret-position="823">
+              <caret line="52" column="9" lean-forward="false" selection-start-line="52" selection-start-column="9" selection-end-line="52" selection-end-column="9" />
               <folding />
             </state>
           </provider>
@@ -89,7 +93,7 @@
         <entry file="file://$PROJECT_DIR$/templates/EntryPopup.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="272">
-              <caret line="16" column="23" lean-forward="true" selection-start-line="16" selection-start-column="23" selection-end-line="16" selection-end-column="23" />
+              <caret line="16" column="23" lean-forward="false" selection-start-line="16" selection-start-column="23" selection-end-line="16" selection-end-column="23" />
               <folding />
             </state>
           </provider>
@@ -484,12 +488,12 @@
       <workItem from="1497263560585" duration="4327000" />
       <workItem from="1497857177319" duration="43000" />
       <workItem from="1497857247516" duration="12936000" />
-      <workItem from="1497872530259" duration="13153000" />
+      <workItem from="1497872530259" duration="13389000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="168839000" />
+    <option name="totallyTimeSpent" value="169075000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -809,7 +813,7 @@
         <state relative-caret-position="835">
           <caret line="105" column="0" lean-forward="true" selection-start-line="105" selection-start-column="0" selection-end-line="105" selection-end-column="0" />
           <folding>
-            <marker date="1497884842782" expanded="true" signature="5762:5770" ph="{...}" />
+            <marker date="1497887368230" expanded="true" signature="6317:6323" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -833,7 +837,7 @@
     <entry file="file://$PROJECT_DIR$/templates/EntryPopup.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="272">
-          <caret line="16" column="23" lean-forward="true" selection-start-line="16" selection-start-column="23" selection-end-line="16" selection-end-column="23" />
+          <caret line="16" column="23" lean-forward="false" selection-start-line="16" selection-start-column="23" selection-end-line="16" selection-end-column="23" />
           <folding />
         </state>
       </provider>
@@ -866,7 +870,7 @@
     <entry file="file://$PROJECT_DIR$/templates/entrytableTempl.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="153">
-          <caret line="9" column="26" lean-forward="true" selection-start-line="9" selection-start-column="26" selection-end-line="9" selection-end-column="26" />
+          <caret line="9" column="26" lean-forward="false" selection-start-line="9" selection-start-column="26" selection-end-line="9" selection-end-column="26" />
           <folding />
         </state>
       </provider>
@@ -874,15 +878,17 @@
     <entry file="file://$PROJECT_DIR$/easyAccess.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="421">
-          <caret line="35" column="5" lean-forward="true" selection-start-line="35" selection-start-column="5" selection-end-line="35" selection-end-column="5" />
-          <folding />
+          <caret line="35" column="5" lean-forward="false" selection-start-line="35" selection-start-column="5" selection-end-line="35" selection-end-column="5" />
+          <folding>
+            <marker date="1497886466270" expanded="true" signature="198:844" ph="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/createUser.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="772">
-          <caret line="52" column="9" lean-forward="true" selection-start-line="52" selection-start-column="9" selection-end-line="52" selection-end-column="9" />
+        <state relative-caret-position="823">
+          <caret line="52" column="9" lean-forward="false" selection-start-line="52" selection-start-column="9" selection-end-line="52" selection-end-column="9" />
           <folding />
         </state>
       </provider>

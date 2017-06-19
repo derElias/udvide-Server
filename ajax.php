@@ -110,6 +110,7 @@ function purifyUserData():array {
     // if every input gets the same treatment, operations on the server side
     // should always give the same result for identical client input
     $in = GET_INSTEAD_POST ? $_GET : $_POST;
+    var_dump($in);
     $result = [];
     // only accept stuff that we really intend to accept
     $result['subject'] = purifyValue($in['subject']);
@@ -118,6 +119,8 @@ function purifyUserData():array {
     $result['passHash'] = purifyValue($in['passHash']);
     //var_dump($result);
     $result['target'] = $in['target'];
+    $result['map'] = $in['map'];
+    $result['user'] = $in['user'];
 
     return DIRECT_USERDATA ? $in : $result;
 }

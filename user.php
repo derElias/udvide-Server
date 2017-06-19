@@ -105,12 +105,13 @@ WHERE deleted = 0
 SQL;
         $db = access_DB::prepareExecuteFetchStatement($sql);
         foreach ($db as $key => $userArr)
-            $db[$key] = (new user())->set($userArr);
+            $db[$key] = (new self())->set($userArr);
         return $db;
     }
 
     /**
      * @return $this
+     * @throws IncompleteObjectException
      * @throws PermissionException
      */
     public function create() {
