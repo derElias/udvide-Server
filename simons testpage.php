@@ -8,57 +8,24 @@ echo time();
 <output id="list"></output>
 
 <script>
-    let image;
-    let dropZone = document.getElementById('drop_zone');
-
-  function handleFileDrop(evt) {
-      evt.stopPropagation();
-      evt.preventDefault();
-
-      let files = evt.dataTransfer.files; // FileList object.
-
-      // files is a FileList of File objects. List some properties.
-      let output = [];
-      if (files[1]) {
-          for (let i = 0, f; f = files[i]; i++) {
-              output.push('<li><strong>', encodeURI(f.name), '</strong> (', f.type || 'n/a', ') - ',
-                  f.size, ' bytes, last modified: ',
-                  f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
-                  '</li>');
-          }
-      } else {
-          file=files[0];
-
-
-          let reader = new FileReader();
-
-          // Closure to capture the file information.
-          reader.onload = (function(theFile) {
-              return function(e) {
-                  // Render thumbnail.
-                  let span = document.createElement('span');
-                  image = e.target.result;
-                  span.innerHTML = ['<img class="thumb" src="', image,
-                      '" title="', encodeURI(theFile.name), '"/>'].join('');
-                  document.getElementById('list').insertBefore(span, null);
-              };
-          });
-
-          // Read in the image file as a data URL.
-          reader.readAsDataURL(file);
-
-
-      }
-    document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
-  }
-
-  function handleDragOver(evt) {
-      evt.stopPropagation();
-      evt.preventDefault();
-      evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
-  }
-
-  // Setup the dnd listeners.
-  dropZone.addEventListener('dragover', handleDragOver, false);
-  dropZone.addEventListener('drop', handleFileDrop, false);
+    function sendCmd() {
+        let wwwForm = '';
+        let xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) {
+                let tn = document.createTextNode(JSON.parse(this.responseText).res["Create.svg"]);
+                document.getElementById("list").appendChild(tn);
+            }
+        };
+        let serverPage = 'resourcePackage.php';
+        <?php if (GET_INSTEAD_POST): // docu: issue #34 ?>
+        xhttp.open("GET", serverPage + "?" + wwwForm, true);
+        xhttp.send();
+        <?php else: ?>
+        xhttp.open("POST", serverPage, true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded"); // One of the 2 possibilities for POST data to be transmitted via AJAX
+        xhttp.send(wwwForm);
+        <?php endif; ?>
+    }
+    sendCmd();
 </script>

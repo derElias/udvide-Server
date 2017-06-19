@@ -192,6 +192,26 @@ function strIsJpg(string $img):bool {
     && (ord($img[strlen($img) - 1]) == 217);
 }
 
+function sanitizeXML($in) {
+
+    $search = array(
+        '/\>[^\S ]+/s',     // strip whitespaces after tags, except space
+        '/[^\S ]+\</s',     // strip whitespaces before tags, except space
+        '/(\s)+/s',         // shorten multiple whitespace sequences
+        '/<!--(.|\s)*?-->/' // Remove HTML comments
+    );
+
+    $replace = array(
+        '>',
+        '<',
+        '\\1',
+        ''
+    );
+
+    return preg_replace($search, $replace, $in);
+}
+
+
 class LoginException extends Exception {}
 class PermissionException extends Exception {}
 class IncompleteObjectException extends Exception {}

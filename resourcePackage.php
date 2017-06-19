@@ -1,4 +1,5 @@
 <?php
+require_once 'helper.php';
 /**
  * Created by PhpStorm.
  * User: User
@@ -6,18 +7,22 @@
  * Time: 17:03
  */
 if ($_SERVER["REQUEST_METHOD"] == "POST" && !GET_INSTEAD_POST
-    || $_SERVER["REQUEST_METHOD"] == "GET" && GET_INSTEAD_POST) {
-
-    $path = '/res';
-    foreach (scandir($path) as $file) {
-        $filePath = $path . $file;
-        $res[$file] = file_get_contents($filePath);
+    || $_SERVER["REQUEST_METHOD"] == "GET" && GET_INSTEAD_POST)
+{
+    $path = 'res';
+    $fullFileArray = scandir($path,SCANDIR_SORT_NONE);
+    $fileArray = array_diff($fullFileArray, array('..', '.')); // scan $path and get rid of . and .. (picked up on linux)
+    foreach ($fileArray as $file) {
+        $filePath = $path . DIRECTORY_SEPARATOR . $file;
+        $res[$file] = sanitizeXML(file_get_contents($filePath));
     }
 
-    $path = '/templates';
-    foreach (scandir($path) as $file) {
-        $filePath = $path . $file;
-        $templ[$file] = file_get_contents($filePath);
+    $path = 'templates';
+    $fullFileArray = scandir($path,SCANDIR_SORT_NONE);
+    $fileArray = array_diff($fullFileArray, array('..', '.'));
+    foreach ($fileArray as $file) {
+        $filePath = $path . DIRECTORY_SEPARATOR . $file;
+        $templ[$file] = sanitizeXML(file_get_contents($filePath));
     }
 
     $package = [

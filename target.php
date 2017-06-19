@@ -1,5 +1,5 @@
 <?php
-require_once 'helper.php';
+require_once 'udvideV3.php';
 /**
  * Created by PhpStorm.
  * User: Simon, all code in this file, except explicitly stated otherwise is written by me
@@ -229,10 +229,10 @@ class target
      * @param string $map
      * @return target
      */
-    public function setMap(string $map = null): target
+    public function setMap(map $map = null): target
     {
         if (isset($map)) {
-            $this->map = $map; // ToDo after map.php
+            $this->map = $map;
         }
         return $this;
     }
