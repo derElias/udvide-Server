@@ -15,18 +15,17 @@ CREATE TABLE Maps (
   PRIMARY KEY (name)
 );
 CREATE TABLE Targets (
-  t_id INT AUTO_INCREMENT NOT NULL UNIQUE,
+  id INT AUTO_INCREMENT NOT NULL UNIQUE,
   deleted BOOLEAN,
-  vw_id VARCHAR(32),
-  image LONGBLOB,
-  t_owner VARCHAR(127),
+  owner VARCHAR(127),
   content TEXT,
   xPos INT,
   yPos INT,
   map VARCHAR(127),
-  markerImageJPG LONGBLOB,
-  PRIMARY KEY (t_id),
-  FOREIGN KEY (t_owner) REFERENCES Users(username) ON DELETE SET NULL ON UPDATE CASCADE,
+  vw_id VARCHAR(32),
+  image LONGBLOB,
+  PRIMARY KEY (id),
+  FOREIGN KEY (owner) REFERENCES Users(username) ON DELETE SET NULL ON UPDATE CASCADE,
   FOREIGN KEY (map) REFERENCES Maps(name) ON DELETE SET NULL ON UPDATE CASCADE
 );
 CREATE TABLE Editors (
@@ -34,7 +33,7 @@ CREATE TABLE Editors (
   username VARCHAR(127) NOT NULL,
   CONSTRAINT Editor PRIMARY KEY (t_id, username),
   FOREIGN KEY (username) REFERENCES Users(username) ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY (t_id) REFERENCES Targets(t_id) ON DELETE CASCADE
+  FOREIGN KEY (t_id) REFERENCES Targets(id) ON DELETE CASCADE
 );
 CREATE TABLE TransactionLog (
   tr_id VARCHAR(32) NOT NULL UNIQUE,
@@ -42,5 +41,5 @@ CREATE TABLE TransactionLog (
   t_id INT NOT NULL,
   PRIMARY KEY (tr_id),
   FOREIGN KEY (username) REFERENCES Users(username) ON DELETE CASCADE ON UPDATE CASCADE, /* transactions and editor permissions are logged until a certain time after deletion by deactivating them instead */
-  FOREIGN KEY (t_id) REFERENCES Targets(t_id) ON DELETE CASCADE ON UPDATE CASCADE
+  FOREIGN KEY (t_id) REFERENCES Targets(id) ON DELETE CASCADE ON UPDATE CASCADE
 );

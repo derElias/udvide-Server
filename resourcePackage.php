@@ -1,6 +1,8 @@
 <?php
 require_once 'helper.php';
 /**
+ * Cache this please - the result will not in a meaningful way in between official Updates
+ *
  * Created by PhpStorm.
  * User: User
  * Date: 19.06.2017
