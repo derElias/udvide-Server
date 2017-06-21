@@ -8,6 +8,22 @@ Requirements:
 To keep in mind:
     When switching PHP versions, keep in mind that the login system uses password_hash and sha1;
 
+Who did what:
+Everything realized in PHP including, but not limited by
+the Database connector, the Vuforia API connector*, the Core Application,
+the AJAX API, the Plugin Support, the FHWS Plugin and the Udvide-mobile-API
+got written by me Simon if nothing else is explicitly noted, like HTTP_Response2 and the TMS Signature Builder, in a more local context.
+
+*excluding the TMS Signature builder; inspired by the Samples provided by Vuforia
+
+JS code, including the web-application, CSSs and HTM is written by Elias if nothing else is explicitly noted in a more local context except
+the AJAX connection prototype, navigating server-sent resources and parts of DOM-Manipulation are partially written or inspired by Simon.
+
+The Database DDL was written by Lukas and Simon.
+The Documentation about the Databases structure was written by Lukas.
+
+
+
 Apis:
     VuforiaServer:
         We follow the guidelines described at ToDo
@@ -19,7 +35,7 @@ Apis:
 
         If you want to send Form submits to the System from your own site to create, update or delete entries,
          you have to follow the following requirements:
-        Send a POST request to /crudForm.php
+        Send a POST request to /.php
         the submission must include certain values based on the operation you want to perform:
 
         1. You have to send your login credentials as following:

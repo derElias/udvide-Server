@@ -14,7 +14,7 @@ Done: Form accept
     2. Sync own data set
     3. give positive answer
 WIP: ToDo get frontend working AJAX API
-WIP: ToDo UnitTests for everything except the 3 lines in ajax.php
+WIP: ToDo UnitTests for everything
 
 ToDo manage.php template builder (using connector and templates to generate CMS UI)
 ToDo check Form submission
@@ -84,6 +84,7 @@ Cache Client sided to minimize traffic ToDo
 Trust:
 Docu: we kinda trust hte vuforia servers to not send malicious data...
 DON'T FORGET that the image and name is generated at the client!
+We use a dynamic include in access_vfc.php - It only loads a Constant defined directly from a non-enduser defined string, so it should be safe
 
 We trust:
 Vuforias answers to Post, Update and Delete

@@ -42,7 +42,7 @@ class map
     }
     //</editor-fold>
 
-    //<editor-fold desc="CRUD">
+    //<editor-fold desc="CRUD DB">
     public function read()
     {
         $sql = <<<'SQL'
@@ -50,7 +50,9 @@ SELECT name, image
 FROM udvide.Maps m
 WHERE name = ?
 SQL;
-        return access_DB::prepareExecuteFetchStatement($sql, [$this->name]);
+        $db = access_DB::prepareExecuteFetchStatement($sql, [$this->name]);
+        $this->set($db[0]);
+        return $this;
     }
 
     public static function readAll()

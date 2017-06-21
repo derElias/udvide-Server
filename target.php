@@ -2,7 +2,6 @@
 require_once 'udvideV3.php';
 /**
  * Created by PhpStorm.
- * User: Simon, all code in this file, except explicitly stated otherwise is written by me
  * Date: 14.06.2017 Refactor in new file
  * Time: 15:48
  */
@@ -81,8 +80,18 @@ class target
     }
     //</editor-fold>
 
+    //<editor-fold desc="CRUD DB">
     public function read() {
-        // ToDo from udvide
+        $sql = <<<'SQL'
+SELECT id, deleted, owner, content, xPos, yPos, map, vw_id, image
+FROM udvide.Targets t
+WHERE id = ?
+SQL;
+        return access_DB::prepareExecuteFetchStatement($sql, [$this->id]);
+    }
+
+    public function readAll() {
+        // ToDo
     }
 
     public function create() {
@@ -97,6 +106,7 @@ class target
     public function delete() {
         // ToDo from udvide
     }
+    //</editor-fold>
 
     /**
      * Fills the target from an array
@@ -229,7 +239,7 @@ class target
      * @param string $map
      * @return target
      */
-    public function setMap(map $map = null): target
+    public function setMap(string $map = null): target
     {
         if (isset($map)) {
             $this->map = $map;
