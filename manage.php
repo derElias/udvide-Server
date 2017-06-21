@@ -9,7 +9,7 @@ $template = str_replace('<!--content-->',$temp,$template);
 
 
 
-$temp = file_get_contents('templates/footerTempl.html');
+$temp = file_get_contents('templates/footer.html');
 $template = str_replace('<!--footer-->',$temp,$template);
 echo $template;
 /*

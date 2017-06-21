@@ -161,7 +161,7 @@ footer {
 }
 
 #logo{
-    height: 50px;
+    height: 70px;
     float: left;
 }
 
@@ -176,6 +176,10 @@ footer {
 
 .previewPic{
     width: 250px;
+    border: solid black 1px;
+}
+.previewPicMap{
+    width: 100%;
     border: solid black 1px;
 }
 .saveButton{

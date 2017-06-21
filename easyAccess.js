@@ -1,25 +1,40 @@
-
-
 var resourcePackage;
 var xhttp = new XMLHttpRequest();
 xhttp.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
+        document.getElementById("test").appendChild(document.createTextNode(this.responseText));
         resourcePackage = JSON.parse(this.responseText);
         main();
     }
 };
-
 xhttp.open("POST", "resourcePackage.php", true);
 xhttp.send();
 
 function main() {
     loadLogin();
-    loadHeader();
+    loadFooter();
 }
 
+function createMap() {
+    document.getElementById("content").innerHTML = resourcePackage.templates["createMap.html"];
+}
+
+function saveMap() {
+    let map = {
+        name: document.getElementById("map_id").value,
+        image: document.getElementById("t_imgPreview").src,
+    };
+    sendAjax(map, map.name, "create");
+    document.getElementById("content").innerHTML = resourcePackage.templates["mapTableTempl.html"];
+
+}
 
 function createEntry() {
-    getEntryUpdatePopup();
+    getMapSelect();
+}
+
+function getMapSelect() {
+    document.getElementById("content").innerHTML = resourcePackage.templates["selectMap.html"]
 }
 
 var username;
@@ -28,12 +43,25 @@ function login() {
     username=document.getElementById("login_username").value;
     passHash=document.getElementById("login_password").value;
     getEntryTable();
+    loadHeader();
+}
+
+function loadFooter() {
+    document.getElementById("footer").innerHTML = resourcePackage.templates["footer.html"]
 }
 
 function logout() {
     username="";
     passHash="";
     loadLogin();
+    emptyHeader();
+}
+function loadHeader() {
+    document.getElementById("header").innerHTML = resourcePackage.templates["headerContent.html"]
+}
+
+function emptyHeader() {
+    document.getElementById("header").removeChild(document.getElementById("headerContent"))
 }
 
 var creatingCurrendtly= false;
@@ -56,9 +84,7 @@ function createUser() {
         xhttp.send();
     }
 }
-function loadHeader() {
-            document.getElementById("header").innerHTML = resourcePackage.templates["Header.html"];
-}
+
 
     function loadLogin() {
         var xhttp = new XMLHttpRequest();
@@ -71,20 +97,26 @@ function loadHeader() {
         xhttp.send();
     }
 
+    //To set when choosing Map
+    var x=null;
+    var y=null;
+    var map=null;
+
     function saveEntry() {
-        var target = JSON.stringify({});
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
-                document.getElementById("content").innerHTML = this.responseText;
-            }
+        let target = {
+            name: document.getElementById("t_id").value,
+            image: document.getElementById("t_imgPreview").src,
+            activeFlag: document.getElementById("t_activeFlag").checked,
+            xPos: x,
+            yPos: y,
+            map: map,
+            content: document.getElementById("t_content").value
         };
-        xhttp.open("POST", "ajax.php?subject=target&verb=" + method + target + true);
-        xhttp.send();
+        sendAjax(target, target.name, "create");
+        getEntryTable();
     }
 
     function getEntryTable() {
-
         document.getElementById("content").innerHTML = resourcePackage.templates["entrytableTempl.html"];
         sendAjax(null, "target", "getAll")
     }
@@ -184,13 +216,13 @@ function loadHeader() {
             createTargetLimit:document. getElementById("update_user_tnumber").value,
 
         }
-        sendAjax(user, username, "create");
+        sendAjax(user, user.username, "create");
         creatingCurrendtly=false;
         closeUserUpdateWindow();
     }
     
     function closeUserUpdateWindow() {
-        
+        document.getElementById("userList").removeChild(document.getElementById("createUserWindow"))
     }
 
     var view = 0;
