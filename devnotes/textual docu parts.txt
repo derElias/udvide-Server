@@ -26,7 +26,7 @@ The Documentation about the Databases structure was written by Lukas.
 
 Apis:
     VuforiaServer:
-        We follow the guidelines described at ToDo
+        We follow the guidelines described at https://library.vuforia.com/articles/Solution/How-To-Use-the-Vuforia-Web-Services-API
 
     Form submit: (ToDo make this a table)
 
@@ -35,7 +35,7 @@ Apis:
 
         If you want to send Form submits to the System from your own site to create, update or delete entries,
          you have to follow the following requirements:
-        Send a POST request to /.php
+        Send a POST request to /.php as "application/x-www-form-urlencoded"
         the submission must include certain values based on the operation you want to perform:
 
         1. You have to send your login credentials as following:

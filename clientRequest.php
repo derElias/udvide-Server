@@ -9,8 +9,8 @@ require_once 'udvide.php';
 header('Content-Type: application/text');
 /**
  * will be called like
- * /clientRequest.php?t=[kundennummer][lokale ID]...
+ * /clientRequest.php?t=[base64encodedTargetName]
  */
-$id = $_GET['t'];
-$sql = 'SELECT content FROM udvide.Targets WHERE t_id = ?';
-return access_DB::prepareExecuteFetchStatement($sql,[$id])[0]['content'];
+$name = base64_decode($_GET['t']);
+$sql = 'SELECT content FROM udvide.Targets WHERE name = ?';
+return access_DB::prepareExecuteFetchStatement($sql,[$name])[0]['content'];

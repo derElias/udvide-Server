@@ -8,8 +8,6 @@ require_once 'udvideV3.php';
 class target
 {
     // SQL only Values
-    /** @var int */
-    private $id;
     /** @var  bool */
     private $deleted;
     /** @var  string */
@@ -28,12 +26,15 @@ class target
     private $vw_id;
     /** @var  resource */
     private $image;
-
-    // VWS only Values
     /** @var  string */
     private $name;
+
+    // VWS only Values
     /** @var  bool */
     private $active;
+
+    // VWS generated Values
+    // ToDo
 
     //<editor-fold desc="Constructors">
     /**
@@ -83,40 +84,163 @@ class target
     //<editor-fold desc="CRUD DB">
     public function read() {
         $sql = <<<'SQL'
-SELECT id, deleted, owner, content, xPos, yPos, map, vw_id, image
+SELECT case when t.deleted = 1 or t.deleted = true then true else false end as deleted, owner, content, xPos, yPos, map, vw_id, image
 FROM udvide.Targets t
-WHERE id = ?
+WHERE name = ?
 SQL;
-        return access_DB::prepareExecuteFetchStatement($sql, [$this->id]);
+        $db = access_DB::prepareExecuteFetchStatement($sql, [$this->name]);
+        $this->set($db[0]);
+        return $this;
     }
 
-    public function readAll() {
-        // ToDo
+    public static function readAll() {
+        $sql = <<<'SQL'
+SELECT name, owner, content, xPos, yPos, map, vw_id, image
+FROM udvide.Targets
+WHERE deleted = 0 or deleted = false
+SQL;
+        $db = access_DB::prepareExecuteFetchStatement($sql);
+        foreach ($db as $key => $userArr)
+            $db[$key] = (new self())->set($userArr);
+        return $db;
     }
 
     public function create() {
-        // ToDo new
+        if (user::getLoggedInUser()->getRole() < MIN_ALLOW_TARGET_CREATE)
+            throw new PermissionException(ERR_PERMISSION_INSUFFICIENT,1);
+        if (!isset($this->name))
+            throw new IncompleteObjectException(ERR_USER_DATASET_INVALID,1); // How tf did u do dis?
+
+        $sql = <<<'SQL'
+INSERT INTO udvide.Targets
+(name, owner)
+VALUES (?,?);
+SQL;
+        $values = [
+            $this->name,
+            isset($this->owner) ? $this->owner : user::getLoggedInUser()->getUsername()
+        ];
+        access_DB::prepareExecuteStatementGetAffected($sql,$values);
+
+        $vwsResponse =  $this->pvfupdateobject() // amusingly with enough refactoring even a create is suddenly just another update
+            ->setMeta('/clientRequest.php?t=' . base64_encode($this->name))
+            ->setAccessMethod('create')
+            ->execute();
+
+        $vwsResponseBody = json_decode($vwsResponse->getBody());
+        $this->vw_id = $vwsResponseBody->target_id;
+        $tr_id = $vwsResponseBody->transaction_id;
+
+        logTransaction($tr_id,user::getLoggedInUser()->getUsername(),$this->name);
+
+        return $this;
     }
-    public function update() {
-        // ToDo from udvide
+
+    public function update(string $subject = null) {
+        // If not allowed to update and self-update (in case of self update)
+        if (user::getLoggedInUser()->getRole() < MIN_ALLOW_TARGET_UPDATE)
+            throw new PermissionException(ERR_PERMISSION_INSUFFICIENT,1);
+
+        $subject = empty($subject) ? $subject : $this->name;
+
+        $this->pdbupdate($subject);
+
+        if (isset($this->name) || isset($this->image) || isset($this->active)) {
+            $vwsResponse = $this->pvfupdateobject()->execute();
+            $vwsResponseBody = json_decode($vwsResponse->getBody());
+            $this->vw_id = $vwsResponseBody->target_id;
+            $tr_id = $vwsResponseBody->transaction_id;
+
+            logTransaction($tr_id,user::getLoggedInUser()->getUsername(),$this->name);
+        }
+        return $this;
     }
+
+    private function pdbupdate($subject)
+    {
+        // If not allowed to update and self-update (in case of self update)
+        if (user::getLoggedInUser()->getRole() < MIN_ALLOW_MAP_UPDATE)
+            throw new PermissionException(ERR_PERMISSION_INSUFFICIENT, 1);
+
+        $updateDB = false;
+        $sql = '';
+        foreach ($this as $key => $value) {
+            if ($key != 'active'
+                && strpos($key, 'vwgen_') !== 0
+                && isset($this->{$key})
+            ) {
+                $sql .= " $key = ? , ";
+                $ins[] = $value;
+                $updateDB = true;
+            }
+        }
+
+        if ($updateDB) {
+            $sql = <<<SQL
+DECLARE @dummy int;
+UPDATE udvide.Targets
+SET
+$sql
+@dummy = 0
+WHERE name = ?;
+SQL;
+            $ins[] = $subject;
+            access_DB::prepareExecuteFetchStatement($sql, $ins);
+        }
+    }
+
+    private function pvfupdateobject()
+    {
+        $vwsa = (new access_vfc())
+            ->setTargetId($this->vw_id)
+            ->setAccessMethod('update')
+            ->setTargetName(isset($this->name) ? $this->name : null)
+            ->setImage(isset($this->image) ? $this->getImageAsRawJpg() : null)
+            ->setActiveflag(isset($this->active) ? $this->active : null);
+
+        return $vwsa;
+    }
+
     public function deactivate() {
-        // ToDo from udvide
+        if (user::getLoggedInUser()->getRole() < MIN_ALLOW_TARGET_DEACTIVATE)
+            throw new PermissionException(ERR_PERMISSION_INSUFFICIENT,1);
+
+        $this->deleted = true;
+        $this->pdbupdate($this->name);
     }
     public function delete() {
-        // ToDo from udvide
+        if (user::getLoggedInUser()->getRole() < MIN_ALLOW_TARGET_DELETE)
+            throw new PermissionException(ERR_PERMISSION_INSUFFICIENT,1);
+
+        if (!$this->deleted) { // ToDo: Is this flawed? do we always have a set deleted when trying to delete?
+            // never delete directly
+            $this->deactivate();
+            return;
+        }
+        $sql = <<<'SQL'
+SELECT vw_id
+FROM udvide.Targets 
+WHERE name = ?;
+
+DELETE FROM udvide.Targets
+WHERE name = ?;
+SQL;
+        access_DB::prepareExecuteFetchStatement($sql,[$this->name,$this->name]);
+
     }
     //</editor-fold>
 
     /**
      * Fills the target from an array
      * @param array $data
+     * @return $this
      */
     public function set(array $data)
     {
         foreach ($data AS $key => $value) {
             $this->__set($key, $value); // To use setters behind permission and type verification
         }
+        return $this;
     }
 
     /**
@@ -151,8 +275,6 @@ SQL;
      */
     public function __get(string $name) {
         switch($name) {
-            case 'id':
-                return $this->getID();
             case 'owner':
                 return $this->getOwner();
             case 'content':
@@ -168,10 +290,6 @@ SQL;
         }
     }
 
-    private function syncVWID() {
-        $sql = 'SELECT vw_id FROM udvide.targets WHERE t_id = ?';
-        $this->vw_id = access_DB::prepareExecuteFetchStatement($sql,[$this->id])[0]['vw_id'];
-    }
 
     //<editor-fold desc="Fluent Setters with type and permission verification">
 
@@ -276,7 +394,7 @@ SQL;
     public function setName(string $name = null): target
     {
         if (isset($name)) {
-            $this->name = purifyValue($name);
+            $this->name = $name;
         } elseif (empty($name)) {
             // name is not allowed to be empty
             // this solution trades 1:1000000 stability for ease and performance
@@ -304,13 +422,6 @@ SQL;
     //</editor-fold>
 
     //<editor-fold desc="Getter with permission verification">
-    /**
-     * @return int
-     */
-    public function getId(): int
-    {
-        return $this->id;
-    }
 
     /**
      * @return string
@@ -358,6 +469,46 @@ SQL;
     public function getImage()
     {
         return $this->image;
+    }
+
+    /**
+     * @return string
+     */
+    public function getImageAsRawJpg()
+    {
+        return imgResToJpgString($this->image); // quality defaults to 95
+    }
+
+    /**
+     * @return string
+     */
+    public function getImageAsBase64Jpg()
+    {
+        return base64_encode($this->getImageAsRawJpg());
+    }
+
+    /**
+     * @return string
+     */
+    public function getImageAsDataUrlJpg()
+    {
+        return 'data:image/jpeg;base64,' . $this->getImageAsBase64Jpg();
+    }
+
+    /**
+     * @return int
+     */
+    public function getHeight():int
+    {
+        return imagesy($this->image);
+    }
+
+    /**
+     * @return int
+     */
+    public function getWidth():int
+    {
+        return imagesx($this->image);
     }
 
     /**

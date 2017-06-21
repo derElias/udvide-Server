@@ -101,7 +101,7 @@ class user
         $sql = <<<'SQL'
 SELECT `username`, `role`
 FROM udvide.users
-WHERE deleted = 0
+WHERE deleted = 0 or deleted = false
 SQL;
         $db = access_DB::prepareExecuteFetchStatement($sql);
         foreach ($db as $key => $userArr)
@@ -145,12 +145,12 @@ SQL;
             throw new PermissionException(ERR_PERMISSION_INSUFFICIENT,1);
 
         $updateDB = false;
-        $sql = /** @lang text <- prevent IDE to hate us because it's not valid sql yet */
-            'UPDATE udvide.users SET ';
+        $sql = '';
 
         foreach ($this as $key => $value) {
             if($key != 'isLoggedIn'
                 && $key != 'deleted'
+                && $key != 'old_username'
                 &&isset($this->{$key})) {
 
                 $sql .= " $key = ? , ";
@@ -160,7 +160,14 @@ SQL;
         }
 
         if ($updateDB) {
-            $sql .= "username = username WHERE username = ?;";
+            $sql = <<<SQL
+DECLARE @dummy int;
+UPDATE udvide.users
+SET 
+$sql
+@dummy = 0
+WHERE username = ?;
+SQL;
             $ins[] = $this->username;
             access_DB::prepareExecuteFetchStatement($sql, $ins);
         }
@@ -175,7 +182,7 @@ SQL;
         if (user::$loggedInUser->role < MIN_ALLOW_USER_DEACTIVATE
             && !($this->isLoggedIn && $this->role < MIN_ALLOW_SELF_DEACTIVATE))
             throw new PermissionException(ERR_PERMISSION_INSUFFICIENT,1);
-        $sql = 'UPDATE udvide.users SET deleted = 1 WHERE username = ?';
+        $sql = 'UPDATE udvide.users SET deleted = TRUE WHERE username = ?';
         access_DB::prepareExecuteFetchStatement($sql,[$this->username]);
         $this->deleted = true;
         return $this;
@@ -209,7 +216,7 @@ SQL;
     private function readComplete()
     {
         $sql = <<<'SQL'
-SELECT case when u.deleted = 1 then true else false end as deleted,`passHash`, `role`, `targetCreateLimit`
+SELECT case when u.deleted = 1 or u.deleted = true then true else false end as deleted,`passHash`, `role`, `targetCreateLimit`
 FROM udvide.users u
 WHERE username = ?
 SQL;

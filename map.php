@@ -105,10 +105,11 @@ SQL;
 
         if ($updateDB) {
             $sql = <<<SQL
+DECLARE @dummy int;
 UPDATE udvide.maps
 SET
 $sql
-name = name
+@dummy = 0
 WHERE name = ?;
 SQL;
             $ins[] = $this->name;

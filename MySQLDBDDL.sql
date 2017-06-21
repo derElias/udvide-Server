@@ -3,10 +3,10 @@ USE udvide;
 
 CREATE TABLE Users (
   username VARCHAR(127) NOT NULL UNIQUE, /* might think about format constraints like COMPANY/USERNAME */
-  deleted BOOLEAN,
+  deleted BOOLEAN DEFAULT FALSE,
   passHash VARCHAR(255),
-  role TINYINT(3) NOT NULL,
-  targetCreateLimit INT,
+  role TINYINT(3) DEFAULT 0,
+  targetCreateLimit INT DEFAULT 0,
   PRIMARY KEY (username)
 );
 CREATE TABLE Maps (
@@ -15,31 +15,31 @@ CREATE TABLE Maps (
   PRIMARY KEY (name)
 );
 CREATE TABLE Targets (
-  id INT AUTO_INCREMENT NOT NULL UNIQUE,
-  deleted BOOLEAN,
+  deleted BOOLEAN DEFAULT FALSE,
   owner VARCHAR(127),
   content TEXT,
-  xPos INT,
-  yPos INT,
+  xPos INT DEFAULT 0,
+  yPos INT DEFAULT 0,
   map VARCHAR(127),
   vw_id VARCHAR(32),
   image LONGBLOB,
-  PRIMARY KEY (id),
+  name VARCHAR(127) NOT NULL UNIQUE,
+  PRIMARY KEY (name),
   FOREIGN KEY (owner) REFERENCES Users(username) ON DELETE SET NULL ON UPDATE CASCADE,
   FOREIGN KEY (map) REFERENCES Maps(name) ON DELETE SET NULL ON UPDATE CASCADE
 );
 CREATE TABLE Editors (
-  t_id INT NOT NULL,
-  username VARCHAR(127) NOT NULL,
-  CONSTRAINT Editor PRIMARY KEY (t_id, username),
-  FOREIGN KEY (username) REFERENCES Users(username) ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY (t_id) REFERENCES Targets(id) ON DELETE CASCADE
+  tName VARCHAR(127) NOT NULL,
+  uName VARCHAR(127) NOT NULL,
+  CONSTRAINT Editor PRIMARY KEY (tName, uName),
+  FOREIGN KEY (uName) REFERENCES Users(username) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (tName) REFERENCES Targets(name) ON DELETE CASCADE
 );
 CREATE TABLE TransactionLog (
   tr_id VARCHAR(32) NOT NULL UNIQUE,
-  username VARCHAR(127),
-  t_id INT NOT NULL,
+  uName VARCHAR(127),
+  tName VARCHAR(127) NOT NULL,
   PRIMARY KEY (tr_id),
-  FOREIGN KEY (username) REFERENCES Users(username) ON DELETE CASCADE ON UPDATE CASCADE, /* transactions and editor permissions are logged until a certain time after deletion by deactivating them instead */
-  FOREIGN KEY (t_id) REFERENCES Targets(id) ON DELETE CASCADE ON UPDATE CASCADE
+  FOREIGN KEY (uName) REFERENCES Users(username) ON DELETE CASCADE ON UPDATE CASCADE, /* transactions and editor permissions are logged until a certain time after deletion by deactivating them instead */
+  FOREIGN KEY (tName) REFERENCES Targets(name) ON DELETE CASCADE ON UPDATE CASCADE
 );

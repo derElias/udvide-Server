@@ -82,14 +82,16 @@ class access_vfc
         // Jpg is hinted and checked by FF D8 @start and FF D9 @end as magic numbers
         // Docu: $image[-x] requires PHP 7.1+; but doesn'T seem to work in test env. using classic Syntax instead
         // Validation method chosen to get a compromise between performance (check file endings) and accuracy (use gd function)
-        $isJpg = (ord($image{0}) == 255)
-            && (ord($image{1}) == 216)
-            && (ord($image[strlen($image)-2]) == 255)
-            && (ord($image[strlen($image)-1]) == 217);
-        if ($isJpg) {
-            $this->image = $image;
-        } else {
-            throw new VuforiaAccessAPIException('Recoverable Error: Image set to non JPEG / JPG file', 120);
+        if (isset($image)) {
+            $isJpg = (ord($image{0}) == 255)
+                && (ord($image{1}) == 216)
+                && (ord($image[strlen($image)-2]) == 255)
+                && (ord($image[strlen($image)-1]) == 217);
+            if ($isJpg) {
+                $this->image = $image;
+            } else {
+                throw new VuforiaAccessAPIException('Recoverable Error: Image set to non JPEG / JPG file', 120);
+            }
         }
         return $this;
     }

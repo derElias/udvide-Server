@@ -6,6 +6,8 @@ require_once 'udvide.php';
  * Date: 29.05.2017
  * Time: 09:17
  */
+
+// ToDo REMEMBER: IF USERNAME == SUBJECT PERFORM ACTIONS ON LOGGEDINUSER
 // If valid Post and Production or Get and Testing
 if ($_SERVER["REQUEST_METHOD"] == "POST" && !GET_INSTEAD_POST
     || $_SERVER["REQUEST_METHOD"] == "GET" && GET_INSTEAD_POST) {
