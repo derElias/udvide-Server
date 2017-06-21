@@ -251,10 +251,10 @@ function getAllEditors() {
     return access_DB::prepareExecuteFetchStatement($sql);
 }
 
-function getAllTargetsForUser() { //  todo move to targets getall()
+/*function getAllTargetsForUser() { //  todo move to targets getall()
     $sql = 'SELECT tName, uName FROM udvide.Editors WHERE ';
     access_DB::prepareExecuteFetchStatement($sql,[$target->getName(),$user->getUsername()]);
-}
+}*/
 
 class LoginException extends Exception {}
 class PermissionException extends Exception {}

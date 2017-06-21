@@ -9,13 +9,11 @@ $sql = <<<'SQL'
 INSERT INTO udvide.Users (username,passHash,role)
 VALUES (?,?,?)
 SQL;
-$keys = json_decode(file_get_contents('keys.json'));
-$new_users_peppered_salted_password = password_hash(sha1($root_passwd . $keys->pepper),PASSWORD_DEFAULT);
-access_DB::prepareExecuteFetchStatement($sql,['root',$new_users_peppered_salted_password,PERMISSIONS_ROOT]);
+$dbpw = pepperedPassGen($root_passwd);
+access_DB::prepareExecuteFetchStatement($sql,['root',$dbpw,PERMISSIONS_ROOT]);
 echo "root created! \n<br/>";
 // add devs as root
-$root = (new user())
-    ->setUsername('root')
+$root = user::fromDB('root')
     ->setPassHash($root_passwd)
     ->login();
 

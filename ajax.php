@@ -1,5 +1,5 @@
 <?php
-require_once 'udvide.php';
+require_once 'udvideV3.php';
 /**
  * Created by PhpStorm.
  * User: User
@@ -87,6 +87,8 @@ function getSwitch($userInput) {
             user::readAll();
             break;
         case 'map':
+            break;
+        case 'initial':
             break;
     }
 }

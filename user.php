@@ -126,7 +126,7 @@ INSERT INTO udvide.users
 VALUES (FALSE,?,?,?);
 SQL;
         $values = [
-            $this->passHash,
+            pepperedPassGen($this->passHash),
             $this->username,
             isset($this->role) ? $this->role : 0
         ];
@@ -155,6 +155,10 @@ SQL;
             if($key != 'isLoggedIn'
                 && $key != 'deleted'
                 &&isset($this->{$key})) {
+
+                if ($key == 'passHash') {
+                    $value = pepperedPassGen($value);
+                }
 
                 $sql .= " $key = ? , ";
                 $ins[] = $value;
@@ -225,9 +229,10 @@ SQL;
                 throw new LoginException(ERR_LOGIN_USERDELETED,2);
             if (!$this->pepperedPassCheck($this->passHash, $userArr['passHash']))
                 throw new LoginException(ERR_LOGIN_WRONGPASSWD,3);
-
             // fill this with the db values
             $this->set($userArr);
+            // role is prevented to be used as permission leverage so we have to set it manually
+            $this->role = $userArr['role']; // todo make obsolete by adapting / testing the setter
             // minimize risk of password readout
             $this->passHash = null;
             // lock object down
@@ -338,7 +343,7 @@ SQL;
     public function setPassHash(string $passHash = null): user
     {
         if (isset($passHash)) {
-            $this->passHash = $this->pepperedPassGen($passHash);
+            $this->passHash = $passHash;
         }
         return $this;
     }
@@ -351,7 +356,7 @@ SQL;
     {
         if (isset($role)) {
             // prevent permission leverage
-            if ($role <= user::$loggedInUser->role)
+            if (is_null(user::$loggedInUser) || $role <= user::$loggedInUser->role)
                 $this->role = $role;
         }
         return $this;
