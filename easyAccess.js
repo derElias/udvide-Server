@@ -36,7 +36,7 @@ function createEntry() {
 function getMapSelect() {
     document.getElementById("content").innerHTML = resourcePackage.templates["selectMap.html"]
 }
-
+var response;
 var username;
 var passHash;
 function login() {
@@ -118,7 +118,21 @@ function createUser() {
 
     function getEntryTable() {
         document.getElementById("content").innerHTML = resourcePackage.templates["entrytableTempl.html"];
-        sendAjax(null, "target", "getAll")
+        sendAjax(null, "target", "getAll",printEntryTable());
+
+
+    }
+    function printEntryTable() {
+        if (this.readyState === 4 && this.status === 200) {
+            response = JSON.parse(this.responseText);
+            let parent = document.getElementById('userList');
+
+            for(let i = 0; i < response.length;i++) {
+                let elem = document.createElement('div').innerHTML = resourcePackage.templates["User.html"];
+                parent.appendChild(elem);
+                document.getElementsByClassName('user_title')[i].innerHTML = document.createTextNode(response[i].role + ": " +  response[i].username);
+            }
+        }
     }
 
     function getEntryUpdatePopup() {
@@ -155,44 +169,20 @@ function createUser() {
         }
     }
 
-    function sendAjax(object, subject, verb) {
-  /*      let target = {
-            id: document.getElementById("t_id").value,
-            name: document.getElementById("t_name").value,
-            image: image,
-            activeFlag: document.getElementById("t_activeFlag").checked,
-            xPos: document.getElementById("xPos").value,
-            yPos: document.getElementById("yPos").value,
-            map: document.getElementById("map").value,
-            content: document.getElementById("t_content").value
-        };
-        let user = {
-            passHash: getElementById("update_user_password").value,
-            username: getElementById("update_user_name").value,
-            role: getElementById("update_user_role").value,
-            createTargetLimit: getElementById("update_user_tnumber").value,
-        };
-        let map = {
-            name: getElementById("t_id").value,
-            image: getElementById("t_id").value,
-        };
-*/
+    function sendAjax(object, subject, verb , callbackMethod) {
+
         let xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function () {
-            if (this.readyState === 4 && this.status === 200) {
-                document.getElementById("test").innerHTML = this.responseText;
-            }
-        };
-        var obSend;
+        xhttp.onreadystatechange = callbackMethod;
+        var objSend;
         if(subject == "target"){
-            obSend="&target=";
+            objSend="&target=";
         }
         else{
             if(subject=="user"){
-                obSend="$user=";
+                objSend="$user=";
             }
             else{
-                obSend="&map=";
+                objSend="&map="
             }
         }
         let wwwForm =
@@ -200,7 +190,7 @@ function createUser() {
             + "&passHash=" + passHash
             + "&subject=" + subject
             + "&verb=" + verb
-            + obSend + JSON.stringify(object);
+            + objSend + JSON.stringify(object);
 
         let serverPage = 'ajax.php';
         xhttp.open("POST", serverPage, true);

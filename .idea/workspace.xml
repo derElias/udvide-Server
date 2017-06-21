@@ -2,22 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e5874ff8-d329-446d-9770-a3d3600cdf40" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/Marker.JPG" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/logo.jpeg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/logo.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/mapPreview.JPG" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/Contiue.svg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/createMap.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/selectMap.html" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/templates/Header.html" afterPath="$PROJECT_DIR$/templates/headerContent.html" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/templates/footerTempl.html" afterPath="$PROJECT_DIR$/templates/footer.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/easyAccess.js" afterPath="$PROJECT_DIR$/easyAccess.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/manage.html" afterPath="$PROJECT_DIR$/manage.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/manage.php" afterPath="$PROJECT_DIR$/manage.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/Create.svg" afterPath="$PROJECT_DIR$/res/Create.svg" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/stylesheet.css" afterPath="$PROJECT_DIR$/stylesheet.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/EntryPopup.html" afterPath="$PROJECT_DIR$/templates/EntryPopup.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/User.html" afterPath="$PROJECT_DIR$/templates/User.html" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -43,11 +30,11 @@
     <splitter split-orientation="horizontal" split-proportion="0.45026487">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="manage.php" pinned="false" current-in-tab="true">
+          <file leaf-file-name="manage.php" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/manage.php">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="289">
-                  <caret line="17" column="27" lean-forward="false" selection-start-line="17" selection-start-column="21" selection-end-line="17" selection-end-column="27" />
+                <state relative-caret-position="153">
+                  <caret line="9" column="0" lean-forward="false" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
                   <folding>
                     <marker date="1498040886858" expanded="true" signature="579:643" ph="INSERT INTO udvide.Users... " />
                   </folding>
@@ -75,11 +62,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="easyAccess.js" pinned="false" current-in-tab="false">
+          <file leaf-file-name="easyAccess.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/easyAccess.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="17">
-                  <caret line="106" column="47" lean-forward="false" selection-start-line="106" selection-start-column="47" selection-end-line="106" selection-end-column="47" />
+                <state relative-caret-position="612">
+                  <caret line="132" column="123" lean-forward="false" selection-start-line="132" selection-start-column="123" selection-end-line="132" selection-end-column="123" />
                   <folding />
                 </state>
               </provider>
@@ -90,16 +77,6 @@
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="289">
                   <caret line="17" column="10" lean-forward="false" selection-start-line="17" selection-start-column="10" selection-end-line="17" selection-end-column="10" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="User.html" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/templates/User.html">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="0">
-                  <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="18" selection-end-column="6" />
                   <folding />
                 </state>
               </provider>
@@ -139,11 +116,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="EntryPopup.html" pinned="false" current-in-tab="true">
+          <file leaf-file-name="EntryPopup.html" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/templates/EntryPopup.html">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="408">
-                  <caret line="24" column="17" lean-forward="true" selection-start-line="24" selection-start-column="17" selection-end-line="24" selection-end-column="17" />
+                  <caret line="24" column="17" lean-forward="false" selection-start-line="24" selection-start-column="17" selection-end-line="24" selection-end-column="17" />
                   <folding />
                 </state>
               </provider>
@@ -177,6 +154,16 @@
                   <folding>
                     <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                   </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="User.html" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/templates/User.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="306">
+                  <caret line="18" column="0" lean-forward="false" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -226,7 +213,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>se</find>
       <find>h</find>
       <find>hea</find>
       <find>pe</find>
@@ -246,7 +232,6 @@
       <find>sendUser</find>
       <find>loadHeader</find>
       <find>getMapTable</find>
-      <find>getEntryTable</find>
       <find>createUser</find>
       <find>sendUserUpdate</find>
       <find>log</find>
@@ -256,6 +241,8 @@
       <find>test</find>
       <find>createEnt</find>
       <find>pre</find>
+      <find>getEntryTable</find>
+      <find>getEntry</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -294,7 +281,6 @@
         <option value="$PROJECT_DIR$/access_vfc.php" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/templates/Entry.html" />
-        <option value="$PROJECT_DIR$/templates/User.html" />
         <option value="$PROJECT_DIR$/res/Delete.svg" />
         <option value="$PROJECT_DIR$/templates/footerTempl.html" />
         <option value="$PROJECT_DIR$/test_ajax.php" />
@@ -313,8 +299,9 @@
         <option value="$PROJECT_DIR$/templates/selectMap.html" />
         <option value="$PROJECT_DIR$/stylesheet.css" />
         <option value="$PROJECT_DIR$/templates/createMap.html" />
-        <option value="$PROJECT_DIR$/easyAccess.js" />
         <option value="$PROJECT_DIR$/templates/EntryPopup.html" />
+        <option value="$PROJECT_DIR$/templates/User.html" />
+        <option value="$PROJECT_DIR$/easyAccess.js" />
       </list>
     </option>
   </component>
@@ -608,12 +595,12 @@
       <workItem from="1497888263966" duration="91000" />
       <workItem from="1497966670740" duration="3265000" />
       <workItem from="1497969958727" duration="25724000" />
-      <workItem from="1498046605843" duration="207000" />
+      <workItem from="1498046605843" duration="2490000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="199058000" />
+    <option name="totallyTimeSpent" value="201341000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -808,7 +795,7 @@
         <state relative-caret-position="-3060">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1497969912128" expanded="true" signature="3935:4007" ph="INSERT INTO udvide.TransactionLog... " />
+            <marker date="1498047653972" expanded="true" signature="3935:4007" ph="INSERT INTO udvide.TransactionLog... " />
           </folding>
         </state>
       </provider>
@@ -825,11 +812,11 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1498038290246" expanded="true" signature="1033:1085" ph="SELECT name,... Maps" />
-            <marker date="1498038290246" expanded="true" signature="1294:1331" ph="SELECT name,... Maps" />
-            <marker date="1498038290246" expanded="true" signature="1859:1908" ph="INSERT INTO udvide.Maps... " />
-            <marker date="1498038290246" expanded="true" signature="2677:2731" ph="UPDATE udvid... " />
-            <marker date="1498038290246" expanded="true" signature="3073:3111" ph="DELETE FROM " />
+            <marker date="1498047653981" expanded="true" signature="1033:1085" ph="SELECT name,... Maps" />
+            <marker date="1498047653981" expanded="true" signature="1294:1331" ph="SELECT name,... Maps" />
+            <marker date="1498047653981" expanded="true" signature="1859:1908" ph="INSERT INTO udvide.Maps... " />
+            <marker date="1498047653981" expanded="true" signature="2677:2731" ph="UPDATE udvid... " />
+            <marker date="1498047653981" expanded="true" signature="3073:3111" ph="DELETE FROM " />
           </folding>
         </state>
       </provider>
@@ -846,6 +833,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="869">
           <caret line="133" column="22" lean-forward="false" selection-start-line="133" selection-start-column="22" selection-end-line="133" selection-end-column="22" />
+          <folding>
+            <marker date="1497887368230" expanded="true" signature="6317:6323" ph="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -869,7 +859,7 @@
         <state relative-caret-position="285">
           <caret line="34" column="14" lean-forward="false" selection-start-line="34" selection-start-column="14" selection-end-line="34" selection-end-column="14" />
           <folding>
-            <marker date="1496754798808" expanded="true" signature="225:289" ph="INSERT INTO udvide.Users... " />
+            <marker date="1498047653984" expanded="true" signature="225:289" ph="INSERT INTO udvide.Users... " />
           </folding>
         </state>
       </provider>
@@ -878,14 +868,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="221">
           <caret line="13" column="0" lean-forward="false" selection-start-line="13" selection-start-column="0" selection-end-line="17" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/User.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="18" selection-end-column="6" />
           <folding />
         </state>
       </provider>
@@ -991,14 +973,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/easyAccess.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="106" column="47" lean-forward="false" selection-start-line="106" selection-start-column="47" selection-end-line="106" selection-end-column="47" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/headerContent.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1023,16 +997,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/manage.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="17" column="27" lean-forward="false" selection-start-line="17" selection-start-column="21" selection-end-line="17" selection-end-column="27" />
-          <folding>
-            <marker date="1498040886858" expanded="true" signature="579:643" ph="INSERT INTO udvide.Users... " />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/manage.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="493">
@@ -1046,7 +1010,33 @@
     <entry file="file://$PROJECT_DIR$/templates/EntryPopup.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="408">
-          <caret line="24" column="17" lean-forward="true" selection-start-line="24" selection-start-column="17" selection-end-line="24" selection-end-column="17" />
+          <caret line="24" column="17" lean-forward="false" selection-start-line="24" selection-start-column="17" selection-end-line="24" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/manage.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" column="0" lean-forward="false" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
+          <folding>
+            <marker date="1498040886858" expanded="true" signature="579:643" ph="INSERT INTO udvide.Users... " />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/User.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="18" column="0" lean-forward="false" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/easyAccess.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="612">
+          <caret line="132" column="123" lean-forward="false" selection-start-line="132" selection-start-column="123" selection-end-line="132" selection-end-column="123" />
           <folding />
         </state>
       </provider>
