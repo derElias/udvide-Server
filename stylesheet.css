@@ -25,11 +25,15 @@ body{
     height: 1010px;
 }
 
-.centerHeight{
-    position: relative;
+.center{
+    position: absolute;
     top: 50%;
     transform: translateY(-50%);
     text-align: center;
+}
+
+.createUserInput{
+    width: 95%;
 }
 .dropdown {
     width: 100%;
@@ -157,7 +161,7 @@ footer {
 }
 
 #logo{
-    height: 50px;
+    height: 70px;
     float: left;
 }
 
@@ -172,6 +176,10 @@ footer {
 
 .previewPic{
     width: 250px;
+    border: solid black 1px;
+}
+.previewPicMap{
+    width: 100%;
     border: solid black 1px;
 }
 .saveButton{
@@ -288,7 +296,7 @@ footer {
     clear: both;
     display: table;
 }
-.rigtht{
+.right{
     float: right;
 }
 .right-1{

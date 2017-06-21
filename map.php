@@ -103,13 +103,12 @@ SQL;
             }
         }
 
+        $sql = rtrim($sql,',');
+
         if ($updateDB) {
             $sql = <<<SQL
-DECLARE @dummy int;
 UPDATE udvide.maps
-SET
-$sql
-@dummy = 0
+SET $sql
 WHERE name = ?;
 SQL;
             $ins[] = $this->name;
@@ -176,12 +175,24 @@ SQL;
     }
 
     /**
-     * @param string $image
+     * @param resource|string $image
      * @return map
      */
-    public function setImage(string $image = null):map
+    public function setImage($image = null):map
     {
-        $this->image = $image;
+        if (isset($image)) {
+            if (is_string($image)) {
+                $this->image =
+                    imagecreatefromstring(
+                        base64_decode(
+                            base64ImgToDecodeAbleBase64($image)
+                        )
+                    );
+            } else {
+                $this->image = $image;
+            }
+            $this->image = imgAssistant($this->image, ['maxFileSize' => VUFORIA_DATA_SIZE_LIMIT]);
+        }
         return $this;
     }
     //</editor-fold>

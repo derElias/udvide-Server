@@ -13,13 +13,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") { // if form submit
         echo '<p>In future versions the software will handle the form async and not replace the page</p></br>';
         if ($handlerResponse->success) {
             echo '<p>';
-            echo $handlerResponse->message;
+            echo $handlerResponse->payLoad;
             echo '</br>';
             echo $handlerResponse->t_id;
             echo '</p>';
         } else {
             echo '<div class="popMessage"><p>';
-            echo $handlerResponse->message;
+            echo $handlerResponse->payLoad;
             echo '</p></div>';
         }
     } catch (Exception $e) {

@@ -1,55 +1,27 @@
- <!--
- <div class="row">
-        <div class="col-10">
-            <input type="text" name="username" placeholder=" username" class="Namefield">
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-10">
-            <input type="text" name="password" placeholder=" password" class="Namefield">
-        </div>
-    </div>
-    <div class="row">
-    <div class="col-3">
-        <div class="dropdown">
-            <div onclick="getPermissionList()" class="dropdown-button , row">
-                <div id="permissionsUser" class="left-7">Editor</div>
-                <img src="res/Dropdown.svg">
-            </div>
-            <div id="Userpermissions" class="dropdown-content">
-                <div onclick="setUserClient()">Client</div>
-                <div onclick="setUserAdmin()">Admin</div>
-                <div onclick="setUserEditor()">Editor</div>
-            </div>
-            <select name="usersPermissions" onchange="showUser(this.value)">
-                <option value="">Select permissions:</option>
-                <option value="1">Client</option>
-                <option value="2">Admin</option>
-                <option value="3">Editor</option>
-            </select>
-        </div>
-    </div>
-    <div class="col-4"></div>
-        <button type="submit" onclick="saveUser()" class="col-2 , Mediumbuttons">
-            <div class="svg">
-                <img src="res/Save.svg">
-            </div>
-        </button>
-        <div class="col-1"></div>
-</div>
--->
- <div class="row">
-     <div id="user_Role">role</div>
-     <div id="user_name">name</div>
- </div>
- <div class="row">
-     <div class="col-5">
-         Change Name:</br>
-         Change Password:</br>
-         Change Role:</br>
-         Change Tagellimit:
+<div class="Entrybox">
+     <div class="row">
+         <div class="left" id="user_Role">role</div>
+         <div class="left" > :</div>
+         <div class="left" id="user_name">name</div>
+         <img class="right" src="res/Save.svg" onclick="sendUserCreate()" id="update_user_save" width="20px">
      </div>
-     <div class="col-5">
-         
+     <div class="row">
+         <div class="col-5">
+             Name:</br>
+             Password:</br>
+             Role:</br>
+             Tagretlimit:
+         </div>
+         <div class="col-5">
+             <input class="createUserInput" type="text" placeholder="Username" id="update_user_name">
+             <input class="createUserInput" type="password" placeholder="Password" id="update_user_password">
+             <select class="createUserInput" onchange="showUser(this.value)" id="update_user_role">
+                 <option value="">Select permissions:</option>
+                 <option value="1">Client</option>
+                 <option value="2">Admin</option>
+                 <option value="3">Editor</option>
+             </select>
+             <input class="createUserInput" type="number" id="update_user_tnumber">
+         </div>
      </div>
  </div>

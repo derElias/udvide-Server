@@ -57,7 +57,7 @@ class udvide
         $perm = $this->getPermissions($username, $passHash);
         // is login invalid? -> Error
         if ($perm === false) {
-            $this->handlerResponse->message = 'Invalid login (Bad password or username)';
+            $this->handlerResponse->payLoad = 'Invalid login (Bad password or username)';
             return $this->handlerResponse;
         }
 
@@ -72,7 +72,7 @@ class udvide
                 $this->handlerResponse->success = true;
                 $this->handlerResponse->t_id = $target->id;
             } else {
-                $this->handlerResponse->message = $ct;
+                $this->handlerResponse->payLoad = $ct;
             }
             return $this->handlerResponse;
         }
@@ -91,7 +91,7 @@ class udvide
             if ($ct === true) {
                 $this->handlerResponse->success = true;
             } else {
-                $this->handlerResponse->message = $ct;
+                $this->handlerResponse->payLoad = $ct;
             }
             return $this->handlerResponse;
         }
@@ -110,7 +110,7 @@ class udvide
             if ($ct === true) {
                 $this->handlerResponse->success = true;
             } else {
-                $this->handlerResponse->message = $ct;
+                $this->handlerResponse->payLoad = $ct;
             }
             return $this->handlerResponse;
         }
@@ -130,11 +130,11 @@ class udvide
             if ($ct === true) {
                 $this->handlerResponse->success = true;
             } else {
-                $this->handlerResponse->message = $ct;
+                $this->handlerResponse->payLoad = $ct;
             }
             return $this->handlerResponse;
         }
-        $this->handlerResponse->message = 'Invalid command?';
+        $this->handlerResponse->payLoad = 'Invalid command?';
         return $this->handlerResponse;
     }
 

@@ -211,16 +211,59 @@ function sanitizeXML($in) {
     return preg_replace($search, $replace, $in);
 }
 
+function cleanupDbAndVfc() {
+    $sql = <<<'SQL'
+SELECT vw_id
+FROM udvide.Targets 
+WHERE deleted = true or deleted = 1;
+
+DELETE FROM udvide.Targets
+WHERE deleted = true or deleted = 1;
+DELETE FROM udvide.Users
+WHERE deleted = true or deleted = 1;
+SQL;
+    $db = access_DB::prepareExecuteFetchStatement($sql,[$this->name,$this->name]);
+
+    foreach ($db as $value) {
+        $vwsResponse = (new access_vfc())
+            ->setTargetId($value['vw_id'])
+            ->setAccessMethod('delete')
+            ->execute();
+
+        $vwsResponseBody = json_decode($vwsResponse->getBody());
+        $tr_id = $vwsResponseBody->transaction_id;
+
+        $user = is_null(user::getLoggedInUser()) ? user::getLoggedInUser()->getUsername() : 'root';
+        logTransaction($tr_id,$user,'cleanup victim');
+    }
+}
+
+function assignEditor(target $target, user $user) {
+    if (user::getLoggedInUser()->getRole() < MIN_ALLOW_TARGET_ASSIGN)
+        throw new PermissionException(ERR_PERMISSION_INSUFFICIENT,1);
+
+    $sql = 'INSERT INTO udvide.Editors VALUES (?,?)';
+    access_DB::prepareExecuteFetchStatement($sql,[$target->getName(),$user->getUsername()]);
+}
+// todo cleancode editor functions
+function getAllEditors() {
+    $sql = 'SELECT tName, uName FROM udvide.Editors';
+    return access_DB::prepareExecuteFetchStatement($sql);
+}
+
+function getAllTargetsForUser() { //  todo move to targets getall()
+    $sql = 'SELECT tName, uName FROM udvide.Editors WHERE ';
+    access_DB::prepareExecuteFetchStatement($sql,[$target->getName(),$user->getUsername()]);
+}
 
 class LoginException extends Exception {}
 class PermissionException extends Exception {}
 class IncompleteObjectException extends Exception {}
+class InvalidVerbException extends Exception {}
 
 class handlerResponse {
     /** @var  bool */
     public $success;
-    /** @var  string */
-    public $message;
-    /** @var  int */
-    public $t_id;
+    /** @var  target|user|map|string|null */
+    public $payLoad;
 }

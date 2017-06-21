@@ -7,14 +7,17 @@ require_once 'udvide.php';
  * Time: 09:17
  */
 
-// ToDo REMEMBER: IF USERNAME == SUBJECT PERFORM ACTIONS ON LOGGEDINUSER
 // If valid Post and Production or Get and Testing
 if ($_SERVER["REQUEST_METHOD"] == "POST" && !GET_INSTEAD_POST
     || $_SERVER["REQUEST_METHOD"] == "GET" && GET_INSTEAD_POST) {
     try {
         // try to perform the requested action
-        echo performVerbForSubject(GET_INSTEAD_POST ? $_GET : $_POST);
+        echo performVerbForSubjectAs(GET_INSTEAD_POST ? $_GET : $_POST);
     } catch (Exception $e) {
+        $response = new handlerResponse();
+        $response->success = false;
+
+        $echo = '';
         $exceptionInfo = [
             'trace'=>$e->getTraceAsString(),
             'msg'=>$e->getMessage(),
@@ -23,8 +26,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !GET_INSTEAD_POST
             'code'=>$e->getCode()
         ];
         foreach ($exceptionInfo as $key=>$value) {
-            echo $key . ': ' . $value . '<br/>';
+            $echo = $key . ': ' . $value . '<br/>';
         }
+        $response->payLoad = $echo;
+        echo json_encode($response);
     }
 } else {
     echo "This site is used to evaluate Ajax requests.\n<br/>
@@ -36,74 +41,112 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !GET_INSTEAD_POST
  * @param array $userInput
  * @return string
  */
-function performVerbForSubject(array $userInput) {
-    $udvide = new udvide();
-    $response = null;
+function performVerbForSubjectAs(array $userInput) {
+    $verb = $userInput['verb'];
+    $subject = isset($userInput['subject']) ? $userInput['subject'] : null;
+
+    $response = new handlerResponse();
+    $response->success = true;
+
+    if (isset($userInput['user'])) {
+        $user = user::fromJSON($userInput['user']);
+        $subject = isset($userInput['subject']) ? $userInput['subject'] : $userInput['username'];
+        // if selfedit log in the $user instance
+        if ($subject === $userInput['username']) {
+            $newUsername = $user->getUsername();
+            $user->setUsername($subject)
+                ->setPassHash($userInput['passHash'])
+                ->login()
+                ->setUsername($newUsername);
+        } else {
+            loginUser($userInput['username'], $userInput['passHash']);
+        }
+        $response->payLoad = performVerbForUser($verb, $user, $subject);
+    } elseif (isset($userInput['target'])) {
+        loginUser($userInput['username'], $userInput['passHash']);
+        $target = target::fromJSON($userInput['target']);
+        $response->payLoad = performVerbForTarget($verb, $target, $subject);
+    } elseif (isset($userInput['map'])) {
+        loginUser($userInput['username'], $userInput['passHash']);
+        $map = map::fromJSON($userInput['map']);
+        $response->payLoad = performVerbForMap($verb, $map, $subject);
+    } elseif ($userInput['verb'] === 'getAll') {
+        getSwitch($userInput);
+    } else {
+        $response->success = false;
+        $response->payLoad = ERR_UD010;
+    }
+    return json_encode($response);
+}
+
+function getSwitch($userInput) {
     switch ($userInput['subject']) {
         case 'target':
-            $target = target::fromJSON($userInput['target']);
-            switch ($userInput['verb']) {
-                case 'create':
-                    $response = $udvide->doTargetManipulationAs('create', $target, $userInput['username'], $userInput['passHash']);
-                    break;
-                case 'read':
-                    //$response = $udvide->readTarget($target);
-                    break;
-                case 'update':
-                    $response = $udvide->doTargetManipulationAs('update', $target, $userInput['username'], $userInput['passHash']);
-                    break;
-                case 'deactivate':
-                    $response = $udvide->doTargetManipulationAs('deactivate', $target, $userInput['username'], $userInput['passHash']);
-                    break;
-                case 'delete':
-                    $response = $udvide->doTargetManipulationAs('delete', $target, $userInput['username'], $userInput['passHash']);
-                    break;
-                case 'list':
-                    $response = $udvide->getTargetPageByUser($userInput['username'], $userInput['passHash'],
-                        isset($userInput['page']) ? $userInput['page'] : 0,
-                        isset($userInput['pageSize']) ? $userInput['pageSize'] : 25);
-                    break;
-            }
-            return json_encode($response);
             break;
         case 'user':
-            $hr = new handlerResponse();
-            switch ($userInput['verb']) {
-                case 'create':
-                    $response = $udvide->createUser($userInput['subjectName'], $userInput['subjectPassword'],
-                        isset($userInput['role']) ? $userInput['role'] : null,
-                        $userInput['username'], $userInput['passHash']);
-                    $hr->success = $response;
-                    break;
-                /*case 'update':
-                    $response = $udvide->updateUser($userInput['subjectName'],$userInput['subjectPassword'],
-                        isset($userInput['role']) ? $userInput['role'] : null,
-                        $userInput['username'],$userInput['passHash']);
-                    break;*/
-                case 'deactivate':
-                    $response = $udvide->deactivateUser($userInput['subjectName'],
-                        $userInput['username'], $userInput['passHash']);
-                    $hr->success = $response;
-                    break;
-                case 'delete':
-                    $response = $udvide->$response = $udvide->deleteUser($userInput['subjectName'],
-                        $userInput['username'], $userInput['passHash']);
-                    $hr->success = $response;
-                    break;
-                /*case 'list':
-                    $response = $udvide->getTargetPageByUser($userInput['username'], $userInput['passHash'],
-                        isset($userInput['page']) ? $userInput['page'] : null,
-                        isset($userInput['pageSize']) ? $userInput['pageSize'] : null);
-                    $hr = $response;
-                    break;*/
-            }
-            return json_encode($hr);
+            user::readAll();
             break;
+        case 'map':
+            break;
+    }
+}
+
+function loginUser(string $username, string $passHash) {
+    user::fromDB($username)
+        ->setPassHash($passHash)
+        ->login();
+}
+
+function performVerbForTarget(string $verb,target $target, string $subject) {
+    switch ($verb) {
+        case 'create':
+            $target->create();
+            return true;
+        case 'read':
+            return $target->read();
+        case 'update':
+            $target->update($subject);
+            return true;
+        case 'delete':
+            $target->delete();
+            return true;
         default:
-            $hr = new handlerResponse();
-            $hr->success = false;
-            $hr->message = ERR_UD010;
-            return json_encode($hr);
-            break;
+            throw new InvalidVerbException();
+    }
+}
+
+function performVerbForUser(string $verb,user $user,string $subject) {
+    switch ($verb) {
+        case 'create':
+            $user->create();
+            return true;
+        case 'read':
+            return $user->read();
+        case 'update':
+            $user->update($subject);
+            return true;
+        case 'delete':
+            $user->delete();
+            return true;
+        default:
+            throw new InvalidVerbException();
+    }
+}
+
+function performVerbForMap(string $verb,map $map,string $subject) {
+    switch ($verb) {
+        case 'create':
+            $map->create();
+            return true;
+        case 'read':
+            return $map->read();
+        case 'update':
+            //$map->update($subject);
+            return true;
+        case 'delete':
+            $map->delete();
+            return true;
+        default:
+            throw new InvalidVerbException();
     }
 }

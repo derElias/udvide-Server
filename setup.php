@@ -1,8 +1,7 @@
 <?php
-require_once 'helper.php';
-require_once 'udvide.php';
+require_once 'udvideV3.php';
 $img = file_get_contents('img/img.jpg');
-$new_users_password = "imGoingToBePepperedAndSalted";
+$root_passwd = "imGoingToBePepperedAndSalted";
 $default_password = "iAmBad";
 
 // manually setup root
@@ -11,24 +10,51 @@ INSERT INTO udvide.Users (username,passHash,role)
 VALUES (?,?,?)
 SQL;
 $keys = json_decode(file_get_contents('keys.json'));
-$new_users_peppered_salted_password = password_hash(sha1($new_users_password . $keys->pepper),PASSWORD_DEFAULT);
+$new_users_peppered_salted_password = password_hash(sha1($root_passwd . $keys->pepper),PASSWORD_DEFAULT);
 access_DB::prepareExecuteFetchStatement($sql,['root',$new_users_peppered_salted_password,PERMISSIONS_ROOT]);
 echo "root created! \n<br/>";
 // add devs as root
-$cu = new udvide();
-$cu->createUser("dev/simon",$default_password,PERMISSIONS_DEVELOPER,'root',$new_users_password);
-$cu->createUser("dev/elias",$default_password,PERMISSIONS_DEVELOPER,'root',$new_users_password);
-$cu->createUser("dev/lukas",$default_password,PERMISSIONS_DEVELOPER,'root',$new_users_password);
-$cu->createUser("dev/niky",$default_password,PERMISSIONS_DEVELOPER,'root',$new_users_password);
-$cu->createUser("dev/siggi",$default_password,PERMISSIONS_DEVELOPER,'root',$new_users_password);
-// add test ppl as root
-$cu->createUser("test/tClient", $default_password,PERMISSIONS_CLIENT,'root',$new_users_password);
-$cu->createUser("test/tAdmin", $default_password,PERMISSIONS_ADMIN,'root',$new_users_password);
-$cu->createUser("test/tEditor", $default_password,PERMISSIONS_EDITOR,'root',$new_users_password);
+$root = (new user())
+    ->setUsername('root')
+    ->setPassHash($root_passwd)
+    ->login();
+
+(new user())
+    ->setPassHash($default_password)
+    ->setRole(PERMISSIONS_DEVELOPER)
+    ->setUsername("dev/simon")
+    ->create()
+    ->setUsername("dev/elias")
+    ->create()
+    ->setUsername("dev/lukas")
+    ->create()
+    ->setUsername("dev/niky")
+    ->create()
+    ->setUsername("dev/siggi")
+    ->create()
+    // add test ppl as root
+    ->setRole(PERMISSIONS_CLIENT)
+    ->setUsername("test/tClient")
+    ->create()
+    ->setRole(PERMISSIONS_ADMIN)
+    ->setUsername("test/tAdmin")
+    ->create()
+    ->setRole(PERMISSIONS_EDITOR)
+    ->setTargetCreateLimit(5)
+    ->setUsername("test/tEditor")
+    ->create();
 echo "devs and test users created!\n<br/>";
 // Add maps
 $mapImg = imagecreatetruecolor(1000,1000);
-$cu->createMap('test/1',$mapImg,'root',$new_users_password);
+(new map())
+    ->setImage($mapImg)
+    ->setName('test/1')
+    ->create()
+    ->setName('test/2')
+    ->create();
+
+
+/*/-----------------------------------------------------------------
 // add test targets
 $user = 'test/tClient';
 $pass = $default_password;
@@ -66,3 +92,4 @@ foreach ($targets as $target)
     $cu->doTargetManipulationAs('create',$target,$user,$pass);
 
 $cu->assignEditorAs($targets[2], 'test/tEditor',$user,$pass);
+//*/

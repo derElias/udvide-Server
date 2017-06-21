@@ -77,7 +77,7 @@ class user
      */
     public static function getLoggedInUser(): user
     {
-        return self::$loggedInUser;
+        return isset(self::$loggedInUser) ? self::$loggedInUser : null;
     }
 
     //<editor-fold desc="CRUD DB">
@@ -135,10 +135,14 @@ SQL;
     }
 
     /**
+     * @param string|null $subject
      * @return $this
      * @throws PermissionException
      */
-    public function update() {
+    public function update(string $subject = null) {
+
+        $subject = empty($subject) ? $subject : $this->name;
+
         // If not allowed to update and self-update (in case of self update)
         if (user::$loggedInUser->role < MIN_ALLOW_USER_UPDATE
             && !($this->isLoggedIn && $this->role < MIN_ALLOW_SELF_UPDATE))
@@ -150,7 +154,6 @@ SQL;
         foreach ($this as $key => $value) {
             if($key != 'isLoggedIn'
                 && $key != 'deleted'
-                && $key != 'old_username'
                 &&isset($this->{$key})) {
 
                 $sql .= " $key = ? , ";
@@ -159,16 +162,15 @@ SQL;
             }
         }
 
+        $sql = rtrim($sql,',');
+
         if ($updateDB) {
             $sql = <<<SQL
-DECLARE @dummy int;
 UPDATE udvide.users
-SET 
-$sql
-@dummy = 0
+SET $sql
 WHERE username = ?;
 SQL;
-            $ins[] = $this->username;
+            $ins[] = $subject;
             access_DB::prepareExecuteFetchStatement($sql, $ins);
         }
         return $this;
@@ -178,36 +180,18 @@ SQL;
      * @return $this
      * @throws PermissionException
      */
-    public function deactivate() {
+    public function delete() {
         if (user::$loggedInUser->role < MIN_ALLOW_USER_DEACTIVATE
             && !($this->isLoggedIn && $this->role < MIN_ALLOW_SELF_DEACTIVATE))
             throw new PermissionException(ERR_PERMISSION_INSUFFICIENT,1);
         $sql = 'UPDATE udvide.users SET deleted = TRUE WHERE username = ?';
         access_DB::prepareExecuteFetchStatement($sql,[$this->username]);
         $this->deleted = true;
-        return $this;
-    }
 
-    /**
-     * @throws PermissionException
-     */
-    public function delete() {
-        if (user::$loggedInUser->role < MIN_ALLOW_USER_DELETE
-            && !($this->isLoggedIn && $this->role < MIN_ALLOW_SELF_DELETE))
-            throw new PermissionException(ERR_PERMISSION_INSUFFICIENT,1);
-
-        if (!$this->deleted) {
-            // never delete directly
-            $this->deactivate();
-            return;
-        }
-        $sql = 'DELETE FROM udvide.Users WHERE username = ?';
-        access_DB::prepareExecuteFetchStatement($sql,[$this->username]);
-
-        // Logout
         $this->isLoggedIn = false;
-        if ($this === user::$loggedInUser)
+        if ($this->username === user::$loggedInUser->username)
             user::$loggedInUser = null;
+        return $this;
     }
 
     /**

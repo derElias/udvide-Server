@@ -40,7 +40,7 @@ class target
     /**
      * target constructor.
      */
-    private function __construct() {}
+    public function __construct() {}
 
     /**
      * indirect constructor
@@ -106,10 +106,15 @@ SQL;
     }
 
     public function create() {
-        if (user::getLoggedInUser()->getRole() < MIN_ALLOW_TARGET_CREATE)
+        if (user::getLoggedInUser()->getRole() < MIN_ALLOW_TARGET_CREATE
+            && user::getLoggedInUser()->getTargetCreateLimit() < 1)
             throw new PermissionException(ERR_PERMISSION_INSUFFICIENT,1);
         if (!isset($this->name))
             throw new IncompleteObjectException(ERR_USER_DATASET_INVALID,1); // How tf did u do dis?
+
+        //todo cleancode
+        if (user::getLoggedInUser()->getRole() < MIN_ALLOW_TARGET_CREATE)
+            user::getLoggedInUser()->targetCreateLimit--; // Why is phpstorm not liking this beautiful code?
 
         $sql = <<<'SQL'
 INSERT INTO udvide.Targets
@@ -148,7 +153,6 @@ SQL;
         if (isset($this->name) || isset($this->image) || isset($this->active)) {
             $vwsResponse = $this->pvfupdateobject()->execute();
             $vwsResponseBody = json_decode($vwsResponse->getBody());
-            $this->vw_id = $vwsResponseBody->target_id;
             $tr_id = $vwsResponseBody->transaction_id;
 
             logTransaction($tr_id,user::getLoggedInUser()->getUsername(),$this->name);
@@ -175,13 +179,12 @@ SQL;
             }
         }
 
+        $sql = rtrim($sql,',');
+
         if ($updateDB) {
             $sql = <<<SQL
-DECLARE @dummy int;
 UPDATE udvide.Targets
-SET
-$sql
-@dummy = 0
+SET $sql
 WHERE name = ?;
 SQL;
             $ins[] = $subject;
@@ -201,32 +204,12 @@ SQL;
         return $vwsa;
     }
 
-    public function deactivate() {
+    public function delete() {
         if (user::getLoggedInUser()->getRole() < MIN_ALLOW_TARGET_DEACTIVATE)
             throw new PermissionException(ERR_PERMISSION_INSUFFICIENT,1);
 
         $this->deleted = true;
         $this->pdbupdate($this->name);
-    }
-    public function delete() {
-        if (user::getLoggedInUser()->getRole() < MIN_ALLOW_TARGET_DELETE)
-            throw new PermissionException(ERR_PERMISSION_INSUFFICIENT,1);
-
-        if (!$this->deleted) { // ToDo: Is this flawed? do we always have a set deleted when trying to delete?
-            // never delete directly
-            $this->deactivate();
-            return;
-        }
-        $sql = <<<'SQL'
-SELECT vw_id
-FROM udvide.Targets 
-WHERE name = ?;
-
-DELETE FROM udvide.Targets
-WHERE name = ?;
-SQL;
-        access_DB::prepareExecuteFetchStatement($sql,[$this->name,$this->name]);
-
     }
     //</editor-fold>
 
