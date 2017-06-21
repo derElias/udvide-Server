@@ -25,11 +25,15 @@ body{
     height: 1010px;
 }
 
-.centerHeight{
-    position: relative;
+.center{
+    position: absolute;
     top: 50%;
     transform: translateY(-50%);
     text-align: center;
+}
+
+.createUserInput{
+    width: 95%;
 }
 .dropdown {
     width: 100%;
@@ -288,7 +292,7 @@ footer {
     clear: both;
     display: table;
 }
-.rigtht{
+.right{
     float: right;
 }
 .right-1{
