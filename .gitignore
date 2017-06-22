@@ -1,3 +1,4 @@
 # exclude the file we use to specify the SECRET keys to the city of VWC...
 keys.json
 localsettings.php
+.idea/
