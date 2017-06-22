@@ -104,8 +104,8 @@ FROM udvide.users
 WHERE deleted = 0 or deleted = false
 SQL;
         $db = access_DB::prepareExecuteFetchStatement($sql);
-        foreach ($db as $key => $userArr)
-            $db[$key] = (new self())->set($userArr);
+        /*foreach ($db as $key => $userArr)
+            $db[$key] = (new self())->set($userArr);*/
         return $db;
     }
 

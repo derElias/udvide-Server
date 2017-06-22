@@ -71,7 +71,7 @@ function performVerbForSubjectAs(array $userInput) {
         $map = map::fromJSON($userInput['map']);
         $response->payLoad = performVerbForMap($verb, $map, $subject);
     } elseif ($verb == 'getAll') {
-        getSwitch($userInput);
+        $response->payLoad = getSwitch($userInput);
     } else {
         $response->success = false;
         $response->payLoad = ERR_UD010;
@@ -84,7 +84,7 @@ function getSwitch($userInput) {
         case 'target':
             break;
         case 'user':
-            user::readAll();
+            return user::readAll();
             break;
         case 'map':
             break;

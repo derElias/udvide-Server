@@ -118,18 +118,42 @@ function saveEntry() {
 
 function getEntryTable() {
     document.getElementById("content").innerHTML = resourcePackage.templates["entrytableTempl.html"];
-    sendAjax(null, "user", "getAll", printEntryTable());
+    sendAjax(null, "user", "getAll", printEntryTable);
 }
 function printEntryTable() {
     if (this.readyState === 4 && this.status === 200) {
         response = JSON.parse(this.responseText);
-        let parent = document.getElementById('userList');
 
-        for (let i = 0; i < response.length; i++) {
-            let elem = document.createElement('div').innerHTML = resourcePackage.templates["User.html"];
-            parent.appendChild(elem);
-            document.getElementsByClassName('user_title')[i].innerHTML = document.createTextNode(response[i].role + ": " + response[i].username);
+        if (response.success === true) {
+            let payLoad = response.payLoad;
+            let parent = document.getElementById('userList');
+
+            for (let i = 0; i < payLoad.length; i++) {
+                let temp = document.createElement('div');
+                temp.innerHTML = resourcePackage.templates["User.html"];
+                parent.appendChild(temp);
+                document.getElementsByClassName('user_title')[i].innerHTML =
+                    roleToString(payLoad[i].role) + ": " + payLoad[i].username;
+            }
         }
+    }
+}
+
+function roleToString(role) {
+    // ToDo read from lang file
+    switch (role) {
+        case 5:
+            return '[root]';
+        case 4:
+            return '[Developer]';
+        case 3:
+            return '[Manager]';
+        case 2:
+            return '[Mod]';
+        case 1:
+            return '[Editor]';
+        default:
+            return ']HACKER[';
     }
 }
 
