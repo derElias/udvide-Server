@@ -48,7 +48,7 @@ function performVerbForSubjectAs(array $userInput) {
     $response = new handlerResponse();
     $response->success = true;
 
-    if (isset($userInput['user'])) {
+    if (!empty($userInput['user'])) {
         $user = user::fromJSON($userInput['user']);
         $subject = isset($userInput['subject']) ? $userInput['subject'] : $userInput['username'];
         // if selfedit log in the $user instance
@@ -62,15 +62,15 @@ function performVerbForSubjectAs(array $userInput) {
             loginUser($userInput['username'], $userInput['passHash']);
         }
         $response->payLoad = performVerbForUser($verb, $user, $subject);
-    } elseif (isset($userInput['target'])) {
+    } elseif (!empty($userInput['target'])) {
         loginUser($userInput['username'], $userInput['passHash']);
         $target = target::fromJSON($userInput['target']);
         $response->payLoad = performVerbForTarget($verb, $target, $subject);
-    } elseif (isset($userInput['map'])) {
+    } elseif (!empty($userInput['map'])) {
         loginUser($userInput['username'], $userInput['passHash']);
         $map = map::fromJSON($userInput['map']);
         $response->payLoad = performVerbForMap($verb, $map, $subject);
-    } elseif ($userInput['verb'] === 'getAll') {
+    } elseif ($verb == 'getAll') {
         getSwitch($userInput);
     } else {
         $response->success = false;
