@@ -101,9 +101,9 @@ FROM udvide.Targets t
 JOIN Editors e
 ON t.name = e.tName 
 WHERE (t.deleted = 0 or t.deleted = false)
-AND e.uName = ?
+AND (e.uName = ? or t.owner = ?)
 SQL;
-            $ins = [user::getLoggedInUser()->getUsername()];
+            $ins = [user::getLoggedInUser()->getUsername(),user::getLoggedInUser()->getUsername()];
         } else {
         $sql = <<<'SQL'
 SELECT name, owner, xPos, yPos, map
