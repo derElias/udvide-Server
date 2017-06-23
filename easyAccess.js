@@ -36,13 +36,13 @@ function createEntry() {
 function getMapSelect() {
     document.getElementById("content").innerHTML = resourcePackage.templates["selectMap.html"]
 }
-let response;
 let username;
 let passHash;
 function login() {
     username = document.getElementById("login_username").value;
     passHash = document.getElementById("login_password").value;
     getEntryTable();
+    getTargetTable();
     loadHeader();
 }
 
@@ -116,13 +116,14 @@ function saveEntry() {
     getEntryTable();
 }
 
+//<editor-fold desc="Load User Table">
 function getEntryTable() {
     document.getElementById("content").innerHTML = resourcePackage.templates["entrytableTempl.html"];
     sendAjax(null, "user", "getAll", printEntryTable);
 }
 function printEntryTable() {
     if (this.readyState === 4 && this.status === 200) {
-        response = JSON.parse(this.responseText);
+        let response = JSON.parse(this.responseText);
 
         if (response.success === true) {
             let payLoad = response.payLoad;
@@ -154,6 +155,46 @@ function roleToString(role) {
             return '[Editor]';
         default:
             return ']HACKER[';
+    }
+}
+//</editor-fold>
+
+//<editor-fold desc="Load Target Table">
+class target {
+    static fromArray(arr) {
+        let instance = new this();
+        instance.name = arr.name;
+        instance.owner = arr.owner;
+        instance.xPos = arr.xPos;
+        instance.yPos = arr.yPos;
+        instance.map = arr.map;
+        // todo if set include the other values from server
+        return instance;
+    }
+}
+let targetList = [];
+function getTargetTable() {
+    document.getElementById("content").innerHTML = resourcePackage.templates["entrytableTempl.html"];
+    sendAjax(null, "target", "getAll", printTargetTable);
+}
+function printTargetTable() {
+    if (this.readyState === 4 && this.status === 200) {
+        let response = JSON.parse(this.responseText);
+        console.log(response);
+
+        if (response.success === true) {
+            let payLoad = response.payLoad;
+            let parent = document.getElementById('targetList');
+
+            for (let i = 0; i < payLoad.length; i++) {
+                let temp = document.createElement('div');
+                temp.innerHTML = resourcePackage.templates["Entry.html"];
+                parent.appendChild(temp);
+                targetList[i] = target.fromArray(payLoad[i]);
+                document.getElementsByClassName('targetEntry')[i].innerHTML =
+                    targetList[i].name;
+            }
+        }
     }
 }
 
