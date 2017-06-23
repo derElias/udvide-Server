@@ -94,14 +94,27 @@ SQL;
     }
 
     public static function readAll() {
+        if (user::getLoggedInUser()->getRole() < MIN_ALLOW_READ_ALL_TARGETS){
+            $sql = <<<'SQL'
+SELECT t.name, t.owner, t.xPos, t.yPos, t.map
+FROM udvide.Targets t
+JOIN Editors e
+ON t.name = e.tName 
+WHERE (t.deleted = 0 or t.deleted = false)
+AND e.uName = ?
+SQL;
+            $ins = [user::getLoggedInUser()->getUsername()];
+        } else {
         $sql = <<<'SQL'
-SELECT name, owner, content, xPos, yPos, map, vw_id, image
+SELECT name, owner, xPos, yPos, map
 FROM udvide.Targets
 WHERE deleted = 0 or deleted = false
 SQL;
-        $db = access_DB::prepareExecuteFetchStatement($sql);
-        foreach ($db as $key => $userArr)
-            $db[$key] = (new self())->set($userArr);
+            $ins = null;
+        }
+        $db = access_DB::prepareExecuteFetchStatement($sql,$ins);
+        /*foreach ($db as $key => $userArr)
+            $db[$key] = (new self())->set($userArr);*/
         return $db;
     }
 
@@ -138,6 +151,8 @@ SQL;
 
         logTransaction($tr_id,user::getLoggedInUser()->getUsername(),$this->name);
 
+        $this->pdbupdate($this->name);
+
         return $this;
     }
 
@@ -151,7 +166,9 @@ SQL;
         $this->pdbupdate($subject);
 
         if (isset($this->name) || isset($this->image) || isset($this->active)) {
-            $vwsResponse = $this->pvfupdateobject()->execute();
+            $vwsResponse = $this->pvfupdateobject()
+                ->setTargetId($this->vw_id)
+                ->execute();
             $vwsResponseBody = json_decode($vwsResponse->getBody());
             $tr_id = $vwsResponseBody->transaction_id;
 
@@ -195,7 +212,6 @@ SQL;
     private function pvfupdateobject()
     {
         $vwsa = (new access_vfc())
-            ->setTargetId($this->vw_id)
             ->setAccessMethod('update')
             ->setTargetName(isset($this->name) ? $this->name : null)
             ->setImage(isset($this->image) ? $this->getImageAsRawJpg() : null)

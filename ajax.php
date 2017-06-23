@@ -58,7 +58,7 @@ function performVerbForSubjectAs(array $userInput) {
                 ->setPassHash($userInput['passHash'])
                 ->login()
                 ->setUsername($newUsername);
-        } else {
+        } else { // todo refactor this switch case
             loginUser($userInput['username'], $userInput['passHash']);
         }
         $response->payLoad = performVerbForUser($verb, $user, $subject);
@@ -71,6 +71,7 @@ function performVerbForSubjectAs(array $userInput) {
         $map = map::fromJSON($userInput['map']);
         $response->payLoad = performVerbForMap($verb, $map, $subject);
     } elseif ($verb == 'getAll') {
+        loginUser($userInput['username'], $userInput['passHash']);
         $response->payLoad = getSwitch($userInput);
     } else {
         $response->success = false;
@@ -82,6 +83,7 @@ function performVerbForSubjectAs(array $userInput) {
 function getSwitch($userInput) {
     switch ($userInput['subject']) {
         case 'target':
+            return target::readAll();
             break;
         case 'user':
             return user::readAll();
@@ -89,6 +91,7 @@ function getSwitch($userInput) {
         case 'map':
             break;
         case 'initial':
+
             break;
     }
 }
