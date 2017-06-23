@@ -180,7 +180,6 @@ function getTargetTable() {
 function printTargetTable() {
     if (this.readyState === 4 && this.status === 200) {
         let response = JSON.parse(this.responseText);
-        console.log(response);
 
         if (response.success === true) {
             let payLoad = response.payLoad;
