@@ -250,7 +250,6 @@ function getAllEditors() {
     $sql = 'SELECT tName, uName FROM udvide.Editors';
     return access_DB::prepareExecuteFetchStatement($sql);
 }
-function get
 
 class LoginException extends Exception {}
 class PermissionException extends Exception {}
