@@ -1,5 +1,5 @@
 <?php
-require_once 'udvide.php';
+require_once 'udvide_old.php';
 /**
  * Created by PhpStorm.
  * User: User
@@ -53,7 +53,7 @@ function handleForm()
     $verb = $cleanData['udvideVerb'];
     $user = $cleanData['username'];
     $passH = $cleanData['passHash'];
-    return (new udvide())->doTargetManipulationAs($verb, $target, $user, $passH);
+    return (new udvideOld())->doTargetManipulationAs($verb, $target, $user, $passH);
 }
 
 /**
