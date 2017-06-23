@@ -166,7 +166,7 @@ SQL;
             }
         }
 
-        $sql = rtrim($sql,',');
+        $sql = rtrim(rtrim($sql),',');
 
         if ($updateDB) {
             $sql = <<<SQL

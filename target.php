@@ -180,7 +180,7 @@ SQL;
     private function pdbupdate($subject)
     {
         // If not allowed to update and self-update (in case of self update)
-        if (user::getLoggedInUser()->getRole() < MIN_ALLOW_MAP_UPDATE)
+        if (user::getLoggedInUser()->getRole() < MIN_ALLOW_TARGET_UPDATE)
             throw new PermissionException(ERR_PERMISSION_INSUFFICIENT, 1);
 
         $updateDB = false;
@@ -196,7 +196,7 @@ SQL;
             }
         }
 
-        $sql = rtrim($sql,',');
+        $sql = rtrim(rtrim($sql),',');
 
         if ($updateDB) {
             $sql = <<<SQL

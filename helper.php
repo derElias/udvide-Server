@@ -128,7 +128,7 @@ function imgJpgSize($img, int $quality = 95):int {
  */
 function logTransaction($tr_id, $user, $t_id = "no specific")
 {
-    $sql = "INSERT INTO udvide.TransactionLog (tr_id, username, t_id) VALUES (?,?,?)";
+    $sql = "INSERT INTO udvide.TransactionLog (tr_id, uName, tName) VALUES (?,?,?)";
     access_DB::prepareExecuteFetchStatement($sql, [$tr_id,$user,$t_id]);
 }
 
@@ -245,16 +245,12 @@ function assignEditor(target $target, user $user) {
     $sql = 'INSERT INTO udvide.Editors VALUES (?,?)';
     access_DB::prepareExecuteFetchStatement($sql,[$target->getName(),$user->getUsername()]);
 }
-// todo cleancode editor functions
+// todo clean code editor functions
 function getAllEditors() {
     $sql = 'SELECT tName, uName FROM udvide.Editors';
     return access_DB::prepareExecuteFetchStatement($sql);
 }
-
-/*function getAllTargetsForUser() { //  todo move to targets getall()
-    $sql = 'SELECT tName, uName FROM udvide.Editors WHERE ';
-    access_DB::prepareExecuteFetchStatement($sql,[$target->getName(),$user->getUsername()]);
-}*/
+function get
 
 class LoginException extends Exception {}
 class PermissionException extends Exception {}
