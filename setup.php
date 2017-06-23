@@ -1,10 +1,11 @@
 <?php
 require_once 'udvideV3.php';
-$img = file_get_contents('img/img.jpg');
+$img = imagecreatefromstring(file_get_contents('img/img.jpg'));
 $root_passwd = "imGoingToBePepperedAndSalted";
 $default_password = "iAmBad";
 
-// manually setup root
+
+//// manually setup root
 $sql = <<<'SQL'
 INSERT INTO udvide.Users (username,passHash,role)
 VALUES (?,?,?)
@@ -12,7 +13,7 @@ SQL;
 $dbpw = pepperedPassGen($root_passwd);
 access_DB::prepareExecuteFetchStatement($sql,['root',$dbpw,PERMISSIONS_ROOT]);
 echo "root created! \n<br/>";
-// add devs as root
+//// add devs as root
 $root = user::fromDB('root')
     ->setPassHash($root_passwd)
     ->login();
@@ -42,7 +43,7 @@ $root = user::fromDB('root')
     ->setUsername("test/tEditor")
     ->create();
 echo "devs and test users created!\n<br/>";
-// Add maps
+//// Add maps
 $mapImg = imagecreatetruecolor(1000,1000);
 (new map())
     ->setImage($mapImg)
@@ -52,42 +53,45 @@ $mapImg = imagecreatetruecolor(1000,1000);
     ->create();
 
 
-/*/-----------------------------------------------------------------
+////-----------------------------------------------------------------
 // add test targets
-$user = 'test/tClient';
-$pass = $default_password;
+$tAdmin = user::fromDB('test/tAdmin')
+    ->setPassHash($default_password)
+    ->login();
 $targets[] = (new target())
-    ->setName('test/t_01_client')
+    ->setName('test/t_01_admin')
     ->setImage($img)
     ->setActive(true)
-    ->setContent('{"text":"Hello World!"}')
+    ->setContent('Hallo Welt!')
     ->setMap('test/1')
     ->setXPos(140)
     ->setYPos(70)
-    ->setOwner($user); // set owner defaults to the username provided via post header
-
+    ->setOwner($tAdmin->getUsername())
+    ->create();
+////
 $targets[] = (new target())
     ->setName('test/t_02_client')
     ->setImage($img)
     ->setActive(true)
-    ->setContent('{"text":"Hello World! 2"}')
+    ->setContent('<bold>Hallo Welt!</bold>')
     ->setMap('test/1')
     ->setXPos(150)
     ->setYPos(80)
-    ->setOwner('test/tAdmin');
-
+    ->setOwner($tAdmin->getUsername())
+    ->create();
+////
 $targets[] = (new target())
     ->setName('test/t_03_shared')
     ->setImage($img)
     ->setActive(true)
-    ->setContent('{"text":"Hello World! 3"}')
-    ->setMap('test/1')
+    ->setContent('<color red>Hallo Welt!</color>')
+    ->setMap('test/2')
     ->setXPos(160)
     ->setYPos(90)
-    ->setOwner($user);
-
-foreach ($targets as $target)
-    $cu->doTargetManipulationAs('create',$target,$user,$pass);
-
-$cu->assignEditorAs($targets[2], 'test/tEditor',$user,$pass);
+    ->setOwner($tAdmin->getUsername())
+    ->create();
+////
+$target = target::fromDB('test/t_01_admin');
+$user = user::fromDB('test/tEditor');
+assignEditor($target,$user);
 //*/

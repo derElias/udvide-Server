@@ -238,7 +238,7 @@ SQL;
     }
 }
 
-function assignEditor(target $target, user $user) {
+function assignEditor(target $target, user $user) { // todo add self assign mechanism and owner wildcard
     if (user::getLoggedInUser()->getRole() < MIN_ALLOW_TARGET_ASSIGN)
         throw new PermissionException(ERR_PERMISSION_INSUFFICIENT,1);
 
