@@ -250,8 +250,6 @@ SQL;
      */
     public function __set(string $name, $value):target {
         switch($name) {
-            case 'id':
-                return $this->setID($value);
             case 'owner':
                 return $this->setOwner($value);
             case 'content':
