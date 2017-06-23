@@ -12,5 +12,6 @@ header('Content-Type: application/text');
  * /clientRequest.php?t=[base64encodedTargetName]
  */
 $name = base64_decode($_GET['t']);
-$sql = 'SELECT content FROM udvide.Targets WHERE name = ?';
+$sql = 'SELECT content FROM udvide.Targets
+  WHERE name = ? AND deleted = 0 or deleted = false';
 return access_DB::prepareExecuteFetchStatement($sql,[$name])[0]['content'];
