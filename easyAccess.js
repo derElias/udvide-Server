@@ -45,6 +45,11 @@ function login() {
     getTargetTable();
     loadHeader();
 }
+function onEnterLogin(e) {
+    if (e.keyCode === 13) {
+        login();
+    }
+}
 
 function loadFooter() {
     document.getElementById("footer").innerHTML = resourcePackage.templates["footer.html"]
