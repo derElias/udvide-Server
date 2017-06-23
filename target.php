@@ -68,14 +68,14 @@ class target
 
     /**
      * indirect constructor
-     * @param null $id
+     * @param null|string $name
      * @return target
      * @internal param bool $array
      */
-    public static function fromDB($id = null) {
+    public static function fromDB($name = null) {
         $instance = new self();
-        if (isset($id)) {
-            $instance->setId($id)->read();
+        if (isset($name)) {
+            $instance->setName($name)->read();
         }
         return $instance;
     }
@@ -291,18 +291,6 @@ SQL;
 
 
     //<editor-fold desc="Fluent Setters with type and permission verification">
-
-    /**
-     * @param int $id
-     * @return target
-     */
-    public function setId(int $id = null): target
-    {
-        if (isset($id)) {
-            $this->id = $id;
-        }
-        return $this;
-    }
 
     /**
      * @param string $owner
