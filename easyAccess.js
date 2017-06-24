@@ -92,14 +92,7 @@ function createUser() {
 
 
 function loadLogin() {
-    let xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            document.getElementById("content").innerHTML = this.responseText;
-        }
-    };
-    xhttp.open("GET", "templates/login.html", true);
-    xhttp.send();
+    document.getElementById("content").innerHTML = resourcePackage.templates["login.html"];
 }
 
 //To set when choosing Map
