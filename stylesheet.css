@@ -26,9 +26,11 @@ body{
 }
 
 .center{
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+    position: relative;
+    top: 47%;
+    width: 50%;
+    margin:auto;
+    padding: 70px 0;
     text-align: center;
 }
 
