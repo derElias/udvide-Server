@@ -37,8 +37,8 @@ SELECT name, image
 FROM udvide.Maps m
 SQL;
         $db = access_DB::prepareExecuteFetchStatement($sql);
-        foreach ($db as $key => $userArr)
-            $db[$key] = (new self())->set($userArr);
+        /*foreach ($db as $key => $userArr)
+            $db[$key] = (new self())->set($userArr);*/
         return $db;
     }
 
