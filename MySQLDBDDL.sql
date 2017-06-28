@@ -1,3 +1,4 @@
+DROP DATABASE IF EXISTS udvide;
 CREATE DATABASE udvide;
 USE udvide;
 

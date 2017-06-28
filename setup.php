@@ -1,5 +1,13 @@
 <?php
+require_once 'minifier.php';
 require_once 'udvide.php';
+
+if (file_exists('MySQLDBDDL.sql')) {
+    $sql = file_get_contents('MySQLDBDDL.sql');
+    access_DB::prepareExecuteFetchStatement($sql);
+    echo 'DB recreated';
+}
+
 $img = imagecreatefromstring(file_get_contents('img/img.jpg'));
 $root_passwd = "imGoingToBePepperedAndSalted";
 $default_password = "iAmBad";
@@ -95,3 +103,15 @@ $target = target::fromDB('test/t_01_admin');
 $user = user::fromDB('test/tEditor');
 assignEditor($target,$user);
 //*/
+// PHP SET UP -----------------------------------------------
+// BEGIN RESOURCE SETUP
+
+// minify
+$js = ""; //  todo get from udvide.js.php
+minifyJS([$js, 'udvide.min.js']);
+/*$css = ""; //  todo collect wherever it is (stretchgoal)
+minifyCSS([$css, 'udvide.min.css']);*/
+
+
+
+echo "DELETE setup.php BEFORE GOING LIVE!";
