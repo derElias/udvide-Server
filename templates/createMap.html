@@ -3,7 +3,7 @@
         <input type="text"  placeholder="name" class="TargetNamefield" id="map_id">
     </div>
     <div>
-        <button onclick="saveMap()" class="saveButton">
+        <button onclick="sendMapCRUD()" class="saveButton">
             <div class="svg">
                 <img src="res/Save.svg">
             </div>
@@ -14,7 +14,10 @@
 <div class="row">
     <div class="col-10">
         <div class="row">
-            <img src="img/mapPreview.JPG" class="previewPicMap" id="t_imgPreview">
+            <canvas onclick="drawMapPoint(event)" id="mapCanvas" class="previewPicMap">
+                <img src="img/mapPreview.JPG" class="previewPicMap" id="t_imgPreview">
+            </canvas>
+            <p id="demo"></p>
         </div>
         <div class="row">
             <input class="left" type="file" onchange="previewFile()">

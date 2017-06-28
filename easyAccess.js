@@ -19,14 +19,38 @@ function createMap() {
     document.getElementById("content").innerHTML = resourcePackage.templates["createMap.html"];
 }
 
-function saveMap() {
+function sendMapCRUD() {
     let map = {
         name: document.getElementById("map_id").value,
         image: document.getElementById("t_imgPreview").src
     };
     sendAjax(map, map.name, "create");
     document.getElementById("content").innerHTML = resourcePackage.templates["mapTableTempl.html"];
+}
 
+
+function getMapTable() {
+    document.getElementById("content").innerHTML = resourcePackage.templates["mapTableTempl.html"];
+    sendAjax(null, "user", "readAll", printEntryTable);
+}
+
+function printMapTable() {
+    if (this.readyState === 4 && this.status === 200) {
+        let response = JSON.parse(this.responseText);
+
+        if (response.success === true) {
+            let payLoad = response.payLoad;
+            let parent = document.getElementById('userList');
+
+            for (let i = 0; i < payLoad.length; i++) {
+                let temp = document.createElement('div');
+                temp.innerHTML = resourcePackage.templates["User.html"];
+                parent.appendChild(temp);
+                document.getElementsByClassName('user_title')[i].innerHTML =
+                    roleToString(payLoad[i].role) + ": " + payLoad[i].username;
+            }
+        }
+    }
 }
 
 function createEntry() {
@@ -117,7 +141,7 @@ function saveEntry() {
 //<editor-fold desc="Load User Table">
 function getEntryTable() {
     document.getElementById("content").innerHTML = resourcePackage.templates["entrytableTempl.html"];
-    sendAjax(null, "user", "getAll", printEntryTable);
+    sendAjax(null, "user", "readAll", printEntryTable);
 }
 function printEntryTable() {
     if (this.readyState === 4 && this.status === 200) {
@@ -173,7 +197,7 @@ class target {
 let targetList = [];
 function getTargetTable() {
     document.getElementById("content").innerHTML = resourcePackage.templates["entrytableTempl.html"];
-    sendAjax(null, "target", "getAll", printTargetTable);
+    sendAjax(null, "target", "readAll", printTargetTable);
 }
 function printTargetTable() {
     if (this.readyState === 4 && this.status === 200) {
@@ -206,9 +230,6 @@ function getEntryUpdatePopup() {
     xhttp.send();
 }
 
-function getMapTable() {
-    document.getElementById("content").innerHTML = resourcePackage.templates["mapTableTempl.html"];
-}
 
 let immage;
 
@@ -322,3 +343,21 @@ function test() {
         xhttp.send();
     }
 }
+
+let xPos=0;
+let yPos=0;
+function drawMapPoint(event) {
+
+    var canvas = document.getElementById("mapCanvas");
+    var ctx = canvas.getContext("2d");
+    var rect = canvas.getBoundingClientRect();
+
+    xPos = (event.clientX - rect.left) * canvas.width / rect.width;
+    yPos = (event.clientY - rect.top) * canvas.height / rect.height;
+    document.getElementById("demo").innerHTML = "X: " + xPos + ", Y: " + yPos;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#FF0000";
+    ctx.fillRect(xPos-1,yPos-1,2,2);
+}
+
