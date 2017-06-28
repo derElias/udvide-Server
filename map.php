@@ -65,7 +65,7 @@ SQL;
         return $this;
     }
 
-    public function update()
+    public function update(string $subject = null)
     {
         // If not allowed to update and self-update (in case of self update)
         if (user::getLoggedInUser()->getRole() < MIN_ALLOW_MAP_UPDATE)
