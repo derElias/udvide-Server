@@ -6,7 +6,7 @@ require_once 'udvide.php';
  * Date: 14.06.2017
  * Time: 18:37
  */
-class user
+class user extends udvide
 {
     /** @var user */
     private static $loggedInUser;
@@ -25,7 +25,6 @@ class user
     /** @var  bool */
     private $isLoggedIn;
 
-    //<editor-fold desc="Constructors">
     /**
      * user constructor.
      */
@@ -33,44 +32,6 @@ class user
     {
         $this->isLoggedIn = false;
     }
-
-    /**
-     * indirect constructor
-     * @param null $username
-     * @return user
-     */
-    public static function fromDB($username = null) {
-        $instance = new self();
-        if (isset($username)) {
-            $instance->setUsername($username)->read();
-        }
-        return $instance;
-    }
-
-    /**
-     * indirect constructor
-     * @param array $array
-     * @return user
-     */
-    public static function fromArray(array $array = null) {
-        $instance = new self();
-        if (!empty($array))
-            $instance->set($array);
-        return $instance;
-    }
-
-    /**
-     * indirect constructor
-     * @param string $json
-     * @return user
-     */
-    public static function fromJSON($json = '') {
-        $instance = new self();
-        if (!empty($json))
-            $instance->set(json_decode($json, true));
-        return $instance;
-    }
-    //</editor-fold>
 
     /**
      * @return user
@@ -292,6 +253,7 @@ SQL;
     public function __set(string $name, $value): user
     {
         switch($name) {
+            case 'name':
             case 'username':
                 return $this->setUsername($value);
             case 'passHash':
@@ -324,6 +286,10 @@ SQL;
     }
 
     //<editor-fold desc="Fluent Setters with validation">
+    public function setName(string $name = null): user
+    {
+        return $this->setUsername($name);
+    }
     /**
      * @param string $username
      * @return user

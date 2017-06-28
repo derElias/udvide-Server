@@ -5,7 +5,7 @@ require_once 'udvide.php';
  * Date: 14.06.2017 Refactor in new file
  * Time: 15:48
  */
-class target
+class target extends udvide
 {
     // SQL only Values
     /** @var  bool */
@@ -36,50 +36,11 @@ class target
     // VWS generated Values
     // ToDo
 
-    //<editor-fold desc="Constructors">
     /**
      * target constructor.
      */
     public function __construct() {}
 
-    /**
-     * indirect constructor
-     * @param string $json
-     * @return target
-     */
-    public static function fromJSON($json = '') {
-        $instance = new self();
-        if (!empty($json))
-            $instance->set(json_decode($json, true));
-        return $instance;
-    }
-
-    /**
-     * indirect constructor
-     * @param array $array
-     * @return target
-     */
-    public static function fromArray(array $array = null) {
-        $instance = new self();
-        if (!empty($array))
-            $instance->set($array);
-        return $instance;
-    }
-
-    /**
-     * indirect constructor
-     * @param null|string $name
-     * @return target
-     * @internal param bool $array
-     */
-    public static function fromDB($name = null) {
-        $instance = new self();
-        if (isset($name)) {
-            $instance->setName($name)->read();
-        }
-        return $instance;
-    }
-    //</editor-fold>
 
     //<editor-fold desc="CRUD DB">
     public function read() {
@@ -297,7 +258,7 @@ SQL;
     public function setOwner(string $owner = null): target
     {
         if (isset($owner)) {
-            $this->owner = $owner; // ToDo after User.php Refactor
+            $this->owner = $owner;
         }
         return $this;
     }
