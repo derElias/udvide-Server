@@ -34,11 +34,14 @@ SQL;
     {
         $sql = <<<'SQL'
 SELECT name, image
-FROM udvide.Maps m
+FROM udvide.Maps
 SQL;
         $db = access_DB::prepareExecuteFetchStatement($sql);
-        /*foreach ($db as $key => $userArr)
-            $db[$key] = (new self())->set($userArr);*/
+        foreach ($db as $key => $userArr) {
+            $temp = new self();
+            $temp->setImage(imagecreatefromstring($userArr['image']));
+            $db[$key]['image'] = $temp->getImageAsDataUrlJpg();
+        } // todo refactor
         return $db;
     }
 

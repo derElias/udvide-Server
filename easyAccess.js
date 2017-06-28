@@ -31,7 +31,7 @@ function sendMapCRUD() {
 
 function getMapTable() {
     document.getElementById("content").innerHTML = resourcePackage.templates["mapTableTempl.html"];
-    sendAjax(null, "user", "readAll", printMapTable);
+    sendAjax(null, "map", "readAll", printMapTable);
 }
 
 function printMapTable() {
@@ -46,8 +46,8 @@ function printMapTable() {
                 let temp = document.createElement('div');
                 temp.innerHTML = resourcePackage.templates["mapEntry.html"];
                 parent.appendChild(temp);
-                document.getElementsByClassName('map_title')[i].innerHTML =
-                    roleToString(payLoad[i].role) + ": " + payLoad[i].username;
+                console.log(payLoad);
+                document.getElementsByClassName('map_title')[i].innerHTML = payLoad[i].name;
             }
         }
     }
@@ -258,9 +258,9 @@ function sendAjax(object, subject, verb, callbackMethod) {
     if (object == null)
         object = "";
 
-    if (subject == "target") {
+    if (subject === "target") {
         objSend = "&target=";
-    } else if (subject == "user") {
+    } else if (subject === "user") {
         objSend = "&user=";
     } else {
         objSend = "&map="
@@ -270,7 +270,7 @@ function sendAjax(object, subject, verb, callbackMethod) {
         + "&passHash=" + passHash
         + "&subject=" + subject
         + "&verb=" + verb;
-    if (verb != "readAll") {
+    if (verb !== "readAll") {
         wwwForm += objSend + JSON.stringify(object);
     }
     let serverPage = 'ajax.php';
