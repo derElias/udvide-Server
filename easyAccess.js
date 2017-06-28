@@ -270,7 +270,7 @@ function sendAjax(object, subject, verb, callbackMethod) {
         + "&passHash=" + passHash
         + "&subject=" + subject
         + "&verb=" + verb;
-    if (verb != "getAll") {
+    if (verb != "readAll") {
         wwwForm += objSend + JSON.stringify(object);
     }
     let serverPage = 'ajax.php';
