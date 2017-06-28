@@ -70,7 +70,7 @@ function performVerbForSubjectAs(array $userInput) {
         loginUser($userInput['username'], $userInput['passHash']);
         $map = map::fromJSON($userInput['map']);
         $response->payLoad = performVerbForMap($verb, $map, $subject);
-    } elseif ($verb == 'getAll') {
+    } elseif ($verb == 'readAll') {
         loginUser($userInput['username'], $userInput['passHash']);
         $response->payLoad = getSwitch($userInput);
     } else {
@@ -89,6 +89,7 @@ function getSwitch($userInput) {
             return user::readAll();
             break;
         case 'map':
+            return map::readAll();
             break;
         case 'initial':
 

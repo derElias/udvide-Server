@@ -8,39 +8,14 @@ require_once 'udvide.php';
  * Date: 17.06.2017
  * Time: 18:30
  */
-class map
+class map extends udvide
 {
     /** @var  string */
     private $name;
     /** @var  resource */
     private $image;
 
-    //<editor-fold desc="Constructors">
     public function __construct(){}
-
-    public static function fromDB(string $name):map
-    {
-        $instance = new self();
-        if (isset($name)) {
-            $instance->setName($name)->read();
-        }
-        return $instance;
-    }
-
-    public static function fromArray(array $array = null) {
-        $instance = new self();
-        if (!empty($array))
-            $instance->set($array);
-        return $instance;
-    }
-
-    public static function fromJSON($json = '') {
-        $instance = new self();
-        if (!empty($json))
-            $instance->set(json_decode($json, true));
-        return $instance;
-    }
-    //</editor-fold>
 
     //<editor-fold desc="CRUD DB">
     public function read()
