@@ -31,7 +31,7 @@ function sendMapCRUD() {
 
 function getMapTable() {
     document.getElementById("content").innerHTML = resourcePackage.templates["mapTableTempl.html"];
-    sendAjax(null, "user", "readAll", printEntryTable);
+    sendAjax(null, "user", "readAll", printMapTable);
 }
 
 function printMapTable() {
@@ -40,13 +40,13 @@ function printMapTable() {
 
         if (response.success === true) {
             let payLoad = response.payLoad;
-            let parent = document.getElementById('userList');
+            let parent = document.getElementById('mapList');
 
             for (let i = 0; i < payLoad.length; i++) {
                 let temp = document.createElement('div');
-                temp.innerHTML = resourcePackage.templates["User.html"];
+                temp.innerHTML = resourcePackage.templates["mapEntry.html"];
                 parent.appendChild(temp);
-                document.getElementsByClassName('user_title')[i].innerHTML =
+                document.getElementsByClassName('map_title')[i].innerHTML =
                     roleToString(payLoad[i].role) + ": " + payLoad[i].username;
             }
         }
