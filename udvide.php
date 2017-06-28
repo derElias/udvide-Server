@@ -54,7 +54,7 @@ abstract class udvide {
 
     public abstract function read();
     public abstract function create();
-    public abstract function update();
+    public abstract function update(string $subject = null);
     public abstract function delete();
 
     public function set(array $data)
