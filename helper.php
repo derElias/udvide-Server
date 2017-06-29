@@ -238,23 +238,11 @@ SQL;
     }
 }
 
-function assignEditor(target $target, user $user) { // todo add self assign mechanism and owner wildcard
-    if (user::getLoggedInUser()->getRole() < MIN_ALLOW_TARGET_ASSIGN)
-        throw new PermissionException(ERR_PERMISSION_INSUFFICIENT,1);
-
-    $sql = 'INSERT INTO udvide.Editors VALUES (?,?)';
-    access_DB::prepareExecuteFetchStatement($sql,[$target->getName(),$user->getUsername()]);
-}
-// todo clean code editor functions
-function getAllEditors() {
-    $sql = 'SELECT tName, uName FROM udvide.Editors';
-    return access_DB::prepareExecuteFetchStatement($sql);
-}
-
 class LoginException extends Exception {}
 class PermissionException extends Exception {}
 class IncompleteObjectException extends Exception {}
 class InvalidVerbException extends Exception {}
+class PluginException extends Exception {}
 
 class handlerResponse {
     /** @var  bool */

@@ -45,12 +45,15 @@ class target extends udvide
     //<editor-fold desc="CRUD DB">
     public function read() {
         $sql = <<<'SQL'
-SELECT case when t.deleted = 1 or t.deleted = true then true else false end as deleted, owner, content, xPos, yPos, map, vw_id, image
+SELECT case when t.deleted = 1 or t.deleted = true then true else false end as deleted,
+  owner, content, xPos, yPos, map, vw_id, image, e.uName
 FROM udvide.Targets t
-WHERE name = ?
+JOIN udvide.Editors e
+ON t.name = e.tName
+WHERE t.name = ?
 SQL;
         $db = access_DB::prepareExecuteFetchStatement($sql, [$this->name]);
-        $this->set($db[0]);
+        $this->set($db[0]); // ignores the e.uName entry
         return $this;
     }
 
@@ -119,6 +122,7 @@ SQL;
 
     public function update(string $subject = null) {
         // If not allowed to update and self-update (in case of self update)
+        // todo if assigned (also @delete)
         if (user::getLoggedInUser()->getRole() < MIN_ALLOW_TARGET_UPDATE)
             throw new PermissionException(ERR_PERMISSION_INSUFFICIENT,1);
 
@@ -189,19 +193,6 @@ SQL;
         $this->pdbupdate($this->name);
     }
     //</editor-fold>
-
-    /**
-     * Fills the target from an array
-     * @param array $data
-     * @return $this
-     */
-    public function set(array $data)
-    {
-        foreach ($data AS $key => $value) {
-            $this->__set($key, $value); // To use setters behind permission and type verification
-        }
-        return $this;
-    }
 
     /**
      * Set via available Fluent Setter or return $this

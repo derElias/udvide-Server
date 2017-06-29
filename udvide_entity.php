@@ -13,6 +13,12 @@ abstract class udvide_entity
     public abstract function create();
     public abstract function delete();
 
+    /**
+     * Fills Entity from array
+     * Ignores false calls if __set always returns
+     * @param array $data
+     * @return $this
+     */
     public function set(array $data)
     {
         foreach ($data AS $key => $value) {
@@ -21,6 +27,12 @@ abstract class udvide_entity
         return $this;
     }
 
+    /**
+     *
+     * @param string $name
+     * @param $value
+     * @return mixed an ":static"
+     */
     public abstract function __set(string $name, $value);
     public abstract function __get(string $name);
 }

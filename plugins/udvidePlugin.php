@@ -12,7 +12,7 @@ interface udvidePlugin
     /**
      * Your code to modify the target before creation
      * return true as "go-ahead" and false to abort silently
-     * throw a pluginException to indicate a problem to the user
+     * throw a PluginException to indicate a problem to the user
      * @param target $target
      * @return boolean
      */
@@ -20,7 +20,7 @@ interface udvidePlugin
     /**
      * Your code to modify the target before change
      * return true as "go-ahead" and false to abort silently
-     * throw a pluginException to indicate a problem to the user
+     * throw a PluginException to indicate a problem to the user
      * $target are the values written to what was previously $subject
      * so make $target what you want in the end and $subject-s name what target should be deleted
      * return false and create a new target yourself, if you want to prevent the original from being deleted
@@ -32,7 +32,7 @@ interface udvidePlugin
     /**
      * Your code to modify the target before deletion
      * return true as "go-ahead" and false to abort silently
-     * throw a pluginException to indicate a problem to the user
+     * throw a PluginException to indicate a problem to the user
      * @param target $target
      * @return boolean
      */
@@ -41,12 +41,11 @@ interface udvidePlugin
     // public function onTargetRead(&$target); // stretch goal since todo objects aren't read as objects
     //</editor-fold>
 
-
     //<editor-fold desc="User">
     /**
      * Your code to modify the user before creation
      * return true as "go-ahead" and false to abort silently
-     * throw a pluginException to indicate a problem to the user
+     * throw a PluginException to indicate a problem to the user
      * @param user $user
      * @return boolean
      */
@@ -54,7 +53,7 @@ interface udvidePlugin
     /**
      * Your code to modify the user before change
      * return true as "go-ahead" and false to abort silently
-     * throw a pluginException to indicate a problem to the user
+     * throw a PluginException to indicate a problem to the user
      * $user are the values written to what was previously $subject
      * so make $user what you want in the end and $subject-s name what target should be deleted
      * return false and create a new user yourself, if you want to prevent the original from being deleted // todo docu example
@@ -66,7 +65,7 @@ interface udvidePlugin
     /**
      * Your code to modify the user before deletion
      * return true as "go-ahead" and false to abort silently
-     * throw a pluginException to indicate a problem to the user
+     * throw a PluginException to indicate a problem to the user
      * @param user $user
      * @return boolean
      */
@@ -75,12 +74,11 @@ interface udvidePlugin
     // public function onUserRead(&$target); // stretch goal since todo objects aren't read as objects
     //</editor-fold>
 
-
     //<editor-fold desc="Map">
     /**
      * Your code to modify the map before creation
      * return true as "go-ahead" and false to abort silently
-     * throw a pluginException to indicate a problem to the user
+     * throw a PluginException to indicate a problem to the user
      * @param map $map
      * @return boolean
      */
@@ -88,7 +86,7 @@ interface udvidePlugin
     /**
      * Your code to modify the map before change
      * return true as "go-ahead" and false to abort silently
-     * throw a pluginException to indicate a problem to the user
+     * throw a PluginException to indicate a problem to the user
      * $map are the values written to what was previously $subject
      * so make $map what you want in the end and $subject-s name what target should be deleted
      * return false and create a new user yourself, if you want to prevent the original from being deleted // todo docu example
@@ -100,7 +98,7 @@ interface udvidePlugin
     /**
      * Your code to modify the map before deletion
      * return true as "go-ahead" and false to abort silently
-     * throw a pluginException to indicate a problem to the user
+     * throw a PluginException to indicate a problem to the user
      * @param map $map
      * @return bool
      */
@@ -108,7 +106,6 @@ interface udvidePlugin
 
     // public function onUserRead(&$target); // stretch goal since todo objects aren't read as objects
     //</editor-fold>
-
 
     /**
      * Your code to modify a user before he logs in
@@ -118,9 +115,8 @@ interface udvidePlugin
      */
     public function onLogin(user &$user):bool;
 
-
     /**
-     * Your code to modify a Editor-permission grant
+     * Your code to modify a editor-permission grant
      * @param user $user
      * @param target $target
      * @param $editor
@@ -128,13 +124,14 @@ interface udvidePlugin
      */
     public function onEditorAssign(user &$user, target &$target, &$editor):bool; // todo
     /**
-     * Your code to modify a Editor-permission revoke
+     * Your code to modify a editor-permission revoke
      * @param user $user
      * @param target $target
      * @param $editor
      * @return bool
      */
     public function onEditorDivest(user &$user, target &$target, &$editor):bool; // todo
+    // public function onEditorRead(user &$user, target &$target):bool // todo stretch
 
     // public function onLog(&$log); // stretch goal since todo low reward
 

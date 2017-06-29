@@ -232,19 +232,6 @@ SQL;
     //</editor-fold>
 
     /**
-     * Fills the target from an array
-     * @param array $data
-     * @return $this
-     */
-    public function set(array $data)
-    {
-        foreach ($data AS $key => $value) {
-            $this->__set($key, $value); // To use setters behind permission and type verification
-        }
-        return $this;
-    }
-
-    /**
      * Set via available Fluent Setter or return $this
      * @param string $name
      * @param mixed $value

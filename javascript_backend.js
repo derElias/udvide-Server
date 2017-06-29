@@ -34,14 +34,28 @@ let markerGenSettings = [
 function markerGen_Sample() {
     // requires colors.js
     let test = document.getElementById('test');
+    let hidden = document.createElement('div');
+    hidden.hidden = "hidden";
+    test.appendChild(hidden);
+
     let img = document.createElement('img');
-    img.src = generateMarker("I.2.2").toDataURL("image/jpeg", 0.95);
+    img.src = generateMarker(hidden, "I.2.2").toDataURL("image/jpeg", 0.95);
     test.appendChild(img);
 }
 
-function generateMarker(string) {
-    let canvas = getNewMarkerCanvas(1000);
+function generateMarker(hidden, string) {
+    // generate Marker
+    let side = 1000;
+    //let canvas = getNewMarkerCanvas(1000);
+    let canvas = document.createElement("canvas");
+    canvas.id = "canvas"
+    canvas.setAttribute("width",side);
+    canvas.setAttribute("height",side);
+    hidden.appendChild(canvas);
+
     let ctx = canvas.getContext("2d");
+/*/
+    // put text on it
     ctx.font = "300px sans-serif";
     if (markerGenSettings[2][0]) {
         // get random color between
@@ -53,7 +67,16 @@ function generateMarker(string) {
     }
     ctx.textAlign = "center";
     ctx.fillText(string, canvas.width/2, canvas.height/2 + 50);
-    ctx.strokeText(string, canvas.width/2 + 5 , canvas.height/2 + 45);
+    ctx.strokeText(string, canvas.width/2 , canvas.height/2 + 50);
+*///
+    // put logo br
+    let logo02 = new Image();
+    let offset = side * 0.00095;
+    logo02.onload = function() {
+        ctx.drawImage(logo02, offset, offset);
+    };
+    logo02.src = "img/logo02.small.png";
+//*/
     return canvas;
 }
 

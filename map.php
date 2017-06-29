@@ -105,14 +105,6 @@ SQL;
     }
     //</editor-fold>
 
-    public function set(array $data)
-    {
-        foreach ($data AS $key => $value) {
-            $this->__set($key, $value); // To use setters behind permission and type verification
-        }
-        return $this;
-    }
-
     public function __set(string $name, $value): map
     {
         switch($name) {

@@ -1,7 +1,13 @@
-<select class="createUserInput" onchange="showUser(this.value)" id="update_user_role">
+<select onchange="selectMap()" id="mapSelect">
     <option value="">Select Map:</option>
-    <option value="1">MapExample_1</option>
+    <option id="mapSelectOption" value="1">MapExample_1</option>
 </select>
 <div class="svg , right" onclick="getEntryUpdatePopup()">
 <img src="res/Contiue.svg">
+</div>
+<div class="row">
+    <canvas onclick="drawMapPoint(event)" id="mapCanvas" class="previewPicMap">
+        <img src="img/mapPreview.JPG" class="previewPicMap" id="t_imgPreview">
+    </canvas>
+    <p id="demo"></p>
 </div>
