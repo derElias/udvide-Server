@@ -1,15 +1,17 @@
 <?php
 require_once 'helper.php';
+require_once 'udvide_entity.php';
 require_once 'user.php';
 require_once 'map.php';
 require_once 'target.php';
+require_once 'editor.php';
 /**
  * Created by PhpStorm.
  * User: User
  * Date: 19.06.2017
  * Time: 22:10
  */
-abstract class udvide {
+abstract class udvide extends udvide_entity {
 
     //<editor-fold desc="Constructors">
     /**
@@ -50,23 +52,8 @@ abstract class udvide {
     }
     //</editor-fold>
 
-    public abstract static function readAll();
-
     public abstract function read();
-    public abstract function create();
     public abstract function update(string $subject = null);
-    public abstract function delete();
-
-    public function set(array $data)
-    {
-        foreach ($data AS $key => $value) {
-            $this->__set($key, $value); // To use setters behind permission and type verification
-        }
-        return $this;
-    }
-
-    public abstract function __set(string $name, $value);
-    public abstract function __get(string $name);
 
     public abstract function setName(string $name);
 }
