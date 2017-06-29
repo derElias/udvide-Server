@@ -24,7 +24,7 @@ function sendMapCRUD() {
         name: document.getElementById("map_id").value,
         image: document.getElementById("t_imgPreview").src
     };
-    sendAjax(map, map.name, "create");
+    sendAjax("map", map, "create", testSuccessful);
     document.getElementById("content").innerHTML = resourcePackage.templates["mapTableTempl.html"];
 }
 
@@ -46,7 +46,6 @@ function printMapTable() {
                 let temp = document.createElement('div');
                 temp.innerHTML = resourcePackage.templates["mapEntry.html"];
                 parent.appendChild(temp);
-                console.log(payLoad);
                 document.getElementsByClassName('map_title')[i].innerHTML = payLoad[i].name;
             }
         }
@@ -58,8 +57,31 @@ function createEntry() {
 }
 
 function getMapSelect() {
-    document.getElementById("content").innerHTML = resourcePackage.templates["selectMap.html"]
+    document.getElementById("content").innerHTML = resourcePackage.templates["selectMap.html"];
+    if (this.readyState === 4 && this.status === 200) {
+        let response = JSON.parse(this.responseText);
+
+        if (response.success === true) {
+            let payLoad = response.payLoad;
+            let parent = document.getElementById('mapSelect');
+
+            console.log(payLoad[0]);
+            console.log(payLoad[1]);
+            document.getElementById('mapSelectOption').innerHTML = payLoad[1].name;
+            /*for (let i = 0; i < payLoad.length; i++) {
+                let temp = document.createElement('option');
+
+                parent.appendChild(temp);
+
+                document.getElementsByClassName('map_selectOption')[i].innerHTML = payLoad[i].name;
+            }*/
+        }
+    }
 }
+
+function selectMap() {
+}
+
 let username;
 let passHash;
 function login() {
