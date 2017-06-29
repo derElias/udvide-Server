@@ -91,7 +91,13 @@ function getSwitch($userInput) {
         case 'map':
             return map::readAll();
             break;
+        case 'editors':
+            return ;
+            break;
         case 'initial':
+            $targets = target::readAll();
+            $users = user::readAll();
+            $editors = ;
 
             break;
     }
@@ -147,7 +153,7 @@ function performVerbForMap(string $verb,map $map,string $subject) {
         case 'read':
             return $map->read();
         case 'update':
-            //$map->update($subject);
+            $map->update($subject);
             return true;
         case 'delete':
             $map->delete();

@@ -17,6 +17,17 @@ let markerGenSettings = [
             "#fff",
             "#aaa"
         ],
+    ],
+    // fill of the font
+    [
+        // treat values as random body, instead of a random list
+        true,
+        // values
+        [
+            "#4a4",
+            "#573",
+            "#375"
+        ],
     ]
 ];
 
@@ -24,9 +35,28 @@ function markerGen_Sample() {
     // requires colors.js
     let test = document.getElementById('test');
     let img = document.createElement('img');
-    img.src = getNewMarkerCanvas(1000).toDataURL("image/jpeg", 0.95);
+    img.src = generateMarker("I.2.2").toDataURL("image/jpeg", 0.95);
     test.appendChild(img);
 }
+
+function generateMarker(string) {
+    let canvas = getNewMarkerCanvas(1000);
+    let ctx = canvas.getContext("2d");
+    ctx.font = "300px sans-serif";
+    if (markerGenSettings[2][0]) {
+        // get random color between
+        ctx.fillStyle = colors_GetRandomColorBetween(markerGenSettings[2][1]);
+    } else {
+        // get a random entry from the provided values
+        ctx.fillStyle = markerGenSettings[2][1]
+            [Math.floor(Math.random() * markerGenSettings[0][1].length)];
+    }
+    ctx.textAlign = "center";
+    ctx.fillText(string, canvas.width/2, canvas.height/2 + 50);
+    ctx.strokeText(string, canvas.width/2 + 5 , canvas.height/2 + 45);
+    return canvas;
+}
+
 let side;
 function getNewMarkerCanvas(sideLength) {
     side = sideLength;
