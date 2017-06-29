@@ -62,21 +62,26 @@ function performVerbForSubjectAs(array $userInput) {
             loginUser($userInput['username'], $userInput['passHash']);
         }
         $response->payLoad = performVerbForUser($verb, $user, $subject);
+
     } elseif (!empty($userInput['target'])) {
         loginUser($userInput['username'], $userInput['passHash']);
         $target = target::fromJSON($userInput['target']);
         $response->payLoad = performVerbForTarget($verb, $target, $subject);
+
     } elseif (!empty($userInput['map'])) {
         loginUser($userInput['username'], $userInput['passHash']);
         $map = map::fromJSON($userInput['map']);
         $response->payLoad = performVerbForMap($verb, $map, $subject);
+
     } elseif ($verb == 'readAll') {
         loginUser($userInput['username'], $userInput['passHash']);
         $response->payLoad = getSwitch($userInput);
+
     } else {
         $response->success = false;
         $response->payLoad = ERR_UD010;
     }
+
     return json_encode($response);
 }
 
@@ -92,13 +97,11 @@ function getSwitch($userInput) {
             return map::readAll();
             break;
         case 'editors':
-            return ;
+            return editor::readAll();
             break;
         case 'initial':
             $targets = target::readAll();
             $users = user::readAll();
-            $editors = ;
-
             break;
     }
 }
