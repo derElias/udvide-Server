@@ -3,7 +3,7 @@
  */
 function switchView() {
     if (view == 0) {
-        creatingCurrendtly = false;
+        creatingUserCurrendtly = false;
         loadMapTable();
         view = 1;
     }

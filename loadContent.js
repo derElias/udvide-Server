@@ -19,11 +19,22 @@ function loadFooter() {
 
 function loadUserAndTargetTable() {
     document.getElementById("content").innerHTML = resourcePackage.templates["entrytableTempl.html"];
-    sendAjax(null, "user", "readAll", printUserTable);
-    sendAjax(null, "target", "readAll", printTargetTable);
+    if(userList == null){
+        setUserList(printUserTable());
+    }
+    else {
+        printUserTable();
+    }
+
+    if(targetList == null){
+        setTargetList(printTargetTable());
+    }
+    else {
+        printTargetTable();
+    }
 }
 
-//<editor-fold desc="Load User Table">
+//<editor-fold desc="print User Table">
 function printUserTable() {
     if (this.readyState === 4 && this.status === 200) {
         let response = JSON.parse(this.responseText);
@@ -36,8 +47,7 @@ function printUserTable() {
                 let temp = document.createElement('div');
                 temp.innerHTML = resourcePackage.templates["User.html"];
                 parent.appendChild(temp);
-                document.getElementsByClassName('user_title')[i].innerHTML =
-                    roleToString(payLoad[i].role) + ": " + payLoad[i].username;
+                document.getElementsByClassName('user_title')[i].innerHTML = roleToString(payLoad[i].role) + ": " + payLoad[i].username;
             }
         }
     }
@@ -48,30 +58,59 @@ function printTargetTable() {
         let response = JSON.parse(this.responseText);
 
         if (response.success === true) {
-            let payLoad = response.payLoad;
+            let payLoad = response.targetList;
             let parent = document.getElementById('targetList');
 
             for (let i = 0; i < payLoad.length; i++) {
                 let temp = document.createElement('div');
-                temp.innerHTML = resourcePackage.templates["Entry.html"];
+                temp.innerHTML = resourcePackage.templates["targetEntry.html"];
                 parent.appendChild(temp);
                 targetList[i] = target.fromArray(payLoad[i]);
-                document.getElementsByClassName('targetEntry')[i].innerHTML =
-                    targetList[i].name;
+                document.getElementsByClassName('targetEntry')[i].innerHTML = targetList[i].name;
+                document.getElementsByClassName('updateButtonTarget')[i].addEventListener(updateTarget(i));
+                document.getElementsByClassName('updateButtonTarget')[i].addEventListener(deleteTarget(i));
             }
         }
     }
 }
 
+function printMapTable() {
+    let parent = document.getElementById('mapList');
+    for (let i = 0; i < mapList.length; i++) {
+        let temp = document.createElement('div');
+        temp.innerHTML = resourcePackage.templates["mapEntry.html"];
+        parent.appendChild(temp);
+        document.getElementsByClassName('map_title')[i].innerHTML = mapList[i].name;
+        document.getElementsByClassName('updateButtonMap')[i].addEventListener(updateMap(i));
+        document.getElementsByClassName('deleteButtonMap')[i].addEventListener(deleteMap(i));
+    }
+}
+
+function printMapOptions() {
+    let parent=document.getElementById('mapSelect');
+    for (let i = 0; i < mapList.length; i++) {
+        let temp = document.createElement('option');
+        temp.setAttribute("class","mapSelectoption");
+        temp.setAttribute("value",""+i);
+        temp.setAttribute("id","mapSelectOption"+i);
+        parent.appendChild(temp);
+        document.getElementsByClassName('map_selectOption')[i].innerHTML = mapList[i].name;
+    }
+}
+
+function printLoginFail(){
+    document.getElementById("loginWarning").innerHTML=document.createTextNode("Login fehlgeschlagen!!!");
+}
+
 function loadUserUpdateField() {
-    if (creatingCurrendtly == false) {
+    if (creatingUserCurrendtly == false) {
         let newItem = document.createElement("div");
         newItem.setAttribute("id", "createUserField")
         newItem.innerHTML = resourcePackage.templates["createUser.html"];
 
         let list = document.getElementById("userList");
         list.insertBefore(newItem, list.childNodes[0]);
-        creatingCurrendtly = true;
+        creatingUserCurrendtly = true;
         }
 }
 
@@ -89,26 +128,11 @@ function loadMapUpdateWindow() {
 
 function loadMapTable() {
     document.getElementById("content").innerHTML = resourcePackage.templates["mapTableTempl.html"];
-    sendAjax(null, "map", "readAll", printMapTable);
-}
-
-function printMapTable() {
-    if (this.readyState === 4 && this.status === 200) {
-        let response = JSON.parse(this.responseText);
-
-        if (response.success === true) {
-            let payLoad = response.payLoad;
-            let parent = document.getElementById('mapList');
-
-            for (let i = 0; i < payLoad.length; i++) {
-                let temp = document.createElement('div');
-                temp.innerHTML = resourcePackage.templates["mapEntry.html"];
-                parent.appendChild(temp);
-                document.getElementsByClassName('map_title')[i].innerHTML = payLoad[i].name;
-                document.getElementsByClassName('updateButtonMap')[i].addEventListener(updateMap(i));
-                document.getElementsByClassName('updateButtonMap')[i].addEventListener(deleteMap(i));
-            }
-        }
+    if(mapList == null) {
+        setMapList(printMapTable);
+    }
+    else {
+        printMapTable();
     }
 }
 
@@ -119,18 +143,5 @@ function loadMapSelect() {
     }
     else {
         printMapOptions();
-    }
-}
-
-function printMapOptions() {
-    console.log(mapList.payLoad);
-    console.log(mapList.payLoad[1]);
-    for (let i = 0; i < payLoad.length; i++) {
-        let temp = document.createElement('option');
-        temp.setAttribute("class","mapSelectoption");
-        temp.setAttribute("value",""+i);
-        temp.setAttribute("id","mapSelectOption"+i);
-        parent.appendChild(temp);
-        document.getElementsByClassName('map_selectOption')[i].innerHTML = payLoad[i].name;
     }
 }

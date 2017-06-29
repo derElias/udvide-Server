@@ -14,19 +14,38 @@ function selectMap() {
     document.getElementById('m_imgPreview').src = map.image;
 }
 
-function saveEntry() {
+function  createTarget(){
+    verb = "create";
+    loadTargetUpdateWindow();
+}
+
+function updateTarget(i) {
+    subject = targetList[i].name;
+    targetList.splice(i,1);
+    verb = "update";
+    loadTargerUpdateWindow();
+}
+
+function deleteTarget(i){
+    subject = targetList[i].name;
+    targetList.splice(i,1);
+    sendAjax(target, subject, "delete", testSuccessful);
+}
+
+function sendTargetCRUD() {
     let target = {
         name: document.getElementById("t_id").value,
         image: document.getElementById("t_imgPreview").src,
         activeFlag: document.getElementById("t_activeFlag").checked,
-        xPos: x,
-        yPos: y,
+        xPos: xPos,
+        yPos: yPos,
         map: map,
         content: document.getElementById("t_content").value
     };
-    sendAjax(target, target.name, "create");
+    sendAjax(target, subject, verb, testSuccessful);
     loadUserAndTargetTable();
 }
+
 
 function  createMap(){
     verb = "create";
@@ -43,8 +62,7 @@ function updateMap(i) {
 function deleteMap(i){
     subject = mapList[i].name;
     mapList.splice(i,1);
-    verb = "delete";
-    sendAjax(map, subject, verb, testSuccessful);
+    sendAjax(map, subject, "delete", testSuccessful);
 }
 
 function sendMapCRUD() {
@@ -68,7 +86,7 @@ function sendUserCreate() {
 
     }
     sendAjax(user, user.username, "create");
-    creatingCurrendtly = false;
+    creatingUserCurrendtly = false;
     closeUserUpdateField();
 }
 

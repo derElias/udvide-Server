@@ -14,23 +14,35 @@ function main() {
     loadFooter();
 }
 
-function login() {
+
+function sendLoginData() {
     username = document.getElementById("login_username").value;
     passHash = document.getElementById("login_password").value;
-    loadUserAndTargetTable();
-    loadHeader();
+    sendAjax(null, "user", "readAll",login);
 }
+
+function login(){
+    let response = JSON.parse(this.responseText);
+    if (response.success === true) {
+        userList = response.payLoad;
+        loadUserAndTargetTable();
+        loadHeader();
+    }
+    else {
+        printLoginFail();
+    }
+}
+
 function onEnterLogin(e) {
     if (e.keyCode === 13) {
-        login();
+        sendLoginData();
     }
 }
 
 function logout() {
-    username = "";
-    passHash = "";
     loadLogin();
     emptyHeader();
+    emptySorage();
 }
 
 //<editor-fold desc="Load Target Table">

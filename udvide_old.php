@@ -40,7 +40,7 @@ class udvideOld
 
     //<editor-fold desc="Target">
     /**
-     * checks login and then calls a CrUD function from below
+     * checks sendLoginData and then calls a CrUD function from below
      * @param string $verb
      * @param target $target adds id when creating
      * @param string $username
@@ -55,9 +55,9 @@ class udvideOld
         $verb = mb_strtolower($verb);
 
         $perm = $this->getPermissions($username, $passHash);
-        // is login invalid? -> Error
+        // is sendLoginData invalid? -> Error
         if ($perm === false) {
-            $this->handlerResponse->payLoad = 'Invalid login (Bad password or username)';
+            $this->handlerResponse->payLoad = 'Invalid sendLoginData (Bad password or username)';
             return $this->handlerResponse;
         }
 
