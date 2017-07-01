@@ -18,7 +18,7 @@ function loadFooter() {
 }
 
 function loadUserAndTargetTable() {
-    document.getElementById("content").innerHTML = resourcePackage.templates["entrytableTempl.html"];
+    document.getElementById("content").innerHTML = resourcePackage.templates["entrytableAdmin.html"];
     if(userList == null){
         setUserList(printUserTable());
     }

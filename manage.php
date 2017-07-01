@@ -4,7 +4,7 @@ $template = file_get_contents('templates/manage.html');
 $temp = file_get_contents('templates/header.html');
 $template = str_replace('<!--header-->',$temp,$template);
 
-$temp = file_get_contents('templates/entrytableTempl.html');
+$temp = file_get_contents('templates/entrytableAdmin.html');
 $template = str_replace('<!--content-->',$temp,$template);
 
 
