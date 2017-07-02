@@ -115,3 +115,10 @@ link-header:
     rel="eventsOnDay";
     type="application/vnd.fhws-event.eventview+json"
 
+XHTML5 HEADER
+<?php
+require_once 'helper.php';
+header('Content-Type: application/xhtml+xml');
+?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">

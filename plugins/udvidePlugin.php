@@ -1,4 +1,5 @@
 <?php
+require_once '../vendor/autoload.php';
 
 /**
  * Created by PhpStorm.
@@ -6,8 +7,13 @@
  * Date: 06.06.2017
  * Time: 15:04
  */
-interface udvidePlugin
+abstract class udvidePlugin
 {
+    /** @var array holding the data your js packs for delivery */
+    public $pluginData;
+    /** @var array holding the user inputs */
+    public $userInput;
+
     //<editor-fold desc="Target">
     /**
      * Your code to modify the target before creation
@@ -16,7 +22,8 @@ interface udvidePlugin
      * @param target $target
      * @return boolean
      */
-    public function onTargetCreate(target &$target):bool;
+    public function onTargetCreate(target &$target): bool {return true;}
+
     /**
      * Your code to modify the target before change
      * return true as "go-ahead" and false to abort silently
@@ -28,7 +35,8 @@ interface udvidePlugin
      * @param target $subject
      * @return boolean
      */
-    public function onTargetUpdate(target &$target, target &$subject):bool;
+    public function onTargetUpdate(target &$target, target &$subject): bool {return true;}
+
     /**
      * Your code to modify the target before deletion
      * return true as "go-ahead" and false to abort silently
@@ -36,7 +44,7 @@ interface udvidePlugin
      * @param target $target
      * @return boolean
      */
-    public function onTargetDelete(target &$target):bool;
+    public function onTargetDelete(target &$target): bool {return true;}
 
     // public function onTargetRead(&$target); // stretch goal since todo objects aren't read as objects
     //</editor-fold>
@@ -49,7 +57,8 @@ interface udvidePlugin
      * @param user $user
      * @return boolean
      */
-    public function onUserCreate(user &$user):bool;
+    public function onUserCreate(user &$user): bool {return true;}
+
     /**
      * Your code to modify the user before change
      * return true as "go-ahead" and false to abort silently
@@ -61,7 +70,8 @@ interface udvidePlugin
      * @param user $subject
      * @return boolean
      */
-    public function onUserUpdate(user &$user, user $subject):bool;
+    public function onUserUpdate(user &$user, user $subject): bool {return true;}
+
     /**
      * Your code to modify the user before deletion
      * return true as "go-ahead" and false to abort silently
@@ -69,7 +79,7 @@ interface udvidePlugin
      * @param user $user
      * @return boolean
      */
-    public function onUserDelete(&$user):bool;
+    public function onUserDelete(&$user): bool {return true;}
 
     // public function onUserRead(&$target); // stretch goal since todo objects aren't read as objects
     //</editor-fold>
@@ -82,7 +92,8 @@ interface udvidePlugin
      * @param map $map
      * @return boolean
      */
-    public function onMapCreate(map &$map):bool;
+    public function onMapCreate(map &$map): bool {return true;}
+
     /**
      * Your code to modify the map before change
      * return true as "go-ahead" and false to abort silently
@@ -94,7 +105,8 @@ interface udvidePlugin
      * @param map $subject
      * @return boolean
      */
-    public function onMapUpdate(map &$map, map &$subject):bool;
+    public function onMapUpdate(map &$map, map &$subject): bool {return true;}
+
     /**
      * Your code to modify the map before deletion
      * return true as "go-ahead" and false to abort silently
@@ -102,7 +114,7 @@ interface udvidePlugin
      * @param map $map
      * @return bool
      */
-    public function onMapDelete(map &$map):bool;
+    public function onMapDelete(map &$map): bool {return true;}
 
     // public function onUserRead(&$target); // stretch goal since todo objects aren't read as objects
     //</editor-fold>
@@ -113,7 +125,7 @@ interface udvidePlugin
      * @param user $user
      * @return bool
      */
-    public function onLogin(user &$user):bool;
+    public function onLogin(user &$user): bool {return true;}
 
     /**
      * Your code to modify a editor-permission grant
@@ -122,7 +134,8 @@ interface udvidePlugin
      * @param $editor
      * @return bool
      */
-    public function onEditorAssign(user &$user, target &$target, &$editor):bool; // todo
+    public function onEditorAssign(user &$user, target &$target, &$editor): bool{return true;} // todo
+
     /**
      * Your code to modify a editor-permission revoke
      * @param user $user
@@ -130,7 +143,7 @@ interface udvidePlugin
      * @param $editor
      * @return bool
      */
-    public function onEditorDivest(user &$user, target &$target, &$editor):bool; // todo
+    public function onEditorDivest(user &$user, target &$target, &$editor): bool {return true;} // todo
     // public function onEditorRead(user &$user, target &$target):bool // todo stretch
 
     // public function onLog(&$log); // stretch goal since todo low reward
@@ -140,5 +153,19 @@ interface udvidePlugin
      * @param target $target
      * @return bool
      */
-    public function onMobileRead(target &$target):bool; // the content of the Target is what is sent in the end
+    public function onMobileRead(target &$target): bool {return true;} // the content of the Target is what is sent in the end
+
+    public function onCustomTargetCreate(): bool {return true;}
+
+    /**
+     * In case you need to setup something
+     * @return bool
+     */
+    public function onSetup(): bool {return true;}
+
+    /**
+     * You have to tell us somethings about your Plugin - see udvidePluginAbout
+     * @return udvidePluginAbout
+     */
+    public abstract function aboutMe(): udvidePluginAbout;
 }

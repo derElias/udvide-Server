@@ -1,18 +1,11 @@
-<?php
-require_once 'udvide_old.php';
-if (!SERVE_XHTML5_AS_HTML)
-    header('Content-Type: application/xhtml+xml');
-?>
+
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 <head>
 
 </head>
 <body>
-<<<<<<< HEAD
 <img src="img/preview.png" draggable="true"/>
-=======
->>>>>>> 8313594b498b191d1a7ca2c2ffe226814b25bc89
 <p>first 5 entries</p><br/>
 <p id="fillme"></p>
 <br/>

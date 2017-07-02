@@ -1,5 +1,5 @@
 <?php
-require_once 'udvide.php';
+require_once 'vendor/autoload.php';
 
 echo time();
 user::fromDB('root')->setPassHash('imGoingToBePepperedAndSalted')->login();

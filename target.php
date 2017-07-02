@@ -1,5 +1,5 @@
 <?php
-require_once 'udvide.php';
+require_once 'vendor/autoload.php';
 /**
  * Created by PhpStorm.
  * Date: 14.06.2017 Refactor in new file
@@ -113,7 +113,7 @@ SQL;
         $this->vw_id = $vwsResponseBody->target_id;
         $tr_id = $vwsResponseBody->transaction_id;
 
-        logTransaction($tr_id,user::getLoggedInUser()->getUsername(),$this->name);
+        helper::logTransaction($tr_id,user::getLoggedInUser()->getUsername(),$this->name);
 
         $this->pdbupdate($this->name);
 
@@ -137,7 +137,7 @@ SQL;
             $vwsResponseBody = json_decode($vwsResponse->getBody());
             $tr_id = $vwsResponseBody->transaction_id;
 
-            logTransaction($tr_id,user::getLoggedInUser()->getUsername(),$this->name);
+            helper::logTransaction($tr_id,user::getLoggedInUser()->getUsername(),$this->name);
         }
         return $this;
     }
@@ -313,13 +313,13 @@ SQL;
                 $this->image =
                     imagecreatefromstring(
                         base64_decode(
-                            base64ImgToDecodeAbleBase64($image)
+                            helper::base64ImgToDecodeAbleBase64($image)
                         )
                     );
             } else {
                 $this->image = $image;
             }
-            $this->image = imgAssistant($this->image, ['maxFileSize' => VUFORIA_DATA_SIZE_LIMIT]);
+            $this->image = helper::imgAssistant($this->image, ['maxFileSize' => VUFORIA_DATA_SIZE_LIMIT]);
         }
         return $this;
     }
@@ -413,7 +413,7 @@ SQL;
      */
     public function getImageAsRawJpg()
     {
-        return imgResToJpgString($this->image); // quality defaults to 95
+        return helper::imgResToJpgString($this->image); // quality defaults to 95
     }
 
     /**

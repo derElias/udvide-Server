@@ -1,11 +1,12 @@
 <?php
-require_once 'udvide.php';
+require_once 'vendor/autoload.php';
 /**
  * Created by PhpStorm.
  * User: User
  * Date: 14.06.2017
  * Time: 18:37
  */
+
 class user extends udvide
 {
     /** @var user */
@@ -87,7 +88,7 @@ INSERT INTO udvide.users
 VALUES (FALSE,?,?,?);
 SQL;
         $values = [
-            pepperedPassGen($this->passHash),
+            helper::pepperedPassGen($this->passHash),
             $this->username,
             isset($this->role) ? $this->role : 0
         ];
@@ -118,7 +119,7 @@ SQL;
                 &&isset($this->{$key})) {
 
                 if ($key == 'passHash') {
-                    $value = pepperedPassGen($value);
+                    $value = helper::pepperedPassGen($value);
                 }
 
                 $sql .= " $key = ? , ";
@@ -188,7 +189,7 @@ SQL;
             $userArr = $db[0];
             if ($userArr['deleted'] === true)
                 throw new LoginException(ERR_LOGIN_USERDELETED,2);
-            if (!$this->pepperedPassCheck($this->passHash, $userArr['passHash']))
+            if (!helper::pepperedPassCheck($this->passHash, $userArr['passHash']))
                 throw new LoginException(ERR_LOGIN_WRONGPASSWD,3);
             // fill this with the db values
             $this->set($userArr);
@@ -205,31 +206,6 @@ SQL;
 
         return $this;
     }
-
-    //<editor-fold desc="Password Utility">
-    /**
-     * Compares a sent in passHash (password) with a peppered and salted passHash
-     * @param string $userPassHash the sent password value (should be hashed client-side)
-     * @param string $serverPassHash the db stored password
-     * @return bool
-     */
-    private function pepperedPassCheck(string $userPassHash,string $serverPassHash):bool
-    {
-        $keys = json_decode(file_get_contents('keys.json'));
-        return password_verify(sha1($userPassHash . $keys->pepper), $serverPassHash);
-    }
-
-    /**
-     * generates a peppered and salted passHash
-     * @param string $new_users_password
-     * @return bool|string
-     */
-    private function pepperedPassGen(string $new_users_password)
-    {
-        $keys = json_decode(file_get_contents('keys.json'));
-        return password_hash(sha1($new_users_password . $keys->pepper), PASSWORD_DEFAULT);
-    }
-    //</editor-fold>
 
     /**
      * Set via available Fluent Setter or return $this

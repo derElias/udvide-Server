@@ -1,5 +1,5 @@
 <?php
-require_once 'helper.php';
+require_once 'vendor/autoload.php';
 /**
  * Cache this please - the result will not in a meaningful way in between official Updates
  *
@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !GET_INSTEAD_POST
     $fileArray = array_diff($fullFileArray, array('..', '.')); // scan $path and get rid of . and .. (picked up on linux)
     foreach ($fileArray as $file) {
         $filePath = $path . DIRECTORY_SEPARATOR . $file;
-        $res[$file] = sanitizeXML(file_get_contents($filePath));
+        $res[$file] = helper::sanitizeXML(file_get_contents($filePath));
     }
 
     $path = 'templates';
@@ -24,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !GET_INSTEAD_POST
     $fileArray = array_diff($fullFileArray, array('..', '.'));
     foreach ($fileArray as $file) {
         $filePath = $path . DIRECTORY_SEPARATOR . $file;
-        $templ[$file] = sanitizeXML(file_get_contents($filePath));
+        $templ[$file] = helper::sanitizeXML(file_get_contents($filePath));
     }
 
     $package = [
@@ -35,6 +35,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !GET_INSTEAD_POST
     echo json_encode($package);
 
 } else {
-    echo "This site is providing a Resource Package for the Javascript application in <a href='manage.php'>the main site!</a> <br/>
+    echo "This site is providing a Resource Package for the Javascript application in <a href='manage.html'>the main site!</a> <br/>
             Consult the Documentation for more information";
 }

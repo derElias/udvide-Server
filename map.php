@@ -1,5 +1,5 @@
 <?php
-require_once 'udvide.php';
+require_once 'vendor/autoload.php';
 
 /**
  * Whole Class analog to user.php
@@ -155,13 +155,13 @@ SQL;
                 $this->image =
                     imagecreatefromstring(
                         base64_decode(
-                            base64ImgToDecodeAbleBase64($image)
+                            helper::base64ImgToDecodeAbleBase64($image)
                         )
                     );
             } else {
                 $this->image = $image;
             }
-            $this->image = imgAssistant($this->image, ['maxFileSize' => VUFORIA_DATA_SIZE_LIMIT]);
+            $this->image = helper::imgAssistant($this->image, ['maxFileSize' => VUFORIA_DATA_SIZE_LIMIT]);
         }
         return $this;
     }
@@ -189,7 +189,7 @@ SQL;
      */
     public function getImageAsRawJpg()
     {
-        return imgResToJpgString($this->image); // quality defaults to 95
+        return helper::imgResToJpgString($this->image); // quality defaults to 95
     }
 
     /**

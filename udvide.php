@@ -1,17 +1,9 @@
 <?php
-require_once 'helper.php';
-require_once 'udvide_entity.php';
-require_once 'user.php';
-require_once 'map.php';
-require_once 'target.php';
-require_once 'editor.php';
-/**
- * Created by PhpStorm.
- * User: User
- * Date: 19.06.2017
- * Time: 22:10
- */
-abstract class udvide extends udvide_entity {
+require_once 'vendor/autoload.php';
+
+
+abstract class udvide extends udvide_entity
+{
 
     //<editor-fold desc="Constructors">
     /**
@@ -56,4 +48,10 @@ abstract class udvide extends udvide_entity {
     public abstract function update(string $subject = null);
 
     public abstract function setName(string $name);
+
+
+
+
+
+
 }

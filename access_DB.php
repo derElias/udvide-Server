@@ -1,5 +1,5 @@
 <?php
-require_once "settings.php";
+require_once 'vendor/autoload.php';
 /**
  * Created by PhpStorm.
  * User: User

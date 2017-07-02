@@ -1,12 +1,48 @@
 {
-  "name": "vendor_name/package_name",
-  "description": "description_text",
+  "name": "udvide/udvide",
+  "description": "The Webclient for the udvide Infrastructure",
   "minimum-stability": "stable",
   "license": "proprietary",
   "authors": [
     {
-      "name": "author's name",
-      "email": "email@example.com"
+      "name":  "udvide Team",
+      "email": "udvide@web.de"
+    },
+    {
+      "name":  "Janssen, Simon",
+      "role":  "PHP, SQL, JS Developer",
+      "email": "simon.janssen@live.de"
+    },
+    {
+      "name": "Riedel, Elias",
+      "role": "HTML, CSS, JS Developer"
     }
-  ]
+  ],
+  "support": {
+    "email":  "udvide@web.de",
+    "docs":   "https://github.com/derElias/udvide-Server/wiki",
+    "wiki":   "https://github.com/derElias/udvide-Server/wiki",
+    "source": "https://github.com/derElias/udvide-Server",
+    "issues": "https://github.com/derElias/udvide-Server/issues"
+
+  },
+  "require":
+  {
+    "php":">=7.1.4",
+    "pear/http_request2": "v2.3.0",
+    "ext-json":"1.5.0",
+    "ext-PDO":"7.*",
+    "ext-pdo_mysql":"7.*",
+    "ext-mbstring":"7.*",
+    "ext-gd":"7.*"
+  },
+  "autoload": {
+    "files": [
+      "helper.php",
+      "settings.php"
+    ],
+    "classmap": ["./"],
+    "exclude-from-classmap": ["vendor/"]
+
+  }
 }

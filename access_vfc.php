@@ -1,6 +1,5 @@
 <?php
-require_once 'settings.php';
-require_once HTTP_REQUEST2_PATH;
+require_once 'vendor/autoload.php';
 
 /**
  * Created by: Simon Janssen

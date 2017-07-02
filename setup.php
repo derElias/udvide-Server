@@ -1,6 +1,5 @@
 <?php
-require_once 'minifier.php';
-require_once 'udvide.php';
+require_once 'vendor/autoload.php';
 
 if (file_exists('MySQLDBDDL.sql')) {
     $sql = file_get_contents('MySQLDBDDL.sql');
@@ -18,7 +17,7 @@ $sql = <<<'SQL'
 INSERT INTO udvide.Users (username,passHash,role)
 VALUES (?,?,?)
 SQL;
-$dbpw = pepperedPassGen($root_passwd);
+$dbpw = helper::pepperedPassGen($root_passwd);
 access_DB::prepareExecuteFetchStatement($sql,['root',$dbpw,PERMISSIONS_ROOT]);
 echo "root created! \n<br/>";
 //// add devs as root
