@@ -19,7 +19,7 @@ function sendAjax(object, subject, verb, callbackMethod) {
     let wwwForm =
         "username=" + username
         + "&passHash=" + passHash
-        + "&updateSubject=" + subject
+        + "&subject=" + subject
         + "&verb=" + verb;
     if (verb === "update") {
         wwwForm += "&updateSubject=" + updateSubject;
