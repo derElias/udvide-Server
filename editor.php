@@ -9,9 +9,9 @@ require_once 'vendor/autoload.php';
  */
 class editor extends udvide_entity
 {
-    /** @var user */
+    /** @var string */
     private $user;
-    /** @var target */
+    /** @var string */
     private $target;
 
     public static function readAll()
@@ -31,26 +31,26 @@ class editor extends udvide_entity
     public function readAllTargets()
     {
         $sql = 'SELECT tName FROM udvide.Editors WHERE uName = ?';
-        return access_DB::prepareExecuteFetchStatement($sql, [$this->uName]);
+        return access_DB::prepareExecuteFetchStatement($sql, [$this->user]);
     }
 
     public function readAllUsers()
     {
         $sql = 'SELECT uName FROM udvide.Editors WHERE tName = ?';
-        return access_DB::prepareExecuteFetchStatement($sql, [$this->uName]);
+        return access_DB::prepareExecuteFetchStatement($sql, [$this->target]);
     }
 
     public function create()
     {
         if (user::getLoggedInUser()->getRole() < MIN_ALLOW_TARGET_ASSIGN
             || (user::getLoggedInUser()->getRole() < MIN_ALLOW_TARGET_SELF_ASSIGN
-                && user::getLoggedInUser()->getUsername() == $this->uName)
+                && user::getLoggedInUser()->getUsername() == $this->user)
             || (user::getLoggedInUser()->getRole() < MIN_ALLOW_TARGET_SELF_ASSIGN_OWN
-                && user::getLoggedInUser()->getUsername() == $this->target->getOwner()))
+                && user::getLoggedInUser()->getUsername() == target::fromDB($this->target)->getOwner()))
             throw new PermissionException(ERR_PERMISSION_INSUFFICIENT,1);
 
         $sql = 'INSERT INTO udvide.Editors VALUES (?,?)';
-        access_DB::prepareExecuteFetchStatement($sql,[$this->tName,$this->uName]);
+        access_DB::prepareExecuteFetchStatement($sql,[$this->target,$this->user]);
     }
 
     public function delete()

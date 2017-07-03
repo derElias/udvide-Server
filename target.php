@@ -8,6 +8,8 @@ require_once 'vendor/autoload.php';
 class target extends udvide
 {
     // SQL only Values
+    /** @var array */
+    private $pluginData;
     /** @var  bool */
     private $deleted;
     /** @var  string */
@@ -46,7 +48,7 @@ class target extends udvide
     public function read() {
         $sql = <<<'SQL'
 SELECT case when t.deleted = 1 or t.deleted = true then true else false end as deleted,
-  owner, content, xPos, yPos, map, vw_id, image, e.uName
+  owner, content, xPos, yPos, map, vw_id, image, pluginData, e.uName
 FROM udvide.Targets t
 JOIN udvide.Editors e
 ON t.name = e.tName
@@ -155,6 +157,9 @@ SQL;
                 && strpos($key, 'vwgen_') !== 0
                 && isset($this->{$key})
             ) {
+                if ($key == 'pluginData') {
+                    $value = base64_encode(json_encode($value));
+                }
                 $sql .= " $key = ? , ";
                 $ins[] = $value;
                 $updateDB = true;
@@ -356,6 +361,21 @@ SQL;
         }
         return $this;
     }
+
+    /**
+     * @param string $plugin
+     * @param array|null $data
+     * @return target
+     * @internal param array $pluginData
+     */
+    public function setPluginData(string $plugin, array $data = null): target
+    {
+        if (isset($data) && isset($plugin)) {
+            $this->pluginData[$plugin] = $data;
+        }
+        return $this;
+    }
+
     //</editor-fold>
 
     //<editor-fold desc="Getter with permission verification">
@@ -463,5 +483,15 @@ SQL;
     {
         return $this->active;
     }
+
+    /**
+     * @param string $plugin
+     * @return target
+     */
+    public function getPluginData(string $plugin): target
+    {
+        return $this->pluginData[$plugin];
+    }
+
     //</editor-fold>
 }

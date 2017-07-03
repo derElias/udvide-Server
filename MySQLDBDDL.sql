@@ -8,11 +8,13 @@ CREATE TABLE Users (
   passHash VARCHAR(255),
   role TINYINT(3) DEFAULT 0,
   targetCreateLimit INT DEFAULT 0,
+  pluginData LONGTEXT,
   PRIMARY KEY (username)
 );
 CREATE TABLE Maps (
   name VARCHAR(127) NOT NULL UNIQUE,
   image LONGBLOB,
+  pluginData LONGTEXT,
   PRIMARY KEY (name)
 );
 CREATE TABLE Targets (
@@ -25,6 +27,7 @@ CREATE TABLE Targets (
   vw_id VARCHAR(32),
   image LONGBLOB,
   name VARCHAR(127) NOT NULL UNIQUE,
+  pluginData LONGTEXT,
   PRIMARY KEY (name),
   FOREIGN KEY (owner) REFERENCES Users(username) ON DELETE SET NULL ON UPDATE CASCADE,
   FOREIGN KEY (map) REFERENCES Maps(name) ON DELETE SET NULL ON UPDATE CASCADE
