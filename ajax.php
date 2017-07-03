@@ -18,22 +18,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !GET_INSTEAD_POST
         $response->success = false;
 
         $echo = '';
-        $exceptionInfo = [
-            'trace'=>$e->getTraceAsString(),
-            'msg'=>$e->getMessage(),
-            'file'=>$e->getFile(),
-            'line'=>$e->getLine(),
-            'code'=>$e->getCode()
-        ];
-        foreach ($exceptionInfo as $key=>$value) {
-            $echo = $key . ': ' . $value . '<br/>';
+        if (!THIS_IS_PRODUCTIOOOON) {
+            $exceptionInfo = [
+                'msg' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'code' => $e->getCode()
+            ];
+            foreach ($exceptionInfo as $key => $value) {
+                $echo = $key . ': ' . $value . '<br/>';
+            }
+        } else {
+            $echo = $e->getMessage();
         }
         $response->payLoad = $echo;
         echo json_encode($response);
     }
 } else {
     echo "This site is used to evaluate Ajax requests.\n<br/>
-                Please go to <a href='manage.php'>the main site </a> or consult the Documentation for more information";
+                Please go to <a href='manage.html'>the main site </a> or consult the Documentation for more information";
 }
 
 /**
@@ -50,15 +54,15 @@ function performVerbForSubjectAs(array $userInput) {
 
     if (!empty($userInput['user'])) {
         $user = user::fromJSON($userInput['user']);
-        $subject = isset($userInput['subject']) ? $userInput['subject'] : $userInput['username'];
         // if selfedit log in the $user instance
         if ($subject === $userInput['username']) {
+            // potential new username has to be saved before login
             $newUsername = $user->getUsername();
             $user->setUsername($subject)
                 ->setPassHash($userInput['passHash'])
                 ->login()
                 ->setUsername($newUsername);
-        } else { // todo refactor this switch case
+        } else {
             loginUser($userInput['username'], $userInput['passHash']);
         }
         $response->payLoad = performVerbForUser($verb, $user, $subject);
@@ -93,6 +97,20 @@ function getSwitch($userInput) {
         case 'user':
             return user::readAll();
             break;
+        case 'target+edit':
+            $targets = target::readAll();
+            foreach ($targets as $key=>$target) {
+                $targets[$key]['editors'] = editor::readAllUsersFor($target['name']);
+            }
+            return $targets;
+            break;
+        case 'user+edit':
+            $users = user::readAll();
+            foreach ($users as $key=>$user) {
+                $users[$key]['editors'] = editor::readAllUsersFor($user['username']);
+            }
+            return $users;
+            break;
         case 'map':
             return map::readAll();
             break;
@@ -102,7 +120,17 @@ function getSwitch($userInput) {
         case 'initial':
             $targets = target::readAll();
             $users = user::readAll();
+            foreach ($targets as $key=>$target) {
+                $targets[$key]['editors'] = editor::readAllUsersFor($target['name']);
+            }
+            foreach ($users as $key=>$user) {
+                $users[$key]['editors'] = editor::readAllUsersFor($user['username']);
+            }
+            return ['targets' => $targets,
+                'users' => $users];
             break;
+        default:
+            throw new InvalidVerbException('Invalid Subject for readAll');
     }
 }
 
