@@ -3,7 +3,7 @@
          <div class="left" id="user_Role">role</div>
          <div class="left" > :</div>
          <div class="left" id="user_name">name</div>
-         <img class="right" src="res/Save.svg" onclick="sendUserCreate()" id="update_user_save" width="20px">
+         <img class="right" src="res/Save.svg" onclick="sendUserCRUD()" id="update_user_save" width="20px">
      </div>
      <div class="row">
          <div class="col-5">
@@ -15,7 +15,7 @@
          <div class="col-5">
              <input class="createUserInput" type="text" placeholder="Username" id="update_user_name">
              <input class="createUserInput" type="password" placeholder="Password" id="update_user_password">
-             <select class="createUserInput" onchange="showUser(this.value)" id="update_user_role">
+             <select class="createUserInput" id="update_user_role">
                  <option value="">Select permissions:</option>
                  <option value="1">Client</option>
                  <option value="2">Admin</option>

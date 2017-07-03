@@ -92,7 +92,7 @@ function performVerbForSubjectAs(array $userInput) {
 }
 
 function getSwitch($userInput) {
-    switch ($userInput['subject']) {
+    switch ($userInput['updateSubject']) {
         case 'target':
             return target::readAll();
             break;

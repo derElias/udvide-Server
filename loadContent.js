@@ -20,14 +20,14 @@ function loadFooter() {
 function loadUserAndTargetTable() {
     document.getElementById("content").innerHTML = resourcePackage.templates["entrytableAdmin.html"];
     if(userList == null){
-        setUserList(printUserTable());
+        setUserList(printUserTable);
     }
     else {
         printUserTable();
     }
 
     if(targetList == null){
-        setTargetList(printTargetTable());
+        setTargetList(printTargetTable);
     }
     else {
         printTargetTable();
@@ -36,41 +36,33 @@ function loadUserAndTargetTable() {
 
 //<editor-fold desc="print User Table">
 function printUserTable() {
-    if (this.readyState === 4 && this.status === 200) {
-        let response = JSON.parse(this.responseText);
+    let parent = document.getElementById('userList');
 
-        if (response.success === true) {
-            let payLoad = response.payLoad;
-            let parent = document.getElementById('userList');
-
-            for (let i = 0; i < payLoad.length; i++) {
-                let temp = document.createElement('div');
-                temp.innerHTML = resourcePackage.templates["User.html"];
-                parent.appendChild(temp);
-                document.getElementsByClassName('user_title')[i].innerHTML = roleToString(payLoad[i].role) + ": " + payLoad[i].username;
-            }
-        }
+    for (let i = 0; i < userList.length; i++) {
+        let temp = document.createElement('div');
+        temp.innerHTML = resourcePackage.templates["UserEntry.html"];
+        parent.appendChild(temp);
+        document.getElementsByClassName('user_title')[i].innerHTML = roleToString(userList[i].role) + ": " + userList[i].username;
     }
 }
 
 function printTargetTable() {
-    if (this.readyState === 4 && this.status === 200) {
-        let response = JSON.parse(this.responseText);
+    let parent = document.getElementById('targetList');
 
-        if (response.success === true) {
-            let payLoad = response.targetList;
-            let parent = document.getElementById('targetList');
-
-            for (let i = 0; i < payLoad.length; i++) {
-                let temp = document.createElement('div');
-                temp.innerHTML = resourcePackage.templates["targetEntry.html"];
-                parent.appendChild(temp);
-                targetList[i] = target.fromArray(payLoad[i]);
-                document.getElementsByClassName('targetEntry')[i].innerHTML = targetList[i].name;
-                document.getElementsByClassName('updateButtonTarget')[i].addEventListener(updateTarget(i));
-                document.getElementsByClassName('updateButtonTarget')[i].addEventListener(deleteTarget(i));
-            }
-        }
+    for (let i = 0; i < targetList.length; i++) {
+        let temp = document.createElement('div');
+        temp.innerHTML = resourcePackage.templates["targetEntry.html"];
+        parent.appendChild(temp);
+        targetList[i] = target.fromArray(targetList[i]);
+        document.getElementsByClassName('targetEntry')[i].innerHTML = targetList[i].name;
+        document.getElementsByClassName('updateButtonTarget')[i].addEventListener("click", function() {
+            console.log("test update");
+            updateTarget(i);
+        });
+        document.getElementsByClassName('deleteButtonTarget')[i].addEventListener("click", function() {
+            console.log("test Delete");
+            deleteTarget(i);
+        });
     }
 }
 
@@ -99,7 +91,11 @@ function printMapOptions() {
 }
 
 function printLoginFail(){
-    document.getElementById("loginWarning").innerHTML=document.createTextNode("Login fehlgeschlagen!!!");
+    document.getElementById("loginWarning").innerHTML= "Login Fehlgeschlagen!!!";
+}
+
+function loadTargetUpdateWindow() {
+    document.getElementById("content").innerHTML = resourcePackage.templates["selectMap.html"];
 }
 
 function loadUserUpdateField() {
@@ -115,7 +111,7 @@ function loadUserUpdateField() {
 }
 
 function closeUserUpdateField() {
-    document.getElementById("userList").removeChild(document.getElementById("createUserWindow"))
+    document.getElementById("userList").removeChild(document.getElementById("createUserField"));
 }
 
 function loadEntryUpdatePopup() {
@@ -143,5 +139,20 @@ function loadMapSelect() {
     }
     else {
         printMapOptions();
+    }
+}
+
+function testSuccessful(){
+    if (this.readyState === 4 && this.status === 200) {
+        let response = JSON.parse(this.responseText);
+
+        console.log(response);
+
+        if (response.success === false) {
+            alert("action: " + verb + " unssuccessfull")
+        }
+        else {
+            verb=null;
+        }
     }
 }

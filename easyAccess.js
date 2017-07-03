@@ -22,14 +22,17 @@ function sendLoginData() {
 }
 
 function login(){
-    let response = JSON.parse(this.responseText);
-    if (response.success === true) {
-        userList = response.payLoad;
-        loadUserAndTargetTable();
-        loadHeader();
-    }
-    else {
-        printLoginFail();
+    if (this.readyState === 4 && this.status === 200) {
+        console.log(this.responseText);
+        let response = JSON.parse(this.responseText);
+        if (response.success === true) {
+            userList = response.payLoad;
+            loadUserAndTargetTable();
+            loadHeader();
+        }
+        else {
+            printLoginFail();
+        }
     }
 }
 
@@ -59,39 +62,11 @@ class target {
     }
 }
 
-function sendAjax(object, subject, verb, callbackMethod) {
-
-    let xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = callbackMethod;
-    let objSend = "";
-    if (object == null)
-        object = "";
-
-    if (subject === "target") {
-        objSend = "&target=";
-    } else if (subject === "user") {
-        objSend = "&user=";
-    } else {
-        objSend = "&map="
-    }
-    let wwwForm =
-        "username=" + username
-        + "&passHash=" + passHash
-        + "&subject=" + subject
-        + "&verb=" + verb;
-    if (verb !== "readAll") {
-        wwwForm += objSend + JSON.stringify(object);
-    }
-    let serverPage = 'ajax.php';
-    xhttp.open("POST", serverPage, true);
-    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded"); // One of the 2 possibilities for POST data to be transmitted via AJAX
-    xhttp.send(wwwForm);
-}
-
-
 function testSuccessful(){
     if (this.readyState === 4 && this.status === 200) {
         let response = JSON.parse(this.responseText);
+
+        console.log(response);
 
         if (response.success === false) {
             alert("action: " + verb + " unssuccessfull")

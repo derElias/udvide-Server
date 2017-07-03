@@ -19,7 +19,7 @@ let yPos=0;
 
 
 let verb;
-let subject;
+let updateSubject;
 
 let creatingUserCurrendtly = false;
 
@@ -35,22 +35,25 @@ function setMapList(printMethode) {
 
 function setUserList(printMethode) {
     sendAjax(null, "user", "readAll", function(){
-        let response = JSON.parse(this.responseText);
-        if (response.success === true) {
-            userList = response.payLoad;
-            printMethode();
-        }
-    });
+        if (this.readyState === 4 && this.status === 200) {
+            let response = JSON.parse(this.responseText);
+
+            if (response.success === true) {
+                userList = response.payLoad;
+                printMethode();
+            }
+    }});
 }
 
 function setTargetList(printMethode) {
     sendAjax(null, "target", "readAll", function(){
-        let response = JSON.parse(this.responseText);
-        if (response.success === true) {
-            targetList = response.payLoad;
-            printMethode();
-        }
-    });
+        if (this.readyState === 4 && this.status === 200) {
+            let response = JSON.parse(this.responseText);
+            if (response.success === true) {
+                targetList = response.payLoad;
+                printMethode();
+            }
+    }});
 }
 
 function emptySorage() {
@@ -65,6 +68,6 @@ function emptySorage() {
     xPos=0;
     yPos=0;
     verb=null
-    subject=null;
+    updateSubject=null;
     creatingUserCurrendtly = false;
 }
