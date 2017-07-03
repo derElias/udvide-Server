@@ -28,8 +28,8 @@ abstract class udvidePlugin
      * Your code to modify the target before change
      * return true as "go-ahead" and false to abort silently
      * throw a PluginException to indicate a problem to the user
-     * $target are the values written to what was previously $subject
-     * so make $target what you want in the end and $subject-s name what target should be deleted
+     * $target are the values written to what was previously $updateSubject
+     * so make $target what you want in the end and $updateSubject-s name what target should be deleted
      * return false and create a new target yourself, if you want to prevent the original from being deleted
      * @param target $target
      * @param target $subject
@@ -63,8 +63,8 @@ abstract class udvidePlugin
      * Your code to modify the user before change
      * return true as "go-ahead" and false to abort silently
      * throw a PluginException to indicate a problem to the user
-     * $user are the values written to what was previously $subject
-     * so make $user what you want in the end and $subject-s name what target should be deleted
+     * $user are the values written to what was previously $updateSubject
+     * so make $user what you want in the end and $updateSubject-s name what target should be deleted
      * return false and create a new user yourself, if you want to prevent the original from being deleted // todo docu example
      * @param user $user
      * @param user $subject
@@ -98,8 +98,8 @@ abstract class udvidePlugin
      * Your code to modify the map before change
      * return true as "go-ahead" and false to abort silently
      * throw a PluginException to indicate a problem to the user
-     * $map are the values written to what was previously $subject
-     * so make $map what you want in the end and $subject-s name what target should be deleted
+     * $map are the values written to what was previously $updateSubject
+     * so make $map what you want in the end and $updateSubject-s name what target should be deleted
      * return false and create a new user yourself, if you want to prevent the original from being deleted // todo docu example
      * @param map $map
      * @param map $subject

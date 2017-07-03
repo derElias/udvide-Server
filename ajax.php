@@ -47,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !GET_INSTEAD_POST
  */
 function performVerbForSubjectAs(array $userInput) {
     $verb = $userInput['verb'];
-    $subject = isset($userInput['subject']) ? $userInput['subject'] : null;
+    $subject = isset($userInput['updateSubject']) ? $userInput['updateSubject'] : null;
 
     $response = new handlerResponse();
     $response->success = true;
@@ -90,7 +90,7 @@ function performVerbForSubjectAs(array $userInput) {
 }
 
 function getSwitch($userInput) {
-    switch ($userInput['subject']) {
+    switch ($userInput['updateSubject']) {
         case 'target':
             return target::readAll();
             break;
