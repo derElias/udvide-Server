@@ -156,11 +156,15 @@ class Helper
     {
         $out = explode(',', $in);
 
-        if (!array_key_exists(1, $out) || array_key_exists(2, $out))
+        if (array_key_exists(2, $out)) {
             // A invalid base 64 img input was given
             throw new TypeError(ERR_TYPE_NOT_BASE64_IMAGE_MSG);
-
-        return $out[1];
+        } elseif(array_key_exists(1, $out)) {
+            return $out[1];
+        } else {
+            // was already decodeable
+            return $in;
+        }
     }
 
     /**

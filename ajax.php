@@ -126,6 +126,7 @@ function getSwitch($userInput) {
         case 'initial':
             $targets = target::readAll();
             $users = user::readAll();
+            $maps = map::readAll();
             // todo refactoring
             foreach ($targets as $key=>$target) {
                 $targets[$key]['editors'] = editor::readAllUsersFor($target['name']);
@@ -134,7 +135,8 @@ function getSwitch($userInput) {
                 $users[$key]['editors'] = editor::readAllTargetsFor($user['username']);
             }
             return ['targets' => $targets,
-                'users' => $users];
+                'users' => $users,
+                'maps' => $maps];
             break;
         default:
             throw new InvalidVerbException('Invalid Subject for readAll');

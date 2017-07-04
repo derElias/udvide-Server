@@ -67,6 +67,8 @@ SQL;
 
     public function update(string $subject = null)
     {
+        $subject = empty($subject) ? $subject : $this->name;
+
         // If not allowed to update and self-update (in case of self update)
         if (user::getLoggedInUser()->getRole() < MIN_ALLOW_MAP_UPDATE)
             throw new PermissionException(ERR_PERMISSION_INSUFFICIENT,1);
@@ -76,6 +78,9 @@ SQL;
         foreach ($this as $key => $value) {
             if(isset($this->{$key})) {
                 $sql .= " $key = ? , ";
+                if ($key == "image") {
+                    $value = $this->getImageAsRawJpg();
+                }
                 $ins[] = $value;
                 $updateDB = true;
             }
@@ -89,7 +94,11 @@ UPDATE udvide.maps
 SET $sql
 WHERE name = ?;
 SQL;
-            $ins[] = $this->name;
+            $ins[] = $subject;
+
+            //echo $sql ."\n";
+            //var_dump($ins);
+
             access_DB::prepareExecuteFetchStatement($sql, $ins);
         }
         return $this;
@@ -152,7 +161,7 @@ SQL;
     {
         if (isset($image)) {
             if (is_string($image)) {
-                // we assume its a base64 URL uploaded via AJAX
+                // we assume its a base64 URL uploaded via AJAX should work on valid DataURL
                 $this->image =
                     imagecreatefromstring(
                         base64_decode(

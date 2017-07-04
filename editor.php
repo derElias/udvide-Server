@@ -30,13 +30,13 @@ class editor extends udvide_entity
 
     public function readAllTargets()
     {
-        $sql = 'SELECT tName FROM udvide.Editors WHERE uName = ?';
+        $sql = 'SELECT tName as "0" FROM udvide.Editors WHERE uName = ?';
         return access_DB::prepareExecuteFetchStatement($sql, [$this->user]);
     }
 
     public function readAllUsers()
     {
-        $sql = 'SELECT uName FROM udvide.Editors WHERE tName = ?';
+        $sql = 'SELECT uName as "0" FROM udvide.Editors WHERE tName = ?';
         return access_DB::prepareExecuteFetchStatement($sql, [$this->target]);
     }
 
