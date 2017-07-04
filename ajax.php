@@ -12,7 +12,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !GET_INSTEAD_POST
     || $_SERVER["REQUEST_METHOD"] == "GET" && GET_INSTEAD_POST) {
     try {
         // try to perform the requested action
-        echo performVerbForSubjectAs(GET_INSTEAD_POST ? $_GET : $_POST);
+        $result = performVerbForSubjectAs(GET_INSTEAD_POST ? $_GET : $_POST);
+        header('Content-Type: application/json');
+        echo $result;
     } catch (Exception $e) {
         $response = new handlerResponse();
         $response->success = false;
