@@ -56,7 +56,7 @@ function performVerbForSubjectAs(array $userInput) {
 
     if (!empty($userInput['user'])) {
         $user = user::fromJSON($userInput['user']);
-        $userInput['updateSubject'] = isset($userInput['updateSubject']) ? $userInput['updateSubject'] : $user['username'];
+        $userInput['updateSubject'] = isset($userInput['updateSubject']) ? $userInput['updateSubject'] : $user->getUsername();
 
         // if selfedit log in the $user instance
         if ($userInput['updateSubject'] === $userInput['username']) {
@@ -74,13 +74,13 @@ function performVerbForSubjectAs(array $userInput) {
     } elseif (!empty($userInput['target'])) {
         loginUser($userInput['username'], $userInput['passHash']);
         $target = target::fromJSON($userInput['target']);
-        $userInput['updateSubject'] = isset($userInput['updateSubject']) ? $userInput['updateSubject'] : $target['name'];
+        $userInput['updateSubject'] = isset($userInput['updateSubject']) ? $userInput['updateSubject'] : $target->getName();
         $response->payLoad = performVerbForTarget($verb, $target, $subject);
 
     } elseif (!empty($userInput['map'])) {
         loginUser($userInput['username'], $userInput['passHash']);
         $map = map::fromJSON($userInput['map']);
-        $userInput['updateSubject'] = isset($userInput['updateSubject']) ? $userInput['updateSubject'] : $map['name'];
+        $userInput['updateSubject'] = isset($userInput['updateSubject']) ? $userInput['updateSubject'] : $map->getName();
         $response->payLoad = performVerbForMap($verb, $map, $userInput['updateSubject']);
 
     } elseif ($verb == 'readAll') {

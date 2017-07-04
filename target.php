@@ -315,10 +315,15 @@ SQL;
     {
         if (isset($image)) {
             if (is_string($image)) {
+                // we assume its a base64 URL uploaded via AJAX
                 $this->image =
                     imagecreatefromstring(
                         base64_decode(
-                            helper::base64ImgToDecodeAbleBase64($image)
+                            strtr(
+                                helper::base64ImgToDecodeAbleBase64($image),
+                                ' ', '+'
+                            // when AJAXing an base64 string apparently "+" get converted to " " see https://stackoverflow.com/questions/16626535/javascript-atob-operation-using-php
+                            )
                         )
                     );
             } else {
