@@ -22,15 +22,25 @@ let verb;
 let updateSubject;
 
 let creatingUserCurrendtly = false;
-
+let tempTarget = {
+    name: null,
+    image: null,
+    activeFlag: null,
+    xPos: null,
+    yPos: null,
+    map: null,
+    content: null
+};
 
 function setMapList(printMethode) {
     sendAjax(null, "map", "readAll", function(){
-        let response = JSON.parse(this.responseText);
-        if (response.success === true) {
-            mapList = response.payLoad;
-            mapList.sort();
-            printMethode();
+        if (this.readyState === 4 && this.status === 200) {
+            let response = JSON.parse(this.responseText);
+            if (response.success === true) {
+                mapList = response.payLoad;
+                mapList.sort();
+                printMethode();
+            }
         }
     });
 }
@@ -58,6 +68,11 @@ function setTargetList(printMethode) {
                 printMethode();
             }
     }});
+}
+
+function setTempTargetMap() {
+    //TODO implement this function
+    loadTargetUpdateWindow();
 }
 
 function emptySorage() {

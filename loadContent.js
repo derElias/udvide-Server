@@ -137,10 +137,9 @@ function loadTargetUpdateWindow() {
         document.getElementById("imgPreview").src= updateSubject.image;
         document.getElementById("t_activeFlag").value = updateSubject.activeFlag;
         document.getElementById("t_content").value=updateSubject.content;
-        let x=updateSubject.xPos;
-        let y=updateSubject.yPos;
-        let map=updateSubject.map;
-
+        tempTarget.xPos=updateSubject.xPos;
+        temptTarget.yPos=updateSubject.yPos;
+        tempTarget.map=updateSubject.map;
     }
 }
 
@@ -163,10 +162,10 @@ function loadMapTable() {
 }
 
 function loadMapSelect() {
-    updateSubject.value = document.getElementById("target_name").value;
-    updateSubject.image = document.getElementById("imgPreview").src
-    updateSubject.acriveFlag = document.getElementById("t_activeFlag").value
-    updateSubject.content = document.getElementById("t_content").value
+    tempTarget.value = document.getElementById("target_name").value;
+    tempTarget.image = document.getElementById("imgPreview").src
+    tempTarget.acriveFlag = document.getElementById("t_activeFlag").value
+    tempTarget.content = document.getElementById("t_content").value
 
     document.getElementById("content").innerHTML = resourcePackage.templates["selectMap.html"];
     if(mapList == null) {
@@ -174,6 +173,11 @@ function loadMapSelect() {
     }
     else {
         printMapOptions();
+    }
+
+    if(tempTarget.map != null){
+        document.getElementById("map_select").selectedIndex="value", tempTarget.map.name;
+        document.getElementById("m_imgPreview").src = tempTarget.map.image;
     }
 }
 
