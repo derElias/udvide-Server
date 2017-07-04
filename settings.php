@@ -27,11 +27,17 @@ require_once 'vendor/autoload.php';
         define('PERMISSIONS_ADMIN', 2);
         define('PERMISSIONS_EDITOR', 1);
 
-// Who is allowed to do what?
+// Who is allowed to do what? If multiple are contradictory action will be
+// allowed (like TargetAssign vs TargetSelfAssign for a Editor (by default))
 //  Targets
         define('MIN_ALLOW_TARGET_ASSIGN', PERMISSIONS_ADMIN);
         define('MIN_ALLOW_TARGET_SELF_ASSIGN', PERMISSIONS_ADMIN);
-        define('MIN_ALLOW_TARGET_SELF_ASSIGN_OWN', PERMISSIONS_CLIENT);
+        define('MIN_ALLOW_TARGET_SELF_ASSIGN_OWN', PERMISSIONS_EDITOR);
+
+        define('MIN_ALLOW_TARGET_DIVEST', PERMISSIONS_ADMIN);
+        define('MIN_ALLOW_TARGET_SELF_DIVEST', PERMISSIONS_ADMIN);
+        define('MIN_ALLOW_TARGET_SELF_DIVEST_OWN', PERMISSIONS_EDITOR);
+
         define('MIN_ALLOW_TARGET_CREATE', PERMISSIONS_ADMIN);
         define('MIN_ALLOW_READ_ALL_TARGETS', PERMISSIONS_ADMIN);
         define('MIN_ALLOW_TARGET_UPDATE', PERMISSIONS_ADMIN);

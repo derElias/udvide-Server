@@ -20,11 +20,11 @@ class editor extends udvide_entity
         return access_DB::prepareExecuteFetchStatement($sql);
     }
 
-    public static function readAllTargetsFor(user $user) {
+    public static function readAllTargetsFor(string $user) {
         return (new self())->setUser($user)->readAllTargets();
     }
 
-    public static function readAllUsersFor(target $target) {
+    public static function readAllUsersFor(string $target) {
         return (new self())->setTarget($target)->readAllUsers();
     }
 
@@ -42,11 +42,13 @@ class editor extends udvide_entity
 
     public function create()
     {
-        if (user::getLoggedInUser()->getRole() < MIN_ALLOW_TARGET_ASSIGN
-            || (user::getLoggedInUser()->getRole() < MIN_ALLOW_TARGET_SELF_ASSIGN
-                && user::getLoggedInUser()->getUsername() == $this->user)
-            || (user::getLoggedInUser()->getRole() < MIN_ALLOW_TARGET_SELF_ASSIGN_OWN
-                && user::getLoggedInUser()->getUsername() == target::fromDB($this->target)->getOwner()))
+        $logRole = user::getLoggedInUser()->getRole();
+        $logName = user::getLoggedInUser()->getUsername();
+        if (!($logRole >= MIN_ALLOW_TARGET_ASSIGN
+            || ($logRole >= MIN_ALLOW_TARGET_SELF_ASSIGN
+                && $logName == $this->user)
+            || ($logRole >= MIN_ALLOW_TARGET_SELF_ASSIGN_OWN
+                && $logName == target::fromDB($this->target)->getOwner())))
             throw new PermissionException(ERR_PERMISSION_INSUFFICIENT,1);
 
         $sql = 'INSERT INTO udvide.Editors VALUES (?,?)';
@@ -55,7 +57,17 @@ class editor extends udvide_entity
 
     public function delete()
     {
-        // TODO: Implement delete() method.
+        $logRole = user::getLoggedInUser()->getRole();
+        $logName = user::getLoggedInUser()->getUsername();
+        if (!($logRole >= MIN_ALLOW_TARGET_DIVEST
+            || ($logRole >= MIN_ALLOW_TARGET_SELF_DIVEST
+                && $logName == $this->user)
+            || ($logRole >= MIN_ALLOW_TARGET_SELF_DIVEST_OWN
+                && $logName == target::fromDB($this->target)->getOwner())))
+            throw new PermissionException(ERR_PERMISSION_INSUFFICIENT,1);
+
+        $sql = 'DELETE FROM udvide.Editors WHERE tName = ? AND uName = ?';
+        access_DB::prepareExecuteFetchStatement($sql,[$this->target,$this->user]);
     }
 
     public function __set(string $name, $value)
@@ -95,41 +107,49 @@ class editor extends udvide_entity
 
     //<editor-fold desc="Setter / Getter">
     /**
-     * @param user $user
+     * @param user|string $user
      * @return editor
      */
-    public function setUser(user $user = null): editor
+    public function setUser($user = null): editor
     {
         if (isset($user)) {
-            $this->user = $user;
+            if (is_string($user)) {
+                $this->user = $user;
+            } else {
+                $this->user = $user->getUsername();
+            }
         }
         return $this;
     }
 
     /**
-     * @param target $target
+     * @param target|string $target
      * @return editor
      */
-    public function setTarget(target $target = null): editor
+    public function setTarget($target = null): editor
     {
         if (isset($target)) {
-            $this->target = $target;
+            if (is_string($target)) {
+                $this->target = $target;
+            } else {
+                $this->target = $target->getName();
+            }
         }
         return $this;
     }
 
     /**
-     * @return target
+     * @return string
      */
-    public function getTarget(): target
+    public function getTarget(): string
     {
         return $this->target;
     }
 
     /**
-     * @return user
+     * @return string
      */
-    public function getUser(): user
+    public function getUser(): string
     {
         return $this->user;
     }
@@ -139,7 +159,7 @@ class editor extends udvide_entity
      */
     public function getTName(): string
     {
-        return $this->target->getName();
+        return $this->getTarget();
     }
 
     /**
@@ -147,7 +167,7 @@ class editor extends udvide_entity
      */
     public function getUName(): string
     {
-        return $this->user->getUsername();
+        return $this->getUser();
     }
     //</editor-fold>
 }

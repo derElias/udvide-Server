@@ -113,7 +113,7 @@ function getSwitch($userInput) {
         case 'user+edit':
             $users = user::readAll();
             foreach ($users as $key=>$user) {
-                $users[$key]['editors'] = editor::readAllUsersFor($user['username']);
+                $users[$key]['editors'] = editor::readAllTargetsFor($user['username']);
             }
             return $users;
             break;
@@ -126,11 +126,12 @@ function getSwitch($userInput) {
         case 'initial':
             $targets = target::readAll();
             $users = user::readAll();
+            // todo refactoring
             foreach ($targets as $key=>$target) {
                 $targets[$key]['editors'] = editor::readAllUsersFor($target['name']);
             }
             foreach ($users as $key=>$user) {
-                $users[$key]['editors'] = editor::readAllUsersFor($user['username']);
+                $users[$key]['editors'] = editor::readAllTargetsFor($user['username']);
             }
             return ['targets' => $targets,
                 'users' => $users];
