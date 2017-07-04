@@ -40,10 +40,22 @@ function printUserTable() {
 
     for (let i = 0; i < userList.length; i++) {
         let temp = document.createElement('div');
+        temp.setAttribute('id', 'userElement'+i);
         temp.innerHTML = resourcePackage.templates["UserEntry.html"];
         parent.appendChild(temp);
+
         document.getElementsByClassName('user_title')[i].innerHTML = roleToString(userList[i].role) + ": " + userList[i].username;
+        document.getElementsByClassName('updateButtonUser')[i].addEventListener("click", function() {
+            updateUser(i);
+        });
+        document.getElementsByClassName('deleteButtonUser')[i].addEventListener("click", function() {
+            deleteUser(i);
+        });
     }
+}
+
+function deleteUserTableEntry(i) {
+        document.getElementById('userList').removeChild(document.getElementById('userElement'+i));
 }
 
 function printTargetTable() {
@@ -56,11 +68,9 @@ function printTargetTable() {
         targetList[i] = target.fromArray(targetList[i]);
         document.getElementsByClassName('targetEntry')[i].innerHTML = targetList[i].name;
         document.getElementsByClassName('updateButtonTarget')[i].addEventListener("click", function() {
-            console.log("test update");
             updateTarget(i);
         });
         document.getElementsByClassName('deleteButtonTarget')[i].addEventListener("click", function() {
-            console.log("test Delete");
             deleteTarget(i);
         });
     }
@@ -73,8 +83,12 @@ function printMapTable() {
         temp.innerHTML = resourcePackage.templates["mapEntry.html"];
         parent.appendChild(temp);
         document.getElementsByClassName('map_title')[i].innerHTML = mapList[i].name;
-        document.getElementsByClassName('updateButtonMap')[i].addEventListener(updateMap(i));
-        document.getElementsByClassName('deleteButtonMap')[i].addEventListener(deleteMap(i));
+        document.getElementsByClassName('updateButtonMap')[i].addEventListener("click", function() {
+            updateMap(i);
+        });
+        document.getElementsByClassName('deleteButtonMap')[i].addEventListener("click", function() {
+            deleteMap(i);
+        });;
     }
 }
 
@@ -99,27 +113,39 @@ function loadTargetUpdateWindow() {
 }
 
 function loadUserUpdateField() {
-    if (creatingUserCurrendtly == false) {
-        let newItem = document.createElement("div");
-        newItem.setAttribute("id", "createUserField")
-        newItem.innerHTML = resourcePackage.templates["createUser.html"];
+    let newItem = document.createElement("div");
+    newItem.setAttribute("id", "createUserField");
+    newItem.innerHTML = resourcePackage.templates["createUser.html"];
 
-        let list = document.getElementById("userList");
-        list.insertBefore(newItem, list.childNodes[0]);
-        creatingUserCurrendtly = true;
-        }
+    let list = document.getElementById("userList");
+    list.insertBefore(newItem, list.childNodes[0]);
+    document.getElementById("update_user_name").setAttribute("value", updateSubject.username);
+    console.log(updateSubject);
+    console.log("tLimit: "+updateSubject.createTargetLimit);
+    document.getElementById("update_user_role").setAttribute("value", updateSubject.role);
+    document.getElementById("update_user_role").selectedIndex="value", updateSubject.role;
+    document.getElementById("update_user_tnumber").setAttribute("value", updateSubject.createTargetLimit);
 }
 
 function closeUserUpdateField() {
     document.getElementById("userList").removeChild(document.getElementById("createUserField"));
+    updateSubject=null;
 }
 
-function loadEntryUpdatePopup() {
-    document.getElementById("content").innerHTML = resourcePackage.templates["EntryPopup.html"];
+
+
+function loadTargetUpdateWindow() {
+    document.getElementById("content").innerHTML = resourcePackage.templates["TargetUpdateWindow.html"];
+
 }
 
 function loadMapUpdateWindow() {
     document.getElementById("content").innerHTML = resourcePackage.templates["createMap.html"];
+    console.log(updateSubject);
+    if(updateSubject!=null) {
+        document.getElementById("map_name").setAttribute("value", updateSubject.name);
+        document.getElementById("imgPreview").setAttribute("src", updateSubject.immage);
+    }
 }
 
 function loadMapTable() {

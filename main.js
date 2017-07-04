@@ -23,7 +23,6 @@ function sendLoginData() {
 
 function login(){
     if (this.readyState === 4 && this.status === 200) {
-        console.log(this.responseText);
         let response = JSON.parse(this.responseText);
         if (response.success === true) {
             userList = response.payLoad;
@@ -66,7 +65,7 @@ function testSuccessful(){
     if (this.readyState === 4 && this.status === 200) {
         let response = JSON.parse(this.responseText);
 
-        console.log(response);
+        console.log("testresponse:"+response);
 
         if (response.success === false) {
             alert("action: " + verb + " unssuccessfull")

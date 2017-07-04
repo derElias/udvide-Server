@@ -33,6 +33,9 @@ body{
     padding: 70px 0;
     text-align: center;
 }
+#createUserField{
+    margin-top: 20px;
+}
 
 .createUserInput{
     width: 95%;
@@ -184,6 +187,7 @@ footer {
     width: 100%;
     border: solid black 1px;
 }
+
 .saveButton{
     margin-right: 15px;
     padding: 15px;

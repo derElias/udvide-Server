@@ -1,6 +1,11 @@
 /**
  * Created by Elias on 29.06.2017.
  */
+
+//object: object which is to be changed
+//subject: typ of object
+//verb: operation on object/subject
+//callbackMathod: Method which is executed when the response arrives
 function sendAjax(object, subject, verb, callbackMethod) {
 
     let xhttp = new XMLHttpRequest();
@@ -33,12 +38,6 @@ function sendAjax(object, subject, verb, callbackMethod) {
     xhttp.send(wwwForm);
 }
 
-
-function createEntry() {
-    t_verb="create";
-    loadMapSelect();
-}
-
 function selectMap() {
     let map = document.getElementbyId("mapSelect").value;
     console.log("map"+ map+"/n");
@@ -68,34 +67,29 @@ function deleteTarget(i){
 
 function  createUser(){
     verb = "create";
-    loadUserUpdateField();
+    if (creatingUserCurrendtly == false) {
+        creatingUserCurrendtly = true;
+        loadUserUpdateField();
+    }
 }
 
 function updateUser(i) {
-    updateSubject = userList[i].name;
-    userList.splice(i,1);
-    verb = "update";
+    if (creatingUserCurrendtly == false) {
+        creatingUserCurrendtly = true;
+    }
+    else {
+        closeUserUpdateField();
+    }
+    updateSubject = userList[i];
     loadUserUpdateField();
+    verb = "update";
 }
 
 function deleteUser(i){
     updateSubject = userList[i].name;
     userList.splice(i,1);
-    sendAjax(user, subject, "delete", testSuccessful);
-}
-
-function sendTargetCRUD() {
-    let target = {
-        name: document.getElementById("t_id").value,
-        image: document.getElementById("t_imgPreview").src,
-        activeFlag: document.getElementById("t_activeFlag").checked,
-        xPos: xPos,
-        yPos: yPos,
-        map: map,
-        content: document.getElementById("t_content").value
-    };
-    sendAjax(target, updateSubject, verb, testSuccessful);
-    loadUserAndTargetTable();
+    sendAjax(updateSubject, "user", "delete", testSuccessful);
+    deleteUserTableEntry(i);
 }
 
 
@@ -117,6 +111,20 @@ function deleteMap(i){
     sendAjax(map, subject, "delete", testSuccessful);
 }
 
+function sendTargetCRUD() {
+    let target = {
+        name: document.getElementById("t_id").value,
+        image: document.getElementById("t_imgPreview").src,
+        activeFlag: document.getElementById("t_activeFlag").checked,
+        xPos: xPos,
+        yPos: yPos,
+        map: map,
+        content: document.getElementById("t_content").value
+    };
+    sendAjax(target, updateSubject, verb, testSuccessful);
+    loadUserAndTargetTable();
+}
+
 function sendMapCRUD() {
     let map = {
         name: document.getElementById("map_id").value,
@@ -130,12 +138,15 @@ function sendMapCRUD() {
 
 
 function sendUserCRUD() {
+
+
+    let pass =document.getElementById("update_user_password").value;
+    if(pass=="") {pass=null;}
     let user = {
-        passHash: document.getElementById("update_user_password").value,
+        passHash: pass,
         username: document.getElementById("update_user_name").value,
         role: document.getElementById("update_user_role").value,
-        createTargetLimit: document.getElementById("update_user_tnumber").value,
-
+        createTargetLimit: document.getElementById("update_user_tnumber").value
     }
     sendAjax(user, "user", verb, testSuccessful);
     creatingUserCurrendtly = false;

@@ -25,6 +25,7 @@ let creatingUserCurrendtly = false;
 
 function setMapList(printMethode) {
     sendAjax(null, "map", "readAll", function(){
+        console.log(this.responseText);
         let response = JSON.parse(this.responseText);
         if (response.success === true) {
             mapList = response.payLoad;
