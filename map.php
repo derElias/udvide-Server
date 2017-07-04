@@ -67,7 +67,7 @@ SQL;
 
     public function update(string $subject = null)
     {
-        $subject = empty($subject) ? $subject : $this->name;
+        $subject = empty($subject) ? $this->name : $subject;
 
         // If not allowed to update and self-update (in case of self update)
         if (user::getLoggedInUser()->getRole() < MIN_ALLOW_MAP_UPDATE)
