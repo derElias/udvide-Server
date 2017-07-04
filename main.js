@@ -26,8 +26,9 @@ function login(){
         let response = JSON.parse(this.responseText);
         if (response.success === true) {
             userList = response.payLoad;
-            loadUserAndTargetTable();
             loadHeader();
+            loadUserAndTargetTable();
+
         }
         else {
             printLoginFail();
@@ -44,7 +45,7 @@ function onEnterLogin(e) {
 function logout() {
     loadLogin();
     emptyHeader();
-    emptySorage();
+    emptyStorage();
 }
 
 //<editor-fold desc="Load Target Table">

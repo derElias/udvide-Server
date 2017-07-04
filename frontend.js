@@ -1,17 +1,7 @@
 /**
  * Created by Elias on 29.06.2017.
  */
-function switchView() {
-    if (view == 0) {
-        creatingUserCurrendtly = false;
-        loadMapTable();
-        view = 1;
-    }
-    else {
-        loadUserAndTargetTable();
-        view = 0;
-    }
-}
+
 
 function markerPreviewFile() {
     let preview=document.getElementById("imgPreview");
@@ -21,7 +11,7 @@ function markerPreviewFile() {
     reader.onloadend = function () {
         image = reader.result;
         preview.src=image;
-        document.getElementByID("marker_downloadButton").href=image;
+        document.getElementById("marker_downloadButton").href=image;
     }
 
     if (file) {
@@ -48,21 +38,28 @@ function mapPreviewFile() {
     }
 }
 
-function drawMapPoint(event) {
+function triggerMapPreview() {
+    let i = document.getElementById("map_select").value;
+    tempTarget.mapImg=mapList[i].image;
+   showMapPreview(function() {});
+}
 
-    var canvas = document.getElementById("mapCanvas");
-    var ctx = canvas.getContext("2d");
-    var rect = canvas.getBoundingClientRect();
+function showMapPreview(f) {
+    let img = document.createElement("img");
+    let canvas = document.getElementById("mapCanvas");
 
-    xPos = (event.clientX - rect.left) * canvas.width / rect.width;
-    yPos = (event.clientY - rect.top) * canvas.height / rect.height;
-    document.getElementById("demo").innerHTML = "X: " + xPos + ", Y: " + yPos;
+    activeMapContext = canvas.getContext("2d");
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "#000000";
-    ctx.fillRect(xPos-1,yPos-1,3,3);
-    ctx.fillStyle = "#FF0000";
-    ctx.fillRect(xPos-1,yPos-1,1,1);
+    let background = new Image();
+    background.onload = function () {
+
+        img.src = canvas.toDataURL("image/jpeg", 0.95);
+        canvas.setAttribute("width","" + background.width);
+        canvas.setAttribute("height","" + background.height);
+        activeMapContext.drawImage(background, 0, 0);
+        f();
+    };
+    background.src = tempTarget.mapImg;
 }
 
 

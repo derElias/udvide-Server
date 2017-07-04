@@ -27,7 +27,12 @@ function sendAjax(object, subject, verb, callbackMethod) {
         + "&subject=" + subject
         + "&verb=" + verb;
     if (verb === "update") {
-        wwwForm += "&updateSubject=" + updateSubject;
+        if(subject==="user") {
+            wwwForm += "&updateSubject=" + updateSubject.username;
+        }
+        else{
+            wwwForm += "&updateSubject=" + updateSubject.name;
+        }
     }
     if (verb !== "readAll") {
         wwwForm += objSend + JSON.stringify(object);
@@ -51,8 +56,8 @@ function  createTarget(){
 function updateTarget(i) {
     sendAjax(targetList[i].name,"target","read",function () {
         if (this.readyState === 4 && this.status === 200) {
-            console.log(this.responseText);
-            updateSubject = JSON.parse(this.responseText);
+            tempTarget= JSON.parse(this.responseText);
+            updateSubject=tempTarget.name;
             loadTargetUpdateWindow();
         }
     });
@@ -77,7 +82,7 @@ function updateUser(i) {
         creatingUserCurrendtly = true;
     }
     else {
-        sendAjax(targetList[i].name,"target","read",function () {
+        sendAjax(userList[i].name,"target","read",function () {
             if (this.readyState === 4 && this.status === 200) {
                 updateSubject = JSON.parse(this.responseText);
                 closeUserUpdateField();
@@ -116,15 +121,23 @@ function deleteMap(i){
 
 function sendTargetCRUD() {
     let target = {
-        name: document.getElementById("t_id").value,
-        image: document.getElementById("t_imgPreview").src,
+        name: document.getElementById("target_name").value,
+        image: document.getElementById("imgPreview").src,
         activeFlag: document.getElementById("t_activeFlag").checked,
-        xPos: xPos,
-        yPos: yPos,
-        map: map,
+        xPos: tempTarget.xPos,
+        yPos: tempTarget.yPos,
+        map: tempTarget.map,
         content: document.getElementById("t_content").value
     };
-    sendAjax(target, updateSubject, verb, testSuccessful);
+    if(verb=="update") {
+        for (let i = 0; i < targetList.length; i++) {
+            if (targetList[i].name == updateSubject.name) {
+                targetList.splice(i, 1);
+            }
+        }
+    }
+    sendAjax(target, "target", verb, testSuccessful);
+    targetList.sort();
     loadUserAndTargetTable();
 }
 
@@ -133,8 +146,17 @@ function sendMapCRUD() {
         name: document.getElementById("map_name").value,
         image: document.getElementById("map_imgPreview").src
     };
-    sendAjax(newMap, updateSubject, verb, testSuccessful);
-    mapList.unshift(map);
+    if(verb=="update") {
+        for (let i = 0; i < mapList.length; i++) {
+            if (mapList[i].name == updateSubject.name) {
+                mapList.splice(i, 1);
+            }
+        }
+    }
+    sendAjax(newMap, "map", verb, testSuccessful);
+    mapList.unshift(newMap);
+    mapList.sort();
+    loadMapTable();
 }
 
 
@@ -149,15 +171,16 @@ function sendUserCRUD() {
     }
     sendAjax(user, "user", verb, testSuccessful);
     creatingUserCurrendtly = false;
-    closeUserUpdateField();
     userList.unshift(user);
-    if(updateSubject!=null){
+    if(verb=="update"){
         for(let i = 0; i < userList.length; i++){
             if(userList[i].username == updateSubject.username){
-                deleteUserTableEntry(i);
+                userList.splice(i, 1);
             }
         }
         updateSubject=null;
     }
+    userList.sort();
+    closeUserUpdateField();
 }
 

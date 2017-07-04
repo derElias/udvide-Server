@@ -18,6 +18,7 @@ function loadFooter() {
 }
 
 function loadUserAndTargetTable() {
+    document.getElementById("viewSwitch").innerHTML="Switch to<br/>Map-View";
     document.getElementById("content").innerHTML = resourcePackage.templates["entrytableAdmin.html"];
     if(userList == null){
         setUserList(printUserTable);
@@ -77,6 +78,7 @@ function printTargetTable() {
 }
 
 function printMapTable() {
+
     let parent = document.getElementById('mapList');
     for (let i = 0; i < mapList.length; i++) {
         let temp = document.createElement('div');
@@ -88,28 +90,42 @@ function printMapTable() {
         });
         document.getElementsByClassName('deleteButtonMap')[i].addEventListener("click", function() {
             deleteMap(i);
-        });;
+        });
     }
+    document.getElementById("viewSwitch").innerHTML="Switch to<br/>Main-View";
 }
 
 function printMapOptions() {
-    let parent=document.getElementById('mapSelect');
+    let parent=document.getElementById('map_select');
     for (let i = 0; i < mapList.length; i++) {
         let temp = document.createElement('option');
-        temp.setAttribute("class","mapSelectoption");
-        temp.setAttribute("value",""+i);
-        temp.setAttribute("id","mapSelectOption"+i);
+        temp.setAttribute("class","map_selectOption");
+        temp.setAttribute("value",i);
         parent.appendChild(temp);
-        document.getElementsByClassName('map_selectOption')[i].innerHTML = mapList[i].name;
+        let option=document.getElementsByClassName('map_selectOption')[i];
+        option.innerHTML = mapList[i].name;
     }
 }
 
 function printLoginFail(){
-    document.getElementById("loginWarning").innerHTML= "Login Fehlgeschlagen!!!";
+    document.getElementById("loginWarning").innerHTML = "Login Fehlgeschlagen!!!";
 }
 
 function loadTargetUpdateWindow() {
-    document.getElementById("content").innerHTML = resourcePackage.templates["selectMap.html"];
+    console.log(tempTarget);
+    document.getElementById("content").innerHTML = resourcePackage.templates["TargetUpdateWindow.html"];
+    if(tempTarget.name != null){
+        document.getElementById("target_name").value=tempTarget.name;
+    }
+    if(tempTarget.activeFlag != null){
+        document.getElementById("t_activeFlag").checked=tempTarget.activeFlag;
+    }
+    if(tempTarget.content != null){
+        document.getElementById("t_content").value=tempTarget.content;
+    }
+    if(tempTarget.image != null){
+        document.getElementById("imgPreview").src=tempTarget.image;
+    }
 }
 
 function loadUserUpdateField() {
@@ -130,19 +146,6 @@ function closeUserUpdateField() {
     updateSubject=null;
 }
 
-function loadTargetUpdateWindow() {
-    document.getElementById("content").innerHTML = resourcePackage.templates["TargetUpdateWindow.html"];
-    if(updateSubject!=null){
-        document.getElementById("target_name").value = updateSubject.name;
-        document.getElementById("imgPreview").src= updateSubject.image;
-        document.getElementById("t_activeFlag").value = updateSubject.activeFlag;
-        document.getElementById("t_content").value=updateSubject.content;
-        tempTarget.xPos=updateSubject.xPos;
-        temptTarget.yPos=updateSubject.yPos;
-        tempTarget.map=updateSubject.map;
-    }
-}
-
 function loadMapUpdateWindow() {
     document.getElementById("content").innerHTML = resourcePackage.templates["createMap.html"];
     if(updateSubject!=null) {
@@ -153,7 +156,7 @@ function loadMapUpdateWindow() {
 
 function loadMapTable() {
     document.getElementById("content").innerHTML = resourcePackage.templates["mapTableTempl.html"];
-    if(mapList == null) {
+    if(mapList === null) {
         setMapList(printMapTable);
     }
     else {
@@ -162,10 +165,10 @@ function loadMapTable() {
 }
 
 function loadMapSelect() {
-    tempTarget.value = document.getElementById("target_name").value;
-    tempTarget.image = document.getElementById("imgPreview").src
-    tempTarget.acriveFlag = document.getElementById("t_activeFlag").value
-    tempTarget.content = document.getElementById("t_content").value
+    tempTarget.name = document.getElementById("target_name").value;
+    tempTarget.image = document.getElementById("imgPreview").src;
+    tempTarget.activeFlag = document.getElementById("t_activeFlag").checked;
+    tempTarget.content = document.getElementById("t_content").value;
 
     document.getElementById("content").innerHTML = resourcePackage.templates["selectMap.html"];
     if(mapList == null) {
@@ -193,5 +196,18 @@ function testSuccessful(){
         else {
             verb=null;
         }
+    }
+}
+
+function switchView() {
+    if (view == 0) {
+        loadMapTable();
+        view = 1;
+        emptyCRUDStorage();
+    }
+    else {
+        loadUserAndTargetTable();
+        view = 0;
+        emptyCRUDStorage();
     }
 }

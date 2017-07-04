@@ -17,11 +17,12 @@ let map = null;
 let xPos=0;
 let yPos=0;
 
-
+//needet for Ajax Requests
 let verb;
 let updateSubject;
 
 let creatingUserCurrendtly = false;
+
 let tempTarget = {
     name: null,
     image: null,
@@ -29,8 +30,11 @@ let tempTarget = {
     xPos: null,
     yPos: null,
     map: null,
-    content: null
+    content: null,
+    mapImg: null
 };
+
+let activeMapContext=null;
 
 function setMapList(printMethode) {
     sendAjax(null, "map", "readAll", function(){
@@ -71,11 +75,51 @@ function setTargetList(printMethode) {
 }
 
 function setTempTargetMap() {
-    //TODO implement this function
+    let i=document.getElementById("map_select").value;
+    tempTarget.mapImg=mapList[i].image;
     loadTargetUpdateWindow();
+    document.getElementById("map_imgPreview").src=tempTarget.mapImg;
+    showMapPreview(function () {
+        activeMapContext.fillStyle = "#FF0000";
+        activeMapContext.fillRect(xPos-1,yPos-1,10,10);
+    });
+
 }
 
-function emptySorage() {
+function setPosition(event) {
+    var canvas = document.getElementById("mapCanvas");
+    var rect = canvas.getBoundingClientRect();
+    xPos = (event.clientX - rect.left) * canvas.width / rect.width;
+    yPos = (event.clientY - rect.top) * canvas.height / rect.height;
+    document.getElementById("demo").innerHTML = "X: " + xPos + ", Y: " + yPos;
+    showMapPreview(function () {
+        activeMapContext.fillStyle = "#FF0000";
+        activeMapContext.fillRect(xPos-1,yPos-1,5,5);
+    });
+}
+
+function emptyCRUDStorage(){
+    immage=null;
+    map = null;
+    xPos=0;
+    yPos=0;
+    verb=null
+    updateSubject=null;
+    creatingUserCurrendtly = false;
+
+    tempTarget = {
+        name: null,
+        image: null,
+        activeFlag: null,
+        xPos: null,
+        yPos: null,
+        map: null,
+        mapImg:null,
+        content: null
+    };
+}
+
+function emptyStorage() {
     username="";
     passHash="";
     view = 0;
@@ -89,4 +133,15 @@ function emptySorage() {
     verb=null
     updateSubject=null;
     creatingUserCurrendtly = false;
+
+    tempTarget = {
+        name: null,
+        image: null,
+        activeFlag: null,
+        xPos: null,
+        yPos: null,
+        map: null,
+        mapImg:null,
+        content: null
+    };
 }
