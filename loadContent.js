@@ -120,8 +120,6 @@ function loadUserUpdateField() {
     let list = document.getElementById("userList");
     list.insertBefore(newItem, list.childNodes[0]);
     document.getElementById("update_user_name").setAttribute("value", updateSubject.username);
-    console.log(updateSubject);
-    console.log("tLimit: "+updateSubject.createTargetLimit);
     document.getElementById("update_user_role").setAttribute("value", updateSubject.role);
     document.getElementById("update_user_role").selectedIndex="value", updateSubject.role;
     document.getElementById("update_user_tnumber").setAttribute("value", updateSubject.createTargetLimit);
@@ -132,19 +130,25 @@ function closeUserUpdateField() {
     updateSubject=null;
 }
 
-
-
 function loadTargetUpdateWindow() {
     document.getElementById("content").innerHTML = resourcePackage.templates["TargetUpdateWindow.html"];
+    if(updateSubject!=null){
+        document.getElementById("target_name").value = updateSubject.name;
+        document.getElementById("imgPreview").src= updateSubject.image;
+        document.getElementById("t_activeFlag").value = updateSubject.activeFlag;
+        document.getElementById("t_content").value=updateSubject.content;
+        let x=updateSubject.xPos;
+        let y=updateSubject.yPos;
+        let map=updateSubject.map;
 
+    }
 }
 
 function loadMapUpdateWindow() {
     document.getElementById("content").innerHTML = resourcePackage.templates["createMap.html"];
-    console.log(updateSubject);
     if(updateSubject!=null) {
         document.getElementById("map_name").setAttribute("value", updateSubject.name);
-        document.getElementById("imgPreview").setAttribute("src", updateSubject.immage);
+        document.getElementById("map_imgPreview").setAttribute("src", updateSubject.image);
     }
 }
 
@@ -159,6 +163,11 @@ function loadMapTable() {
 }
 
 function loadMapSelect() {
+    updateSubject.value = document.getElementById("target_name").value;
+    updateSubject.image = document.getElementById("imgPreview").src
+    updateSubject.acriveFlag = document.getElementById("t_activeFlag").value
+    updateSubject.content = document.getElementById("t_content").value
+
     document.getElementById("content").innerHTML = resourcePackage.templates["selectMap.html"];
     if(mapList == null) {
         setMapList(printMapOptions);

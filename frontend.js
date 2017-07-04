@@ -13,14 +13,32 @@ function switchView() {
     }
 }
 
-function previewFile() {
-    let preview = document.getElementById("t_imgPreview"); //selects the query named preview
+function markerPreviewFile() {
+    let preview=document.getElementById("imgPreview");
     let file = document.querySelector('input[type=file]').files[0]; //same as here
     let reader = new FileReader();
 
     reader.onloadend = function () {
-        preview.src = reader.result;
-        immage = preview.src;
+        image = reader.result;
+        preview.src=image;
+        document.getElementByID("marker_downloadButton").href=image;
+    }
+
+    if (file) {
+        reader.readAsDataURL(file); //reads the data as a URL
+    } else {
+        preview.src = "";
+    }
+}
+
+function mapPreviewFile() {
+    let preview=document.getElementById("map_imgPreview");
+    let file = document.querySelector('input[type=file]').files[0]; //same as here
+    let reader = new FileReader();
+
+    reader.onloadend = function () {
+        image = reader.result;
+        preview.src=image;
     }
 
     if (file) {

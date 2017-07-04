@@ -40,8 +40,6 @@ function sendAjax(object, subject, verb, callbackMethod) {
 
 function selectMap() {
     let map = document.getElementbyId("mapSelect").value;
-    console.log("map"+ map+"/n");
-    console.log("map.image" +map.image+"/n");
     document.getElementById('m_imgPreview').src = map.image;
 }
 
@@ -51,17 +49,18 @@ function  createTarget(){
 }
 
 function updateTarget(i) {
-    console.log(i);
-    updateSubject = targetList[i].name;
-    targetList.splice(i,1);
+    sendAjax(targetList[i].name,"target","read",function () {
+        if (this.readyState === 4 && this.status === 200) {
+            console.log(this.responseText);
+            updateSubject = JSON.parse(this.responseText);
+            loadTargetUpdateWindow();
+        }
+    });
     verb = "update";
-    loadTargetUpdateWindow();
 }
 
 function deleteTarget(i){
-    console.log(i);
     updateSubject = targetList[i].name;
-    targetList.splice(i,1);
     sendAjax(target, subject, "delete", testSuccessful);
 }
 
@@ -78,7 +77,12 @@ function updateUser(i) {
         creatingUserCurrendtly = true;
     }
     else {
-        closeUserUpdateField();
+        sendAjax(targetList[i].name,"target","read",function () {
+            if (this.readyState === 4 && this.status === 200) {
+                updateSubject = JSON.parse(this.responseText);
+                closeUserUpdateField();
+            }
+        });
     }
     updateSubject = userList[i];
     loadUserUpdateField();
@@ -99,8 +103,7 @@ function  createMap(){
 }
 
 function updateMap(i) {
-    updateSubject = mapList[i].name;
-    mapList.splice(i,1);
+    updateSubject = mapList[i];
     verb = "update";
     loadMapUpdateWindow();
 }
@@ -126,22 +129,18 @@ function sendTargetCRUD() {
 }
 
 function sendMapCRUD() {
-    let map = {
-        name: document.getElementById("map_id").value,
-        image: document.getElementById("t_imgPreview").src
+    let newMap = {
+        name: document.getElementById("map_name").value,
+        image: document.getElementById("map_imgPreview").src
     };
-    sendAjax(map, updateSubject, verb, testSuccessful);
+    sendAjax(newMap, updateSubject, verb, testSuccessful);
     mapList.unshift(map);
-    mapList.sort();
-    loadMapTable();
 }
 
 
 function sendUserCRUD() {
-
-
     let pass =document.getElementById("update_user_password").value;
-    if(pass=="") {pass=null;}
+    if(pass==""){pass=null;}
     let user = {
         passHash: pass,
         username: document.getElementById("update_user_name").value,
@@ -151,5 +150,14 @@ function sendUserCRUD() {
     sendAjax(user, "user", verb, testSuccessful);
     creatingUserCurrendtly = false;
     closeUserUpdateField();
+    userList.unshift(user);
+    if(updateSubject!=null){
+        for(let i = 0; i < userList.length; i++){
+            if(userList[i].username == updateSubject.username){
+                deleteUserTableEntry(i);
+            }
+        }
+        updateSubject=null;
+    }
 }
 

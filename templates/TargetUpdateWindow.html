@@ -9,23 +9,31 @@
 
 <div class="row">
     <div class="col-10">
-        <input type="text"  placeholder="name" class="TargetNamefield" id="t_id">
+        <input type="text"  placeholder="name" class="TargetNamefield" id="target_name">
     </div>
 </div>
 
 <div class="row">
     <div class="col-4">
         <div class="row">
-        <img src="img/Marker.JPG" class="previewPic" id="t_imgPreview">
+        <img src="img/Marker.JPG" class="previewPic" id="imgPreview">
         </div>
         <div class="row">
-        <input class="left" type="file" onchange="previewFile()">
+        <input class="left" type="file" onchange="markerPreviewFile()">
         </div>
         <div class="row">
             </br>
-            <button class="col-8">
+            <button class="col-3">
                 <div class="svg">
                     <img src="res/Generate.svg">
+                </div>
+            </button>
+            <div class="col-2"></div>
+            <button class="col-3" onclick="downloadMarker()">
+                <div class="svg">
+                    <a href="" download="marker.jpg" id="marker_downloadButton">
+                        <img src="res/Download.svg">
+                    </a>
                 </div>
             </button>
             </br>
@@ -33,7 +41,7 @@
             </br>
             </br>
         </div>
-        <div class="row">
+        <div class="row" onclick="loadMapSelect">
             <img src="" class="previewPic"  id="map_imgPreview">
         </div>
     </div>

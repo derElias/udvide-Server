@@ -10,7 +10,7 @@ let userList = null;
 let mapList = null;
 let targetList = null;
 
-let immage;
+let image;
 
 //To set when choosing Map
 let map = null;
@@ -23,12 +23,13 @@ let updateSubject;
 
 let creatingUserCurrendtly = false;
 
+
 function setMapList(printMethode) {
     sendAjax(null, "map", "readAll", function(){
-        console.log(this.responseText);
         let response = JSON.parse(this.responseText);
         if (response.success === true) {
             mapList = response.payLoad;
+            mapList.sort();
             printMethode();
         }
     });
@@ -41,6 +42,7 @@ function setUserList(printMethode) {
 
             if (response.success === true) {
                 userList = response.payLoad;
+                userList.sort();
                 printMethode();
             }
     }});
@@ -52,6 +54,7 @@ function setTargetList(printMethode) {
             let response = JSON.parse(this.responseText);
             if (response.success === true) {
                 targetList = response.payLoad;
+                targetList.sort();
                 printMethode();
             }
     }});
