@@ -1,5 +1,5 @@
 <?php
-include '../udvidePlugin.php';
+require_once '../../vendor/autoload.php';
 /**
  * This Plugin was written by Simon
  * It can serve as reference for future Plugins
@@ -26,7 +26,7 @@ class fhwsApi extends udvidePlugin
                     "description"=>"Rooms and Floors Buildings as\n
                         Building: floor.last-room floor2.last-room",
                     "preFill"=>"\"I: 1.21 2.19 3.24;\nH: 0.5 1.11\")",
-                    "type"=>PLUGIN_INPUT_LARGE_TEXT
+                    "type"=>self::PLUGIN_INPUT_LARGE_TEXT
                 ]
             ])
             ->setAdditionalTargetOptions([
@@ -34,7 +34,7 @@ class fhwsApi extends udvidePlugin
                     "id"=>"RoomNbr",
                     "description"=>"Room identifier",
                     "preFill"=>"z.B.: I.2.2",
-                    "type"=>PLUGIN_INPUT_SMALL_TEXT
+                    "type"=>self::PLUGIN_INPUT_SMALL_TEXT
                 ]
             ]);
     }
@@ -108,7 +108,7 @@ class fhwsApi extends udvidePlugin
         }
 
         $content = $target->getContent();
-        $content = str_replace("FHWS_API_01",$insert['01'],$content); // todo
+        $content = str_replace("FHWS_API_01",$insert['01'],$content);
         $target->setContent($content);
         return true;
     }

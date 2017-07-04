@@ -9,6 +9,17 @@ require_once '../vendor/autoload.php';
  */
 abstract class udvidePlugin
 {
+
+    // Types of custom Inputs
+    public const PLUGIN_INPUT_BANNER = 0; // no Input field
+    public const PLUGIN_INPUT_SMALL_TEXT = 1; // small text-box like name
+    public const PLUGIN_INPUT_LARGE_TEXT = 2; // large text-box like content
+    public const PLUGIN_INPUT_PASSWORD = 3; // smallText with hidden inputs
+    /* future Releases might support:
+    "image"  "enum: opt1,op2,..."
+    "date"  "color"  "range"
+    */
+
     /** @var array holding the data your js packs for delivery */
     public $pluginData;
     /** @var array holding the user inputs */

@@ -1,12 +1,6 @@
 <?php
 require_once 'vendor/autoload.php';
 
-/*class settings
-{
-    private function __construct(){}
-
-    public static function defineSettings()
-    {*/
 // Include local settings
         require_once 'localsettings.php';
 
@@ -79,5 +73,3 @@ require_once 'vendor/autoload.php';
         define('SERVE_XHTML5_AS_HTML', true && !THIS_IS_PRODUCTIOOOON);
 
         define('DS', DIRECTORY_SEPARATOR);
-//    }
-//}

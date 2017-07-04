@@ -1,15 +1,5 @@
 <?php
 
-// Types of custom Inputs
-define("BANNER",0); // no Input field
-define("SMALL_TEXT",1); // small text-box like name
-define("LARGE_TEXT",2); // large text-box like content
-define("PASSWORD",3); // smallText with hidden inputs
-/* future Releases might support:
-"image"  "enum: opt1,op2,..."
-"date"  "color"  "range"
-*/
-
 /**
  * Created by PhpStorm.
  * User: User
