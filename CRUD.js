@@ -2,7 +2,8 @@
  * Created by Elias on 29.06.2017.
  */
 
-//object: object which is to be changed
+// global var updatesubject is name of old subject
+//object: the new objectdata which is to be send
 //subject: typ of object
 //verb: operation on object/subject
 //callbackMathod: Method which is executed when the response arrives
@@ -27,12 +28,7 @@ function sendAjax(object, subject, verb, callbackMethod) {
         + "&subject=" + subject
         + "&verb=" + verb;
     if (verb === "update") {
-        if(subject==="user") {
-            wwwForm += "&updateSubject=" + updateSubject.username;
-        }
-        else{
-            wwwForm += "&updateSubject=" + updateSubject.name;
-        }
+            wwwForm += "&updateSubject=" + updateSubject;
     }
     if (verb !== "readAll") {
         wwwForm += objSend + JSON.stringify(object);
@@ -49,74 +45,88 @@ function selectMap() {
 }
 
 function  createTarget(){
+    emptyCRUDStorage();
     verb = "create";
     loadTargetUpdateWindow();
 }
 
 function updateTarget(i) {
+    emptyCRUDStorage();
+    verb = "update";
+    updateSubject=targetList[i].name;
     sendAjax(targetList[i].name,"target","read",function () {
         if (this.readyState === 4 && this.status === 200) {
             tempTarget= JSON.parse(this.responseText);
-            updateSubject=tempTarget.name;
+            if(tempTarget.map !=null){
+                for (let i =o; i < mapList.length; i++){
+                    if(tempTarget.map == mapList[i].name){
+                        tempTarget.mapIndex=i;
+                        tempTarget.mapImg=mapList[i].image;
+                    }
+                }
+            }
+
             loadTargetUpdateWindow();
         }
     });
-    verb = "update";
 }
 
 function deleteTarget(i){
+    emptyCRUDStorage();
     updateSubject = targetList[i].name;
-    sendAjax(target, subject, "delete", testSuccessful);
+    sendAjax(null, subject, "delete", testSuccessful);
 }
 
 function  createUser(){
+    console.log(creatingUserCurrendtly)
+    if (creatingUserCurrendtly) {
+    closeUserUpdateField();
+}
+    emptyCRUDStorage();
+    loadUserUpdateField();
+    creatingUserCurrendtly =true;
     verb = "create";
-    if (creatingUserCurrendtly == false) {
-        creatingUserCurrendtly = true;
-        loadUserUpdateField();
-    }
 }
 
 function updateUser(i) {
-    if (creatingUserCurrendtly == false) {
-        creatingUserCurrendtly = true;
+    if (creatingUserCurrendtly){
+        closeUserUpdateField();
     }
-    else {
-        sendAjax(userList[i].name,"target","read",function () {
-            if (this.readyState === 4 && this.status === 200) {
-                updateSubject = JSON.parse(this.responseText);
-                closeUserUpdateField();
-            }
-        });
-    }
-    updateSubject = userList[i];
-    loadUserUpdateField();
+    emptyCRUDStorage();
+    creatingUserCurrendtly =true;
     verb = "update";
+    tempUser=userList[i];
+    loadUserUpdateField();
+    //clickedEntry(0,userList[i].username,"user");
 }
 
 function deleteUser(i){
+    emptyCRUDStorage();
     updateSubject = userList[i].name;
     userList.splice(i,1);
-    sendAjax(updateSubject, "user", "delete", testSuccessful);
+    sendAjax(null, "user", "delete", testSuccessful);
     deleteUserTableEntry(i);
 }
 
 
 function  createMap(){
+    emptyCRUDStorage();
     verb = "create";
     loadMapUpdateWindow();
 }
 
 function updateMap(i) {
-    updateSubject = mapList[i];
+    emptyCRUDStorage();
+    updateSubject = mapList[i].name;
     verb = "update";
     loadMapUpdateWindow();
 }
 
 function deleteMap(i){
+    emptyCRUDStorage();
     updateSubject = mapList[i].name;
     mapList.splice(i,1);
-    sendAjax(map, subject, "delete", testSuccessful);
+    sendAjax(null, "map", "delete", testSuccessful);
 }
 
 function sendTargetCRUD() {
@@ -137,8 +147,8 @@ function sendTargetCRUD() {
         }
     }
     sendAjax(target, "target", verb, testSuccessful);
-    targetList.sort();
     loadUserAndTargetTable();
+    emptyCRUDStorage();
 }
 
 function sendMapCRUD() {
@@ -155,8 +165,8 @@ function sendMapCRUD() {
     }
     sendAjax(newMap, "map", verb, testSuccessful);
     mapList.unshift(newMap);
-    mapList.sort();
     loadMapTable();
+    emptyCRUDStorage();
 }
 
 
@@ -169,18 +179,75 @@ function sendUserCRUD() {
         role: document.getElementById("update_user_role").value,
         createTargetLimit: document.getElementById("update_user_tnumber").value
     }
-    sendAjax(user, "user", verb, testSuccessful);
+    sendAjax(user, "user", verb, function () {
+        if (this.readyState === 4 && this.status === 200) {
+            emptyCRUDStorage();
+        }});
     creatingUserCurrendtly = false;
     userList.unshift(user);
     if(verb=="update"){
         for(let i = 0; i < userList.length; i++){
-            if(userList[i].username == updateSubject.username){
+            if(userList[i].username == updateSubject){
                 userList.splice(i, 1);
             }
         }
-        updateSubject=null;
+        closeUserUpdateField();
     }
-    userList.sort();
-    closeUserUpdateField();
+    loadUserAndTargetTable();
+}
+
+function sendEditorUpdate(i) {
+    sendAjax(userList[i],subjectType,"update", function () {
+        if (this.readyState === 4 && this.status === 200) {
+            emptyCRUDStorage();
+        }
+    })
+}
+
+function clickedEntry(i,subject, entryType){
+    if(updateSubject == null){
+        updateSubject = subject;
+        subjectType = entryType;
+        if(subjectType== "user") {
+            subjectPermissions = userList[i].role;
+        }
+        markEntries(i);
+    }
+    else {
+        if(subject == updateSubject) {
+            updateSubject=null;
+            subjectType=null;
+            subjectPermissions=null;
+            unmarkEverything();
+            if(creatingUserCurrendtly){
+                closeUserUpdateField();
+            }
+            sendEditorUpdate(i);
+        }
+        else{
+            if(entryType == subjectType){
+                sendEditorUpdate(i);
+                updateSubject = subject;
+                subjectType =entryType;
+                if(subjectType== "user") {
+                    subjectPermissions = userList[i].role;
+                }
+                unmarkEverything();
+                if(creatingUserCurrendtly){
+                    closeUserUpdateField();
+                }
+                markEntries(i);
+            }
+            else{
+                if(subjectType == "user"){
+                    if(subjectPermissions == 1) {
+                        toggleMarkEntry(i, entryType);
+                        toggleAssingment(subject);
+                    }
+                }
+            }
+        }
+
+    }
 }
 

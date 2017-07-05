@@ -33,6 +33,13 @@ body{
     padding: 70px 0;
     text-align: center;
 }
+.closeButton{
+    margin-right: 15px;
+    padding: 15px;
+    float: right;
+    width: 60px;
+    text-align: center;
+}
 #createUserField{
     margin-top: 20px;
 }
@@ -87,13 +94,22 @@ body{
 .dropdown-content div:hover{
     color: lightgrey;
 }
-.Entrybox{
+[class*="entrybox"]{
     width: 100%;
     min-height: 80px;
     margin: auto;
     background-color: white;
     border: solid 2px black;
     padding: 5px;
+}
+.entryboxTarget{}
+.entryboxUser{}
+.entryboxMap{}
+.entryboxCreateUser{}
+
+.entryboxMarked{
+    text-shadow: 2px 2px 5px blue;
+    box-shadow: 2px 2px 20px blue;
 }
 
 .entrybutton{
@@ -252,6 +268,13 @@ footer {
     font-size: 20px;
     padding:10px;
 }
+
+#update_user_save{
+    width: 20px;
+    margin: 2px;
+}
+
+
 
 [class*="col-"]{
     float: left;

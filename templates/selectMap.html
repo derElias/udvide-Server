@@ -1,9 +1,9 @@
 <select onchange="triggerMapPreview()" id="map_select">
     <option value="">Select Map:</option>
 </select>
-<div class="svg right" onclick="setTempTargetMap()">
-<img src="res/Contiue.svg">
-</div>
+<button class="svg right" onclick="setTempTargetMap()">
+    <img src="res/Save.svg">
+</button>
 <div class="row">
     <canvas onclick="setPosition(event)" id="mapCanvas" class="previewPicMap">
         <img src="" class="previewPicMap" id="m_imgPreview">

@@ -25,10 +25,7 @@ function login(){
     if (this.readyState === 4 && this.status === 200) {
         let response = JSON.parse(this.responseText);
         if (response.success === true) {
-            userList = response.payLoad;
-            loadHeader();
-            loadUserAndTargetTable();
-
+            initialRead();
         }
         else {
             printLoginFail();

@@ -3,6 +3,7 @@
  */
 let username;
 let passHash;
+let permissions;
 
 let view = 0;
 
@@ -18,23 +19,54 @@ let xPos=0;
 let yPos=0;
 
 //needet for Ajax Requests
-let verb;
-let updateSubject;
+let verb
+let updateSubject=null;
+let subjectType=null;
+let subjectPermissions=null;
 
 let creatingUserCurrendtly = false;
+
+let initial=null;
 
 let tempTarget = {
     name: null,
     image: null,
     activeFlag: null,
+    content: null,
     xPos: null,
     yPos: null,
     map: null,
-    content: null,
-    mapImg: null
+    mapImg: null,
+    mapIndex: null
 };
 
+let tempUser ={
+    username: null,
+    role: null,
+    createTargetLimit: null,
+    editors: null
+}
+
 let activeMapContext=null;
+
+function initialRead() {
+    sendAjax(null, "initial", "readAll", function () {
+        if (this.readyState === 4 && this.status === 200) {
+            initial = JSON.parse(this.responseText);
+            userList = initial.payLoad.users;
+            targetList = initial.payLoad.targets;
+            mapList = initial.payLoad.maps;
+            for(let i=0; i<userList.length;i++){
+                if(username==userList[i].username){
+                    permissions = userList[i].role;
+                }
+            }
+
+            loadHeader();
+            loadUserAndTargetTable();
+        }
+    });
+}
 
 function setMapList(printMethode) {
     sendAjax(null, "map", "readAll", function(){
@@ -42,7 +74,6 @@ function setMapList(printMethode) {
             let response = JSON.parse(this.responseText);
             if (response.success === true) {
                 mapList = response.payLoad;
-                mapList.sort();
                 printMethode();
             }
         }
@@ -56,7 +87,6 @@ function setUserList(printMethode) {
 
             if (response.success === true) {
                 userList = response.payLoad;
-                userList.sort();
                 printMethode();
             }
     }});
@@ -68,22 +98,42 @@ function setTargetList(printMethode) {
             let response = JSON.parse(this.responseText);
             if (response.success === true) {
                 targetList = response.payLoad;
-                targetList.sort();
                 printMethode();
             }
     }});
 }
 
+function toggleAssingment(subject) {
+    if(subjectType==user){
+        for(let i = 0; i < userList[i].length;i++){
+            if(userList[i].username==updateSubject){
+                let toggled=false;
+                if(userList[i].editors != false) {
+                    for (let k = 0; k < userList[i].editors.length; k++) {
+                        if (userList[i].editors[k] == subject) {
+                            userList[i].editors.splice(k, 1);
+                            toggled = true
+                        }
+                    }
+                    if (toggled == false) {
+                        userList[i].editors.add(subject);
+                    }
+                }
+                else{
+                    userList[i].editors=[subject];
+                }
+            }
+        }
+    }
+}
+
 function setTempTargetMap() {
     let i=document.getElementById("map_select").value;
+    tempTarget.map=mapList[i].name;
     tempTarget.mapImg=mapList[i].image;
+    tempTarget.xPos=xPos;
+    tempTarget.yPos=yPos;
     loadTargetUpdateWindow();
-    document.getElementById("map_imgPreview").src=tempTarget.mapImg;
-    showMapPreview(function () {
-        activeMapContext.fillStyle = "#FF0000";
-        activeMapContext.fillRect(xPos-1,yPos-1,10,10);
-    });
-
 }
 
 function setPosition(event) {
@@ -105,18 +155,29 @@ function emptyCRUDStorage(){
     yPos=0;
     verb=null
     updateSubject=null;
+    subjectType=null;
+    subjectPermissions=null;
     creatingUserCurrendtly = false;
 
     tempTarget = {
         name: null,
         image: null,
         activeFlag: null,
+        content: null,
         xPos: null,
         yPos: null,
         map: null,
-        mapImg:null,
-        content: null
+        mapImg: null,
+        mapIndex: null
     };
+
+    tempUser ={
+        username: null,
+        role: null,
+        createTargetLimit: null,
+        editors: null
+    }
+    unmarkEverything();
 }
 
 function emptyStorage() {
@@ -126,22 +187,5 @@ function emptyStorage() {
     userList = null;
     mapList = null;
     targetList = null;
-    immage=null;
-    map = null;
-    xPos=0;
-    yPos=0;
-    verb=null
-    updateSubject=null;
-    creatingUserCurrendtly = false;
-
-    tempTarget = {
-        name: null,
-        image: null,
-        activeFlag: null,
-        xPos: null,
-        yPos: null,
-        map: null,
-        mapImg:null,
-        content: null
-    };
+    emptyCRUDStorage();
 }

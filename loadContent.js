@@ -42,6 +42,9 @@ function printUserTable() {
     for (let i = 0; i < userList.length; i++) {
         let temp = document.createElement('div');
         temp.setAttribute('id', 'userElement'+i);
+        temp.addEventListener("click", function() {
+            clickedEntry(i,userList[i].username,"user");
+        });
         temp.innerHTML = resourcePackage.templates["UserEntry.html"];
         parent.appendChild(temp);
 
@@ -65,6 +68,9 @@ function printTargetTable() {
     for (let i = 0; i < targetList.length; i++) {
         let temp = document.createElement('div');
         temp.innerHTML = resourcePackage.templates["targetEntry.html"];
+        temp.addEventListener("click", function() {
+            clickedEntry(i,targetList[i].name,"target");
+        });
         parent.appendChild(temp);
         targetList[i] = target.fromArray(targetList[i]);
         document.getElementsByClassName('targetEntry')[i].innerHTML = targetList[i].name;
@@ -112,8 +118,7 @@ function printLoginFail(){
 }
 
 function loadTargetUpdateWindow() {
-    console.log(tempTarget);
-    document.getElementById("content").innerHTML = resourcePackage.templates["TargetUpdateWindow.html"];
+    document.getElementById("content").innerHTML = resourcePackage.templates["targetUpdateWindow.html"];
     if(tempTarget.name != null){
         document.getElementById("target_name").value=tempTarget.name;
     }
@@ -126,6 +131,12 @@ function loadTargetUpdateWindow() {
     if(tempTarget.image != null){
         document.getElementById("imgPreview").src=tempTarget.image;
     }
+    if(tempTarget.map != null){
+        showMapPreview(function () {
+            activeMapContext.fillStyle = "#FF0000";
+            activeMapContext.fillRect(tempTarget.xPos-1,tempTarget.yPos-1,10,10);
+        });
+    }
 }
 
 function loadUserUpdateField() {
@@ -135,15 +146,20 @@ function loadUserUpdateField() {
 
     let list = document.getElementById("userList");
     list.insertBefore(newItem, list.childNodes[0]);
-    document.getElementById("update_user_name").setAttribute("value", updateSubject.username);
-    document.getElementById("update_user_role").setAttribute("value", updateSubject.role);
-    document.getElementById("update_user_role").selectedIndex="value", updateSubject.role;
-    document.getElementById("update_user_tnumber").setAttribute("value", updateSubject.createTargetLimit);
+    if(tempUser.username != null){
+        document.getElementById("update_user_name").value = tempUser.username;
+    }
+    if(tempUser.role != null) {
+        document.getElementById("update_user_role").selectedIndex = "value", tempUser.role;
+    }
+    if(tempUser.createTargetLimit != null) {
+        document.getElementById("update_user_tnumber").value = tempUser.createTargetLimit;
+    }
 }
 
 function closeUserUpdateField() {
-    document.getElementById("userList").removeChild(document.getElementById("createUserField"));
-    updateSubject=null;
+    let list=document.getElementById("userList")
+    list.removeChild(list.childNodes[0]);
 }
 
 function loadMapUpdateWindow() {
@@ -152,6 +168,22 @@ function loadMapUpdateWindow() {
         document.getElementById("map_name").setAttribute("value", updateSubject.name);
         document.getElementById("map_imgPreview").setAttribute("src", updateSubject.image);
     }
+}
+
+function closeUpdateWindow() {
+
+    if(creatingUserCurrendtly){
+        closeUserUpdateField()
+    }
+    else{
+        if(view == 0){
+            loadUserAndTargetTable();
+        }
+        else {
+            loadMapTable();
+        }
+    }
+    emptyCRUDStorage();
 }
 
 function loadMapTable() {
@@ -179,8 +211,14 @@ function loadMapSelect() {
     }
 
     if(tempTarget.map != null){
-        document.getElementById("map_select").selectedIndex="value", tempTarget.map.name;
-        document.getElementById("m_imgPreview").src = tempTarget.map.image;
+        document.getElementById("map_select").selectedIndex="value", tempTarget.mapIndex;
+    }
+
+    if(tempTarget.map != null){
+        showMapPreview(function () {
+            activeMapContext.fillStyle = "#FF0000";
+            activeMapContext.fillRect(tempTarget.xPos-1,tempTarget.yPos-1,5,5);
+        });
     }
 }
 
