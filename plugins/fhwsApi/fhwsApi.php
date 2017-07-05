@@ -1,5 +1,5 @@
 <?php
-require_once '../../vendor/autoload.php';
+require_once 'vendor/autoload.php';
 /**
  * This Plugin was written by Simon
  * It can serve as reference for future Plugins
@@ -42,7 +42,7 @@ class fhwsApi extends udvidePlugin
     public function onTargetCreate(target &$target): bool
     {
         if (!empty($this->userInput['RoomNbr'])) {
-            $target->setPluginData('fhwsApi',$this->userInput['RoomNbr']);
+            $target->setPluginData('fhwsApi',['RoomNbr'=>$this->userInput['RoomNbr']]);
         }
         return true;
     }
@@ -92,7 +92,7 @@ class fhwsApi extends udvidePlugin
     public function onMobileRead(target &$target): bool
     {
         $insert['01'] = "";
-        $templ = file_get_contents('fhwsRoomTemplate.richtxt');
+        $templ = file_get_contents($this->rootPath . 'fhwsRoomTemplate.richtxt');
         $roomId = $this->getRoomInfo($target);
         $roomEvts = $this->getApiInfoForRoom($roomId);
         foreach ($roomEvts as $evt) {

@@ -1,5 +1,5 @@
 <?php
-require_once '../vendor/autoload.php';
+require_once 'vendor/autoload.php';
 
 /**
  * Created by PhpStorm.
@@ -20,10 +20,17 @@ abstract class udvidePlugin
     "date"  "color"  "range"
     */
 
+    /** @var string */
+    public $rootPath;
     /** @var array holding the data your js packs for delivery */
     public $pluginData;
     /** @var array holding the user inputs */
     public $userInput;
+
+    function __construct()
+    {
+        $this->rootPath = 'plugins/' . static::class . '/';
+    }
 
     //<editor-fold desc="Target">
     /**

@@ -11,9 +11,9 @@ require_once 'vendor/autoload.php';
 class map extends udvide
 {
     /** @var  string */
-    private $name;
+    protected $name;
     /** @var  resource */
-    private $image;
+    protected $image;
 
     public function __construct(){}
 
@@ -39,7 +39,7 @@ SQL;
         $db = access_DB::prepareExecuteFetchStatement($sql);
         foreach ($db as $key => $userArr) {
             $temp = new self();
-            $temp->setImage(imagecreatefromstring($userArr['image']));
+            $temp->setImage($userArr['image']);
             $db[$key]['image'] = $temp->getImageAsDataUrlJpg();
         } // todo refactor
         return $db;
@@ -161,21 +161,14 @@ SQL;
     {
         if (isset($image)) {
             if (is_string($image)) {
-                // we assume its a base64 URL uploaded via AJAX should work on valid DataURL
-                $this->image =
-                    imagecreatefromstring(
-                        base64_decode(
-                            strtr(
-                                helper::base64ImgToDecodeAbleBase64($image),
-                                ' ', '+'
-                            // when AJAXing an base64 string apparently "+" get converted to " " see https://stackoverflow.com/questions/16626535/javascript-atob-operation-using-php
-                            )
-                        )
-                    );
-            } else {
-                $this->image = $image;
+                if (!helper::strIsJpg($image)) {
+                    // if it is a data url we want to resolve it
+                    $image = helper::base64ImgToDecodeAbleBase64($image);
+                    $image = base64_decode($image);
+                }
+                $image = imagecreatefromstring($image);
             }
-            $this->image = helper::imgAssistant($this->image, ['maxFileSize' => VUFORIA_DATA_SIZE_LIMIT]);
+            $this->image = helper::imgAssistant($image, ['maxFileSize' => VUFORIA_DATA_SIZE_LIMIT]);
         }
         return $this;
     }

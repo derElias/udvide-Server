@@ -13,15 +13,15 @@ class user extends udvide
     private static $loggedInUser;
 
     /** @var string max 127 S/G prevent change if logged in*/
-    private $username;
+    protected $username;
     /** @var bool G prevent change*/
     private $deleted;
     /** @var string max 255 S prevent change if logged in*/
     private $passHash;
     /** @var int S/G prevent change if logged in conditionally */
-    private $role;
+    protected $role;
     /** @var int */
-    private $targetCreateLimit;
+    protected $targetCreateLimit;
 
     /** @var  bool */
     private $isLoggedIn;
@@ -116,6 +116,7 @@ SQL;
         foreach ($this as $key => $value) {
             if($key != 'isLoggedIn'
                 && $key != 'deleted'
+                && $key != 'editors'
                 &&isset($this->{$key})) {
 
                 if ($key == 'passHash') {

@@ -75,7 +75,7 @@ function performVerbForSubjectAs(array $userInput) {
         loginUser($userInput['username'], $userInput['passHash']);
         $target = target::fromJSON($userInput['target']);
         $userInput['updateSubject'] = isset($userInput['updateSubject']) ? $userInput['updateSubject'] : $target->getName();
-        $response->payLoad = performVerbForTarget($verb, $target, $subject);
+        $response->payLoad = performVerbForTarget($verb, $target, $userInput['updateSubject']);
 
     } elseif (!empty($userInput['map'])) {
         loginUser($userInput['username'], $userInput['passHash']);

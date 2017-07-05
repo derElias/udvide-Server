@@ -2,9 +2,8 @@
 require_once 'vendor/autoload.php';
 
 
-abstract class udvide extends udvide_entity
+abstract class udvide extends udvide_entity implements JsonSerializable
 {
-
     //<editor-fold desc="Constructors">
     /**
      * indirect constructor
@@ -50,8 +49,26 @@ abstract class udvide extends udvide_entity
     public abstract function setName(string $name);
 
 
-
-
-
-
+    /**
+     * Specify data which should be serialized to JSON
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    public function jsonSerialize()
+    {
+        $assoc = [];
+        foreach ($this as $field => $value) {
+            if (isset($this->{$field})) {
+                if (is_resource($value)) {
+                    // image handling
+                    $assoc[$field] = 'data:image/jpeg;base64,' . base64_encode(helper::imgResToJpgString($value));
+                } else {
+                    $assoc[$field] = $this->__get($field);
+                }
+            }
+        }
+        return $assoc;
+    }
 }

@@ -7,33 +7,36 @@ require_once 'vendor/autoload.php';
  */
 class target extends udvide
 {
+    /** @var array */
+    private $editors;
+
     // SQL only Values
     /** @var array */
-    private $pluginData;
+    protected $pluginData;
     /** @var  bool */
     private $deleted;
     /** @var  string */
-    private $owner;
-    /** @var  string WARNING: UNESCAPED */
-    private $content;
-    /** @var  int */
-    private $xPos;
-    /** @var  int */
-    private $yPos;
+    protected $owner;
     /** @var  string */
-    private $map;
+    protected $content;
+    /** @var  int */
+    protected $xPos;
+    /** @var  int */
+    protected $yPos;
+    /** @var  string */
+    protected $map;
 
     // Shared Values
     /** @var string varchar(32) */
     private $vw_id;
     /** @var  resource */
-    private $image;
+    protected $image;
     /** @var  string */
-    private $name;
+    protected $name;
 
     // VWS only Values
     /** @var  bool */
-    private $active;
+    protected $active;
 
     // VWS generated Values
     // ToDo
@@ -45,17 +48,16 @@ class target extends udvide
 
 
     //<editor-fold desc="CRUD DB">
-    public function read() {
+    public function read() { // todo
         $sql = <<<'SQL'
-SELECT case when t.deleted = 1 or t.deleted = true then true else false end as deleted,
-  owner, content, xPos, yPos, map, vw_id, image, pluginData, e.uName
-FROM udvide.Targets t
-JOIN udvide.Editors e
-ON t.name = e.tName
-WHERE t.name = ?
+SELECT /*case when t.deleted = 1 or t.deleted = true then true else false end as*/ 
+deleted, owner, content, xPos, yPos, map, vw_id, image, pluginData
+FROM udvide.Targets
+WHERE name = ?
 SQL;
         $db = access_DB::prepareExecuteFetchStatement($sql, [$this->name]);
-        $this->set($db[0]); // ignores the e.uName entry
+        $this->set($db[0]);
+        $this->editors = editor::readAllUsersFor($this->name);
         return $this;
     }
 
@@ -154,6 +156,7 @@ SQL;
         $sql = '';
         foreach ($this as $key => $value) {
             if ($key != 'active'
+                && $key != 'editors'
                 && strpos($key, 'vwgen_') !== 0
                 && isset($this->{$key})
             ) {
@@ -207,6 +210,10 @@ SQL;
      */
     public function __set(string $name, $value):target {
         switch($name) {
+            case 'name':
+                return $this->setName($value);
+            case 'image':
+                return $this->setImage($value);
             case 'owner':
                 return $this->setOwner($value);
             case 'content':
@@ -229,6 +236,10 @@ SQL;
      */
     public function __get(string $name) {
         switch($name) {
+            case 'name':
+                return $this->getName();
+            case 'image':
+                return $this->getImage();
             case 'owner':
                 return $this->getOwner();
             case 'content':
@@ -491,9 +502,9 @@ SQL;
 
     /**
      * @param string $plugin
-     * @return target
+     * @return array
      */
-    public function getPluginData(string $plugin): target
+    public function getPluginData(string $plugin): array
     {
         return $this->pluginData[$plugin];
     }

@@ -160,7 +160,9 @@ class Helper
             // A invalid base 64 img input was given
             throw new TypeError(ERR_TYPE_NOT_BASE64_IMAGE_MSG);
         } elseif(array_key_exists(1, $out)) {
-            return $out[1];
+            // when AJAXing an base64 string apparently "+" get converted to " " see https://stackoverflow.com/questions/16626535/javascript-atob-operation-using-php;
+            // since " " is ignored in normal base64 conversion we can assume that a " " was most likely a "+"
+            return strtr($out[1],' ', '+');
         } else {
             // was already decodeable
             return $in;
