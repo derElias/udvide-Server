@@ -128,7 +128,7 @@ SQL;
         if (user::getLoggedInUser()->getRole() < MIN_ALLOW_TARGET_UPDATE)
             throw new PermissionException(ERR_PERMISSION_INSUFFICIENT,1);
 
-        $subject = empty($subject) ? $subject : $this->name;
+        $subject = empty($subject) ? $this->name : $subject;
 
         $this->pdbupdate($subject);
 
