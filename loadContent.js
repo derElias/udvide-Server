@@ -165,8 +165,8 @@ function closeUserUpdateField() {
 function loadMapUpdateWindow() {
     document.getElementById("content").innerHTML = resourcePackage.templates["createMap.html"];
     if(updateSubject!=null) {
-        document.getElementById("map_name").setAttribute("value", updateSubject.name);
-        document.getElementById("map_imgPreview").setAttribute("src", updateSubject.image);
+        document.getElementById("map_name").value = updateSubject;
+        document.getElementById("map_imgPreview").src = tempMap.image;
     }
 }
 

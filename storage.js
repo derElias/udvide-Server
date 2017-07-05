@@ -45,7 +45,12 @@ let tempUser ={
     role: null,
     createTargetLimit: null,
     editors: null
-}
+};
+
+let tempMap ={
+    name: null,
+    img: null
+};
 
 let activeMapContext=null;
 
@@ -176,7 +181,12 @@ function emptyCRUDStorage(){
         role: null,
         createTargetLimit: null,
         editors: null
-    }
+    };
+
+    tempMap ={
+        name: null,
+        image: null
+    };
     unmarkEverything();
 }
 

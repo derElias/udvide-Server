@@ -73,8 +73,12 @@ function updateTarget(i) {
 
 function deleteTarget(i){
     emptyCRUDStorage();
-    updateSubject = targetList[i].name;
-    sendAjax(null, subject, "delete", testSuccessful);
+    updateSubject=targetList[i].name;
+    targetList.splice(i,1);
+    sendAjax(updateSubject, "target", "delete", function () {
+        if (this.readyState === 4 && this.status === 200) {
+            loadUserAndTargetTable();
+        }});
 }
 
 function  createUser(){
@@ -100,14 +104,16 @@ function updateUser(i) {
     //clickedEntry(0,userList[i].username,"user");
 }
 
-function deleteUser(i){
+function deleteUser(i) {
     emptyCRUDStorage();
-    updateSubject = userList[i].name;
-    userList.splice(i,1);
-    sendAjax(null, "user", "delete", testSuccessful);
-    deleteUserTableEntry(i);
+    updateSubject = userList[i].username;
+    userList.splice(i, 1);
+    sendAjax(updateSubject, "user", "delete", function () {
+        if (this.readyState === 4 && this.status === 200) {
+            loadUserAndTargetTable();
+        }
+    });
 }
-
 
 function  createMap(){
     emptyCRUDStorage();
@@ -118,6 +124,7 @@ function  createMap(){
 function updateMap(i) {
     emptyCRUDStorage();
     updateSubject = mapList[i].name;
+    tempMap=mapList[i];
     verb = "update";
     loadMapUpdateWindow();
 }
@@ -126,7 +133,10 @@ function deleteMap(i){
     emptyCRUDStorage();
     updateSubject = mapList[i].name;
     mapList.splice(i,1);
-    sendAjax(null, "map", "delete", testSuccessful);
+    sendAjax(updateSubject, "map", "delete", function () {
+        if (this.readyState === 4 && this.status === 200) {
+            loadMapTable();
+        }});
 }
 
 function sendTargetCRUD() {
@@ -158,7 +168,7 @@ function sendMapCRUD() {
     };
     if(verb=="update") {
         for (let i = 0; i < mapList.length; i++) {
-            if (mapList[i].name == updateSubject.name) {
+            if (mapList[i].name == updateSubject) {
                 mapList.splice(i, 1);
             }
         }
