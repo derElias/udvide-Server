@@ -48,7 +48,7 @@ class target extends udvide
 
 
     //<editor-fold desc="CRUD DB">
-    public function read() { // todo
+    public function read() {
         $sql = <<<'SQL'
 SELECT /*case when t.deleted = 1 or t.deleted = true then true else false end as*/ 
 deleted, owner, content, xPos, yPos, map, vw_id, image, pluginData
@@ -322,25 +322,18 @@ SQL;
      * @param resource|string $image
      * @return target
      */
-    public function setImage($image = null)
+    public function setImage($image = null):target
     {
         if (isset($image)) {
             if (is_string($image)) {
-                // we assume its a base64 URL uploaded via AJAX
-                $this->image =
-                    imagecreatefromstring(
-                        base64_decode(
-                            strtr(
-                                helper::base64ImgToDecodeAbleBase64($image),
-                                ' ', '+'
-                            // when AJAXing an base64 string apparently "+" get converted to " " see https://stackoverflow.com/questions/16626535/javascript-atob-operation-using-php
-                            )
-                        )
-                    );
-            } else {
-                $this->image = $image;
+                if (!helper::strIsJpg($image)) {
+                    // if it is a data url we want to resolve it
+                    $image = helper::base64ImgToDecodeAbleBase64($image);
+                    $image = base64_decode($image);
+                }
+                $image = imagecreatefromstring($image);
             }
-            $this->image = helper::imgAssistant($this->image, ['maxFileSize' => VUFORIA_DATA_SIZE_LIMIT]);
+            $this->image = helper::imgAssistant($image, ['maxFileSize' => VUFORIA_DATA_SIZE_LIMIT]);
         }
         return $this;
     }

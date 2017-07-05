@@ -50,6 +50,8 @@ abstract class udvide extends udvide_entity implements JsonSerializable
 
 
     /**
+     * Because JSON serialization doesn't allow Image resources they default to the DataURI JPG string
+     *
      * Specify data which should be serialized to JSON
      * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
      * @return mixed data which can be serialized by <b>json_encode</b>,
