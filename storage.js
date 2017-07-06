@@ -68,6 +68,9 @@ function initialRead() {
             }
 
             loadHeader();
+            if(userList[0].role == 1){
+                view =3;
+            }
             loadUserAndTargetTable();
         }
     });
@@ -109,26 +112,20 @@ function setTargetList(printMethode) {
 }
 
 function toggleAssingment(subject) {
-    if(subjectType==user){
-        for(let i = 0; i < userList[i].length;i++){
-            if(userList[i].username==updateSubject){
-                let toggled=false;
-                if(userList[i].editors != false) {
-                    for (let k = 0; k < userList[i].editors.length; k++) {
-                        if (userList[i].editors[k] == subject) {
-                            userList[i].editors.splice(k, 1);
-                            toggled = true
-                        }
-                    }
-                    if (toggled == false) {
-                        userList[i].editors.add(subject);
-                    }
-                }
-                else{
-                    userList[i].editors=[subject];
-                }
+    if (tempUser.editors != false) {
+        let toggled = false;
+        for (let i = 0; i < tempUser.editors.length; i++) {
+            if (tempUser.editors[i] == subject) {
+                tempUser.editors.splice(i, 1);
+                toggled = true
             }
         }
+        if (toggled == false) {
+            tempUser.editors.add(subject);
+        }
+    }
+    else {
+        tempUser.editors = [subject];
     }
 }
 

@@ -80,14 +80,9 @@ function roleToString(role) {
             return ']HACKER[';
     }
 }
-function toggleMarkEntry(i, entryType) {
+function toggleMarkEntry(i){
     let entry;
-    if (entryType == "target") {
         entry = document.getElementsByClassName('entryboxTarget')[i];
-    }
-    else{
-        entry=document.getElementsByClassName('entryboxUser')[i];
-    }
         if(entry.classList.contains("entryboxMarked")){
             entry.classList.remove("entryboxMarked");
         }
@@ -97,17 +92,8 @@ function toggleMarkEntry(i, entryType) {
 }
 
 function markEntries(i) {
-    if (subjectType == "user") {
-        document.getElementsByClassName('entryboxUser')[i].classList.add("entryboxMarked");
-        markTargetEntries(i);
-    }
-    else {
-        document.getElementsByClassName('entryboxTarget')[i].classList.add("entryboxMarked");
-        markUserEntries(i);
-    }
-}
+    document.getElementsByClassName('entryboxUser')[i].classList.add("entryboxMarked");
 
-function markTargetEntries(i) {
     if (userList[i].role == 1) {
         if (userList[i].editors != false) {
             for (let k = 0; k < targetList.length; k++) {
@@ -122,26 +108,6 @@ function markTargetEntries(i) {
     else{
         for (let k = 0; k < targetList.length; k++) {
             document.getElementsByClassName('entryboxTarget')[k].classList.add("entryboxMarked");
-        }
-    }
-}
-
-
-function markUserEntries(i) {
-    if (targetList[i].role = 1) {
-        if (targetList[i].editors) {
-            for (let i = 0; i < userList.length; i++) {
-                for (let ii = 0; ii < targetList[i].editors.length; ii++) {
-                    if (targetList[i].editors[ii] == userList[i].username) {
-                        document.getElementsByClassName('entryboxUser')[i].class = "entryboxMarked";
-                    }
-                }
-            }
-        }
-    }
-    else{
-        for (let i = 0; i < userList.length; i++) {
-            document.getElementsByClassName('entryboxUser')[i].class = "entryboxMarked";
         }
     }
 }

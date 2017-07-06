@@ -60,15 +60,22 @@ class user extends udvide
      * @return array|false
      */
     public static function readAll() {
-        $sql = <<<'SQL'
+        if (user::$loggedInUser->role < MIN_ALLOW_USER_READALL) {
+            return [
+                "username" => user::getLoggedInUser()->getUsername(),
+                "role" => user::getLoggedInUser()->getRole()
+            ];
+        } else {
+            $sql = <<<'SQL'
 SELECT `username`, `role`
 FROM udvide.users
-WHERE deleted = 0 or deleted = false
+WHERE deleted = 0 OR deleted = FALSE
 SQL;
-        $db = access_DB::prepareExecuteFetchStatement($sql);
-        /*foreach ($db as $key => $userArr)
-            $db[$key] = (new self())->set($userArr);*/
-        return $db;
+            $db = access_DB::prepareExecuteFetchStatement($sql);
+            /*foreach ($db as $key => $userArr)
+                $db[$key] = (new self())->set($userArr);*/
+            return $db;
+        }
     }
 
     /**

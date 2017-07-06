@@ -48,6 +48,7 @@ require_once 'vendor/autoload.php';
         define('ALLOW_ASSIGNED_TARGET_DELETE', false);
 //  Users
         define('MIN_ALLOW_USER_CREATE', PERMISSIONS_ADMIN);
+        define('MIN_ALLOW_USER_READALL', PERMISSIONS_ADMIN);
         define('MIN_ALLOW_USER_UPDATE', PERMISSIONS_ADMIN);
         define('MIN_ALLOW_SELF_UPDATE', PERMISSIONS_EDITOR);
         define('MIN_ALLOW_USER_DEACTIVATE', PERMISSIONS_ADMIN);
