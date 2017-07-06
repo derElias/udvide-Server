@@ -36,13 +36,13 @@ function markerGen_Sample() {
     let test = document.getElementById('test');
 
     let img = document.createElement('img');
-    generateMarker(img, 'I.2.2', 1000);
+    generateMarker(img, '', 1000, function () {});
 
     test.appendChild(img);
 }
 
 let side;
-function generateMarker(img, text, sideIn) {
+function generateMarker(img, text, sideIn, callback) {
     side = sideIn;
     // generate Marker
     let canvas = document.createElement('canvas');
@@ -65,6 +65,7 @@ function generateMarker(img, text, sideIn) {
         logo02.onload = function () {
             ctx.drawImage(logo02, offset, offset);
             img.src = canvas.toDataURL("image/jpeg", 0.95);
+            callback();
         };
         logo02.src = "img/logo02.small.png";
     }

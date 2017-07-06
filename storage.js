@@ -68,7 +68,7 @@ function initialRead() {
             }
 
             loadHeader();
-            if(userList[0].role == 1){
+            if(userList.length==1 && userList[0].role==1){
                 view =3;
             }
 
@@ -134,6 +134,7 @@ function setTempTargetMap() {
     let i=document.getElementById("map_select").value;
     tempTarget.map=mapList[i].name;
     tempTarget.mapImg=mapList[i].image;
+    tempTarget.mapIndex=i;
     tempTarget.xPos=xPos;
     tempTarget.yPos=yPos;
     loadTargetUpdateWindow();

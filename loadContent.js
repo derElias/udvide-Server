@@ -173,7 +173,7 @@ function loadUserUpdateField() {
         document.getElementById("update_user_name").value = tempUser.username;
     }
     if(tempUser.role != null) {
-        document.getElementById("update_user_role").selectedIndex = "value", tempUser.role;
+        document.getElementById("update_user_role").selectedIndex =tempUser.role;
     }
     if(tempUser.createTargetLimit != null) {
         document.getElementById("update_user_tnumber").value = tempUser.createTargetLimit;
@@ -187,13 +187,11 @@ function closeUserUpdateField() {
 }
 
 function editorcheck() {
-    console.log("editorcheck");
     let item= document.getElementById("update_user_tnumber");
     let titles = document.getElementById("createUserField_titles");
     let values =document.getElementById("createUserField_values");
     let role=document.getElementById("update_user_role");
     if(role.value==1 && view ==0){
-        console.log("true");
         titles.innerHTML="Name:</br>Password:</br>Role:</br>Tagretlimit:";
         item= document.createElement("input");
         item.setAttribute("id","update_user_tnumber");
@@ -203,7 +201,6 @@ function editorcheck() {
         values.appendChild(item);
     }
     else{
-        console.log("false");
         if(item != null){
         titles.innerHTML="Name:</br>Password:</br>Role:";
         values.removeChild(item);
@@ -260,15 +257,17 @@ function loadMapSelect() {
     }
 
     if(tempTarget.map != null){
-        document.getElementById("map_select").selectedIndex="value", tempTarget.mapIndex;
-    }
+        let dropdown=document.getElementById("map_select");
+        console.log(dropdown.value);
+        dropdown.selectedIndex=tempTarget.mapIndex;
+        dropdown.value=tempTarget.mapIndex;
 
-    if(tempTarget.map != null){
         showMapPreview(function () {
             activeMapContext.fillStyle = "#FF0000";
             activeMapContext.fillRect(tempTarget.xPos-1,tempTarget.yPos-1,5,5);
         });
     }
+    console.log(tempTarget);
 }
 
 function testSuccessful(){

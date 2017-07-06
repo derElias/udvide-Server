@@ -21,6 +21,13 @@ function markerPreviewFile() {
     }
 }
 
+function markerGeneration() {
+    generateMarker(document.getElementById("imgPreview"), '', 1000, function () {
+        document.getElementById("marker_downloadButton").href=document.getElementById("imgPreview").src;
+    });
+}
+
+
 function mapPreviewFile() {
     let preview=document.getElementById("map_imgPreview");
     let file = document.querySelector('input[type=file]').files[0]; //same as here

@@ -56,15 +56,17 @@ function updateTarget(i) {
     updateSubject=targetList[i].name;
     sendAjax(targetList[i],"target","read",function () {
         if (this.readyState === 4 && this.status === 200) {
-            tempTarget= JSON.parse(this.responseText);
+            let response = JSON.parse(this.responseText);
+            tempTarget = response.payLoad;
             if(tempTarget.map !=null){
-                for (let i =o; i < mapList.length; i++){
+                for (let i = 0; i < mapList.length; i++){
                     if(tempTarget.map == mapList[i].name){
                         tempTarget.mapIndex=i;
                         tempTarget.mapImg=mapList[i].image;
                     }
                 }
             }
+            console.log(tempTarget);
 
             loadTargetUpdateWindow();
         }
@@ -154,12 +156,13 @@ function sendTargetCRUD() {
     };
     if(verb=="update") {
         for (let i = 0; i < targetList.length; i++) {
-            if (targetList[i].name == updateSubject.name) {
-                targetList.splice(i, 1);
+            if (targetList[i].name == updateSubject) {
+                targetList.splice(i,1);
             }
         }
     }
     sendAjax(target, "target", verb, testSuccessful);
+    targetList.unshift(target);
     loadUserAndTargetTable();
     emptyCRUDStorage();
 }
@@ -209,6 +212,7 @@ function sendUserCRUD() {
             emptyCRUDStorage();
         }});
     creatingUserCurrendtly = false;
+    user.role = parseInt(user.role,10);
     userList.unshift(user);
     if(verb=="update"){
         for(let i = 0; i < userList.length; i++){
