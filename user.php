@@ -61,10 +61,10 @@ class user extends udvide
      */
     public static function readAll() {
         if (user::$loggedInUser->role < MIN_ALLOW_USER_READALL) {
-            return [
+            return [[
                 "username" => user::getLoggedInUser()->getUsername(),
                 "role" => user::getLoggedInUser()->getRole()
-            ];
+            ]];
         } else {
             $sql = <<<'SQL'
 SELECT `username`, `role`
