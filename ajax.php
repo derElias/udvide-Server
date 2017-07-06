@@ -28,13 +28,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !GET_INSTEAD_POST
                 'line' => $e->getLine(),
                 'code' => $e->getCode()
             ];
+            $echo = "";
             foreach ($exceptionInfo as $key => $value) {
-                $echo = $key . ': ' . $value . '<br/>';
+                $echo .= $key . ': ' . $value . '<br/>';
             }
         } else {
             $echo = $e->getMessage();
         }
         $response->payLoad = $echo;
+        header('Content-Type: application/json');
         echo json_encode($response);
     }
 } else {
@@ -86,7 +88,12 @@ function performVerbForSubjectAs(array $userInput) {
     } elseif ($verb == 'readAll') {
         loginUser($userInput['username'], $userInput['passHash']);
         $response->payLoad = getSwitch($userInput);
-
+    } elseif ($verb == 'clean') {
+        // for restoration and not deleting database connection and for error suppression we mark all "deleted" entries as such.
+        // clean allows admins full deletion
+        loginUser($userInput['username'], $userInput['passHash']);
+        if (user::getLoggedInUser()->getRole() > MIN_ALLOW_CLEAN)
+            helper::cleanupDbAndVfc();
     } else {
         $response->success = false;
         $response->payLoad = ERR_UD010;
@@ -127,7 +134,6 @@ function getSwitch($userInput) {
             $targets = target::readAll();
             $users = user::readAll();
             $maps = map::readAll();
-            // todo refactoring
             foreach ($targets as $key=>$target) {
                 $targets[$key]['editors'] = editor::readAllUsersFor($target['name']);
             }

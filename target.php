@@ -93,9 +93,8 @@ SQL;
         if (!isset($this->name))
             throw new IncompleteObjectException(ERR_USER_DATASET_INVALID,1); // How tf did u do dis?
 
-        //todo cleancode
         if (user::getLoggedInUser()->getRole() < MIN_ALLOW_TARGET_CREATE)
-            user::getLoggedInUser()->targetCreateLimit--; // Why is phpstorm not liking this beautiful code?
+            user::getLoggedInUser()->targetCreateLimit--; // Why is phpstorm not liking this beautiful code? :P
 
         $sql = <<<'SQL'
 INSERT INTO udvide.Targets
@@ -187,6 +186,7 @@ SQL;
         $vwsa = (new access_vfc())
             ->setAccessMethod('update')
             ->setTargetName(isset($this->name) ? $this->name : null)
+            ->setMeta(isset($this->name) ? '/clientRequest.php?t=' . base64_encode($this->name) : null)
             ->setImage(isset($this->image) ? $this->getImageAsRawJpg() : null)
             ->setActiveflag(isset($this->active) ? $this->active : null);
 
