@@ -183,12 +183,23 @@ function sendMapCRUD() {
 function sendUserCRUD() {
     let pass =document.getElementById("update_user_password").value;
     if(pass==""){pass=null;}
-    let user = {
-        passHash: pass,
-        username: document.getElementById("update_user_name").value,
-        role: document.getElementById("update_user_role").value,
-        createTargetLimit: document.getElementById("update_user_tnumber").value
+    let role = document.getElementById("update_user_role").value;
+    if(role ==1) {
+        let user = {
+            passHash: pass,
+            username: document.getElementById("update_user_name").value,
+            role: role,
+            createTargetLimit: document.getElementById("update_user_tnumber").value
+        };
     }
+    else{
+        let user = {
+            passHash: pass,
+            username: document.getElementById("update_user_name").value,
+            role: role,
+        };
+    }
+
     sendAjax(user, "user", verb, function () {
         if (this.readyState === 4 && this.status === 200) {
             emptyCRUDStorage();
@@ -206,58 +217,38 @@ function sendUserCRUD() {
     loadUserAndTargetTable();
 }
 
-function sendEditorUpdate(i) {
-    sendAjax(userList[i],subjectType,"update", function () {
-        if (this.readyState === 4 && this.status === 200) {
-            emptyCRUDStorage();
-        }
-    })
+function sendEditorUpdate() {
+    sendAjax(tempUser,"user","update", function(){});
 }
 
-function clickedEntry(i,subject, entryType){
-    if(updateSubject == null){
-        updateSubject = subject;
-        subjectType = entryType;
-        if(subjectType== "user") {
+function clickedEntry(i,subject, entryType) {
+
+    if (entryType == "user" && view ==0) {
+        if (updateSubject == null) {
+            tempUser = userList[i];
+            updateSubject = subject;
             subjectPermissions = userList[i].role;
+            markEntries(i);
         }
-        markEntries(i);
-    }
-    else {
-        if(subject == updateSubject) {
-            updateSubject=null;
-            subjectType=null;
-            subjectPermissions=null;
-            unmarkEverything();
-            if(creatingUserCurrendtly){
-                closeUserUpdateField();
-            }
-            sendEditorUpdate(i);
-        }
-        else{
-            if(entryType == subjectType){
-                sendEditorUpdate(i);
-                updateSubject = subject;
-                subjectType =entryType;
-                if(subjectType== "user") {
-                    subjectPermissions = userList[i].role;
-                }
+        else {
+            if (subject != updateSubject) {
+                sendEditorUpdate();
                 unmarkEverything();
-                if(creatingUserCurrendtly){
-                    closeUserUpdateField();
-                }
+                tempUser=userList[i];
+                updateSubject = subject;
+                subjectPermissions = userList[i].role;
                 markEntries(i);
             }
             else{
-                if(subjectType == "user"){
-                    if(subjectPermissions == 1) {
-                        toggleMarkEntry(i, entryType);
-                        toggleAssingment(subject);
-                    }
-                }
+                sendEditorUpdate();
+                emptyCRUDStorage();
             }
         }
-
+    }
+    else {
+        if (updateSubject != null) {
+            toggleAssingment(i);
+            toggleMarkEntry(i);
+        }
     }
 }
-

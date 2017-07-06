@@ -18,15 +18,22 @@ function loadFooter() {
 }
 
 function loadUserAndTargetTable() {
-    document.getElementById("viewSwitch").innerHTML="Switch to<br/>Map-View";
+    if (view == 0) {
+    document.getElementById("viewSwitch").innerHTML = "Switch to<br/>Map-View";
     document.getElementById("content").innerHTML = resourcePackage.templates["entrytableAdmin.html"];
-    if(userList == null){
-        setUserList(printUserTable);
+        if(userList == null){
+            setUserList(printUserTable);
+        }
+        else {
+            printUserTable();
+        }
     }
-    else {
-        printUserTable();
+    else{
+        if(view==3){
+            document.getElementById("content").innerHTML = resourcePackage.templates["entrytableEditor.html"];
+        }
+        printUser();
     }
-
     if(targetList == null){
         setTargetList(printTargetTable);
     }
@@ -34,6 +41,7 @@ function loadUserAndTargetTable() {
         printTargetTable();
     }
 }
+
 
 //<editor-fold desc="print User Table">
 function printUserTable() {
@@ -52,14 +60,31 @@ function printUserTable() {
         document.getElementsByClassName('updateButtonUser')[i].addEventListener("click", function() {
             updateUser(i);
         });
-        document.getElementsByClassName('deleteButtonUser')[i].addEventListener("click", function() {
+
+        let deleteParent=document.getElementsByClassName('deleteButtonUser')[i];
+        let deletbutton= document.createElement("img");
+        deletbutton.setAttribute("src","res/Delete.svg" );
+        deleteParent.addEventListener("click", function() {
             deleteUser(i);
         });
+        deleteParent.appendChild(deletbutton);
     }
 }
 
-function deleteUserTableEntry(i) {
-        document.getElementById('userList').removeChild(document.getElementById('userElement'+i));
+function printUser() {
+    let parent = document.getElementById('userList');
+    let temp = document.createElement('div');
+    temp.setAttribute('id', 'userElement'+0);
+    temp.addEventListener("click", function() {
+        clickedEntry(0,userList[0].username,"user");
+    });
+    temp.innerHTML = resourcePackage.templates["UserEntry.html"];
+    parent.appendChild(temp);
+
+    document.getElementsByClassName('user_title')[0].innerHTML = roleToString(userList[0].role) + ": " + userList[0].username;
+    document.getElementsByClassName('updateButtonUser')[0].addEventListener("click", function() {
+        updateUser(0);
+    });
 }
 
 function printTargetTable() {
@@ -155,11 +180,37 @@ function loadUserUpdateField() {
     if(tempUser.createTargetLimit != null) {
         document.getElementById("update_user_tnumber").value = tempUser.createTargetLimit;
     }
+    editorcheck();
 }
 
 function closeUserUpdateField() {
-    let list=document.getElementById("userList")
+    let list=document.getElementById("userList");
     list.removeChild(list.childNodes[0]);
+}
+
+function editorcheck() {
+    console.log("editorcheck");
+    let item= document.getElementById("update_user_tnumber");
+    let titles = document.getElementById("createUserField_titles");
+    let values =document.getElementById("createUserField_values");
+    let role=document.getElementById("update_user_role");
+    if(role.value==1 && view ==0){
+        console.log("true");
+        titles.innerHTML="Name:</br>Password:</br>Role:</br>Tagretlimit:";
+        item= document.createElement("input");
+        item.setAttribute("id","update_user_tnumber");
+        item.setAttribute("type","number");
+        item.setAttribute("class","createUserInput");
+        item.setAttribute("value",tempUser.createTargetLimit);
+        values.appendChild(item);
+    }
+    else{
+        console.log("false");
+        if(item != null){
+        titles.innerHTML="Name:</br>Password:</br>Role:";
+        values.removeChild(item);
+        }
+    }
 }
 
 function loadMapUpdateWindow() {
@@ -176,7 +227,7 @@ function closeUpdateWindow() {
         closeUserUpdateField()
     }
     else{
-        if(view == 0){
+        if(view == 0||view==3){
             loadUserAndTargetTable();
         }
         else {
