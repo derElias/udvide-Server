@@ -108,7 +108,6 @@ SQL;
         access_DB::prepareExecuteStatementGetAffected($sql,$values);
 
         $vwsResponse =  $this->pvfupdateobject() // amusingly with enough refactoring even a create is suddenly just another update
-            ->setMeta('/clientRequest.php?t=' . base64_encode($this->name))
             ->setAccessMethod('create')
             ->execute();
 
@@ -161,6 +160,9 @@ SQL;
             ) {
                 if ($key == 'pluginData') {
                     $value = base64_encode(json_encode($value));
+                }
+                if ($key == "image") {
+                    $value = $this->getImageAsRawJpg();
                 }
                 $sql .= " $key = ? , ";
                 $ins[] = $value;

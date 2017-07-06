@@ -109,12 +109,14 @@ class access_vfc
      * @return access_vfc
      * @throws VuforiaAccessAPIException
      */
-    public function setMeta(string $meta): access_vfc
+    public function setMeta(string $meta = null): access_vfc
     {
         // Docu: Apparently Vuforia only accepts a MetaData of less than 2mb,
         // and we'll give  a bit of tolerance to reduce required testing time of the VWS
         if (strlen($meta)<2000000) {
-            $this->meta = $meta;
+            if (!empty($meta)) {
+                $this->meta = $meta;
+            }
         } else {
             throw new VuforiaAccessAPIException('Human Interaction required - Error: The Meta you\'re trying to set is larger than 2mb',230);
         }
@@ -125,9 +127,11 @@ class access_vfc
      * @param bool $activeflag
      * @return access_vfc
      */
-    public function setActiveflag(bool $activeflag): access_vfc
+    public function setActiveflag(bool $activeflag = null): access_vfc
     {
-        $this->activeflag = $activeflag;
+        if (isset($activeflag)) {
+            $this->activeflag = $activeflag;
+        }
         return $this;
     }
 
