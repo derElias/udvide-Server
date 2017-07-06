@@ -44,8 +44,6 @@ require_once 'vendor/autoload.php';
         define('ALLOW_ASSIGNED_TARGET_UPDATE', true);
         define('MIN_ALLOW_TARGET_DEACTIVATE', PERMISSIONS_ADMIN);
         define('ALLOW_ASSIGNED_TARGET_DEACTIVATE', false);
-        define('MIN_ALLOW_TARGET_DELETE', PERMISSIONS_ADMIN);
-        define('ALLOW_ASSIGNED_TARGET_DELETE', false);
 //  Users
         define('MIN_ALLOW_USER_CREATE', PERMISSIONS_ADMIN);
         define('MIN_ALLOW_USER_READALL', PERMISSIONS_ADMIN);
@@ -59,6 +57,8 @@ require_once 'vendor/autoload.php';
         define('MIN_ALLOW_MAP_CREATE', PERMISSIONS_ADMIN);
         define('MIN_ALLOW_MAP_UPDATE', PERMISSIONS_ADMIN);
         define('MIN_ALLOW_MAP_DELETE', PERMISSIONS_ADMIN);
+// Other
+        define('MIN_ALLOW_CLEAN', PERMISSIONS_ADMIN);
 
 // What do others expect from us?
         define('VUFORIA_DATA_SIZE_LIMIT', 2000000); // =IMG=META

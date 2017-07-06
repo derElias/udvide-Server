@@ -21,6 +21,7 @@
   "LOGIN_USERUNKNOWN":"We don't know that username",
   "LOGIN_USERDELETED":"This User has been deleted",
   "LOGIN_WRONGPASSWD":"That is not the correct password; please try harder!",
+  "USER_DATASET_INVALID":"ERR_USER_DATASET_INVALID",
 
   "..999":"Shit?"
 }
