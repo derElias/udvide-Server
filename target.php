@@ -133,6 +133,10 @@ SQL;
         $this->pdbupdate($subject);
 
         if (isset($this->name) || isset($this->image) || isset($this->active)) {
+            if (!isset($this->vw_id))
+                $this->vw_id = access_DB::prepareExecuteFetchStatement(
+                    'SELECT vw_id FROM udvide.Targets t WHERE t.name = ?', [$this->name])[0]['vw_id'];
+
             $vwsResponse = $this->pvfupdateobject()
                 ->setTargetId($this->vw_id)
                 ->execute();

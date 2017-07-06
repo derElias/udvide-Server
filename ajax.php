@@ -21,17 +21,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !GET_INSTEAD_POST
 
         $echo = '';
         if (!THIS_IS_PRODUCTIOOOON) {
-            $exceptionInfo = [
+            $echo = [
                 'msg' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
+                'trace' => explode("\n",$e->getTraceAsString()),
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
                 'code' => $e->getCode()
             ];
-            $echo = "";
-            foreach ($exceptionInfo as $key => $value) {
-                $echo .= $key . ': ' . $value . '<br/>';
-            }
         } else {
             $echo = $e->getMessage();
         }

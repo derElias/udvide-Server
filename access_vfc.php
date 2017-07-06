@@ -61,9 +61,9 @@ class access_vfc
      * @return access_vfc
      * @throws VuforiaAccessAPIException
      */
-    public function setTargetName(string $targetName): access_vfc
+    public function setTargetName(string $targetName = null): access_vfc
     {
-        if ($targetName === '')
+        if (empty($targetName))
             throw new VuforiaAccessAPIException('Recoverable Error: TargetName empty', 110);
         if (strlen($this->targetName) > 64)
             throw new VuforiaAccessAPIException('Recoverable Error: targetName longer then 64 characters', 111);
@@ -76,12 +76,12 @@ class access_vfc
      * @return access_vfc
      * @throws VuforiaAccessAPIException
      */
-    public function setImage(string $image): access_vfc
+    public function setImage(string $image = null): access_vfc
     {
         // Jpg is hinted and checked by FF D8 @start and FF D9 @end as magic numbers
         // Docu: $image[-x] requires PHP 7.1+; but doesn'T seem to work in test env. using classic Syntax instead
         // Validation method chosen to get a compromise between performance (check file endings) and accuracy (use gd function)
-        if (isset($image)) {
+        if (!empty($image)) {
             $isJpg = (ord($image{0}) == 255)
                 && (ord($image{1}) == 216)
                 && (ord($image[strlen($image)-2]) == 255)
