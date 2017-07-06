@@ -54,7 +54,7 @@ function updateTarget(i) {
     emptyCRUDStorage();
     verb = "update";
     updateSubject=targetList[i].name;
-    sendAjax(targetList[i].name,"target","read",function () {
+    sendAjax(targetList[i],"target","read",function () {
         if (this.readyState === 4 && this.status === 200) {
             tempTarget= JSON.parse(this.responseText);
             if(tempTarget.map !=null){
@@ -74,8 +74,9 @@ function updateTarget(i) {
 function deleteTarget(i){
     emptyCRUDStorage();
     updateSubject=targetList[i].name;
+    let target=targetList[i];
     targetList.splice(i,1);
-    sendAjax(updateSubject, "target", "delete", function () {
+    sendAjax(target, "target", "delete", function () {
         if (this.readyState === 4 && this.status === 200) {
             loadUserAndTargetTable();
         }});
@@ -107,8 +108,9 @@ function updateUser(i) {
 function deleteUser(i) {
     emptyCRUDStorage();
     updateSubject = userList[i].username;
+    let user=userList[i];
     userList.splice(i, 1);
-    sendAjax(updateSubject, "user", "delete", function () {
+    sendAjax(user, "user", "delete", function () {
         if (this.readyState === 4 && this.status === 200) {
             loadUserAndTargetTable();
         }
@@ -132,8 +134,9 @@ function updateMap(i) {
 function deleteMap(i){
     emptyCRUDStorage();
     updateSubject = mapList[i].name;
+    let map = mapList[i];
     mapList.splice(i,1);
-    sendAjax(updateSubject, "map", "delete", function () {
+    sendAjax(map, "map", "delete", function () {
         if (this.readyState === 4 && this.status === 200) {
             loadMapTable();
         }});
@@ -184,8 +187,9 @@ function sendUserCRUD() {
     let pass =document.getElementById("update_user_password").value;
     if(pass==""){pass=null;}
     let role = document.getElementById("update_user_role").value;
+    let user;
     if(role ==1) {
-        let user = {
+        user = {
             passHash: pass,
             username: document.getElementById("update_user_name").value,
             role: role,
@@ -193,7 +197,7 @@ function sendUserCRUD() {
         };
     }
     else{
-        let user = {
+        user = {
             passHash: pass,
             username: document.getElementById("update_user_name").value,
             role: role,

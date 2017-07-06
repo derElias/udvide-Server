@@ -71,6 +71,7 @@ function initialRead() {
             if(userList[0].role == 1){
                 view =3;
             }
+
             loadUserAndTargetTable();
         }
     });

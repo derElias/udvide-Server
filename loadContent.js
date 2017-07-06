@@ -56,18 +56,23 @@ function printUserTable() {
         temp.innerHTML = resourcePackage.templates["UserEntry.html"];
         parent.appendChild(temp);
 
-        document.getElementsByClassName('user_title')[i].innerHTML = roleToString(userList[i].role) + ": " + userList[i].username;
-        document.getElementsByClassName('updateButtonUser')[i].addEventListener("click", function() {
+        document.getElementsByClassName("user_title")[i].innerHTML = roleToString(userList[i].role) + ": " + userList[i].username;
+
+        let updateButtonParent=document.getElementsByClassName('updateButtonUser')[i];
+        let updateButton = document.createElement("img");
+        updateButton.setAttribute("src","res/Entry.svg" );
+        updateButtonParent.appendChild(updateButton);
+        updateButtonParent.addEventListener("click", function() {
             updateUser(i);
         });
 
         let deleteParent=document.getElementsByClassName('deleteButtonUser')[i];
-        let deletbutton= document.createElement("img");
-        deletbutton.setAttribute("src","res/Delete.svg" );
+        let deleteButton= document.createElement("img");
+        deleteButton.setAttribute("src","res/Delete.svg" );
+        deleteParent.appendChild(deleteButton);
         deleteParent.addEventListener("click", function() {
             deleteUser(i);
         });
-        deleteParent.appendChild(deletbutton);
     }
 }
 
@@ -75,16 +80,9 @@ function printUser() {
     let parent = document.getElementById('userList');
     let temp = document.createElement('div');
     temp.setAttribute('id', 'userElement'+0);
-    temp.addEventListener("click", function() {
-        clickedEntry(0,userList[0].username,"user");
-    });
     temp.innerHTML = resourcePackage.templates["UserEntry.html"];
     parent.appendChild(temp);
-
     document.getElementsByClassName('user_title')[0].innerHTML = roleToString(userList[0].role) + ": " + userList[0].username;
-    document.getElementsByClassName('updateButtonUser')[0].addEventListener("click", function() {
-        updateUser(0);
-    });
 }
 
 function printTargetTable() {
@@ -289,14 +287,14 @@ function testSuccessful(){
 }
 
 function switchView() {
-    if (view == 0) {
-        loadMapTable();
+        if (view == 0) {
         view = 1;
+        loadMapTable();
         emptyCRUDStorage();
     }
     else {
-        loadUserAndTargetTable();
         view = 0;
+        loadUserAndTargetTable();
         emptyCRUDStorage();
     }
 }
