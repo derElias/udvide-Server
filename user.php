@@ -138,14 +138,19 @@ DELETE FROM udvide.Editors
 WHERE uName = ?;
 SQL;
             $ins = [$subject];
-            foreach ($this->editors as $v) {
-                    $sql .= <<<'SQL'
-INSERT INTO udvide.Editors (uName,tName)
-VALUES (?,?)
-SQL;
-                    $ins[] = $subject;
-                    $ins[] = $v;
+            access_DB::prepareExecuteFetchStatement($sql,$ins);
+            $ins = [];
+
+            $sql = 'INSERT INTO udvide.Editors (uName,tName) VALUES';
+            foreach ($this->editors as $k=>$v) {
+                if ($k != 0)
+                    $sql .= ',';
+
+                $sql .= '(?,?)';
+                $ins[] = $subject;
+                $ins[] = $v;
             }
+            $sql .= ';';
             access_DB::prepareExecuteFetchStatement($sql,$ins);
         }
 
