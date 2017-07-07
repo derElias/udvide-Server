@@ -111,16 +111,17 @@ SQL;
 
         if ($isLimited)
             user::getLoggedInUser()->targetCreateLimit--; // Why is phpstorm not liking this beautiful code? :P
-        user::getLoggedInUser()->update();
+        user::getLoggedInUser()->updateTCL();
 
         $sql = <<<'SQL'
 INSERT INTO udvide.Targets
 (name, owner)
 VALUES (?,?);
 SQL;
+        $this->owner = isset($this->owner)&&!$isLimited ? $this->owner : user::getLoggedInUser()->getUsername();
         $values = [
             $this->name,
-            isset($this->owner)&&!$isLimited ? $this->owner : user::getLoggedInUser()->getUsername()
+            $this->owner
         ];
         access_DB::prepareExecuteStatementGetAffected($sql,$values);
 
@@ -249,7 +250,7 @@ SQL;
         $isLimited = user::getLoggedInUser()->getRole() < MIN_ALLOW_TARGET_CREATE; // CREATE is correct i think
         if ($isLimited)
             user::getLoggedInUser()->targetCreateLimit++; // Why is phpstorm not liking this beautiful code? :P
-        user::getLoggedInUser()->update();
+        user::getLoggedInUser()->updateTCL();
     }
     //</editor-fold>
 

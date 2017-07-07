@@ -116,6 +116,12 @@ SQL;
         return $this;
     }
 
+    public function updateTCL() {
+        $sql = 'UPDATE udvide.users SET targetCreateLimit = ? WHERE username = ?';
+        $ins = [$this->targetCreateLimit,$this->username];
+        access_DB::prepareExecuteFetchStatement($sql,$ins);
+    }
+
     /**
      * @param string|null $subject
      * @return $this
