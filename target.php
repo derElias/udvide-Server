@@ -215,7 +215,7 @@ SQL;
             ->setTargetName(isset($this->name) ? $this->name : null)
             ->setMeta(isset($this->name) ? '/clientRequest.php?t=' . base64_encode($this->name) : null)
             ->setImage(isset($this->image) ? $this->getImageAsRawJpg() : null)
-            ->setActiveflag(isset($this->active) ? $this->active : null);
+            ->setActiveflag(isset($this->deleted)&&$this->deleted ? false : isset($this->active) ? $this->active : null);
 
         return $vwsa;
     }

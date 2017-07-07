@@ -26,6 +26,8 @@ class user extends udvide
     /** @var  bool */
     private $isLoggedIn;
 
+    private $editors;
+
     /**
      * user constructor.
      */
@@ -127,6 +129,25 @@ SQL;
         if (user::$loggedInUser->role < MIN_ALLOW_USER_UPDATE
             && !($this->isLoggedIn && $this->role < MIN_ALLOW_SELF_UPDATE))
             throw new PermissionException(ERR_PERMISSION_INSUFFICIENT,1);
+
+        // changing Editor assigns - hotfix #48
+        if (isset($this->editors) && $this->editors != false) { // false == no change
+            // this code is a hotfix todo refactor
+            $sql = <<<'SQL'
+DELETE FROM udvide.Editors
+WHERE uName = ?;
+SQL;
+            $ins = [$subject];
+            foreach ($this->editors as $v) {
+                    $sql .= <<<'SQL'
+INSERT INTO udvide.Editors (uName,tName)
+VALUES (?,?)
+SQL;
+                    $ins[] = $subject;
+                    $ins[] = $v;
+            }
+            access_DB::prepareExecuteFetchStatement($sql,$ins);
+        }
 
         $updateDB = false;
         $sql = '';
@@ -244,6 +265,8 @@ SQL;
                 return $this->setRole($value);
             case 'targetCreateLimit':
                 return $this->setTargetCreateLimit($value);
+            case 'editors': // Hotfix #48
+                return $this->editors = $value;
             default:
                 return $this;
         }

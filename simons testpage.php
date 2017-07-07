@@ -17,17 +17,6 @@ $fhwsPlugin->onTargetCreate($t);
 $fhwsPlugin->onMobileRead($t);
 echo $t->getContent();
 */
-$sql = <<<'SQL'
-SELECT name, image FROM udvide.Maps
-SQL;
 
-$db = access_DB::prepareExecuteFetchStatement($sql);
-$sql = <<<'SQL'
-UPDATE udvide.Maps SET image = ? WHERE name = ?
-SQL;
-
-foreach ($db as $ind => $row) {
-    $ins = ["data:image/jpeg;base64," . base64_encode($row['image']),$ind];
-    access_DB::prepareExecuteFetchStatement($sql,$ins);
-}
+echo "data:image/jpeg;base64," . base64_encode(file_get_contents("img/SampleGen.jpg"));
 
