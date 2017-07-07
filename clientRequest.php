@@ -14,4 +14,4 @@ header('Content-Type: application/text');
 $name = base64_decode($_GET['t']);
 $t = target::fromDB($name);
 // onMobileRead($t);
-return $t->getContent();
+echo $t->getContent();
