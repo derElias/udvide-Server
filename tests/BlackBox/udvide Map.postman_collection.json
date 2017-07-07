@@ -1,0 +1,80 @@
+{
+	"variables": [],
+	"info": {
+		"name": "udvide Map",
+		"_postman_id": "0c8b0137-1561-9050-b2af-2b295b088570",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "update Map",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"successful\"] = jsonData.success === true;",
+							"tests[\"content indicates a action not changing user input\"] = jsonData.payLoad === true;"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost/udvide/ajax.php",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "BBT/Admin",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "passHash",
+							"value": "iAmBad",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "subject",
+							"value": "map",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "verb",
+							"value": "update",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "updateSubject",
+							"value": "BBT/updateMap",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "map",
+							"value": "{\"name\":\"byeWorld\",\"image\":\"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/4QBoRXhpZgAATU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAAExAAIAAAARAAAATgAAAAAAAABgAAAAAQAAAGAAAAABcGFpbnQubmV0IDQuMC4xMwAA/9sAQwAqHSAlIBoqJSIlLy0qMj9pRD86Oj+BXGFMaZmGoJ6WhpORqL3yzaiz5bWRk9L/1eX6/////6PL///////y/////9sAQwEtLy8/Nz98RER8/66Trv///////////////////////////////////////////////////////////////////8AAEQgAFAAaAwEiAAIRAQMRAf/EAB8AAAEFAQEBAQEBAAAAAAAAAAABAgMEBQYHCAkKC//EALUQAAIBAwMCBAMFBQQEAAABfQECAwAEEQUSITFBBhNRYQcicRQygZGhCCNCscEVUtHwJDNicoIJChYXGBkaJSYnKCkqNDU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6g4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2drh4uPk5ebn6Onq8fLz9PX29/j5+v/EAB8BAAMBAQEBAQEBAQEAAAAAAAABAgMEBQYHCAkKC//EALURAAIBAgQEAwQHBQQEAAECdwABAgMRBAUhMQYSQVEHYXETIjKBCBRCkaGxwQkjM1LwFWJy0QoWJDThJfEXGBkaJicoKSo1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoKDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uLj5OXm5+jp6vLz9PX29/j5+v/aAAwDAQACEQMRAD8AtvcRrEZAwcDjCnOT6VVa2lclzAgLHJzK1OuYUS6glUYUvhgOhPY1doApR3E6FozAP3YGQG5x6jPWrK3ETKGDjBGearzuy3y+VGXfyyMD68Zpq6cuwbnO7HOKALc0ayxMjdD6dqzvtE//AD2b8l/woooAuWa/uzKxLO55J9qsUUUAf//Z\"}",
+							"type": "text",
+							"description": ""
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

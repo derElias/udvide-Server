@@ -1,0 +1,234 @@
+{
+	"variables": [],
+	"info": {
+		"name": "udvide User",
+		"_postman_id": "fb24e0f9-80b6-e6f8-e9c1-00df4109783e",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "read User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var json = JSON.parse(responseBody);",
+							"var pl = json.payLoad;",
+							"",
+							"tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"tests[\"Read was successful\"] = json.success === true;",
+							"tests[\"the target identifies with the requested name\"] = pl['username'] === \"test/tEditor\";",
+							"tests[\"role is set (to 1)\"] = pl.role === 1;",
+							"if (pl.role === 1) {",
+							"    tests[\"targetCreateLimit is set\"] = pl.targetCreateLimit === pl.targetCreateLimit;",
+							"}"
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"//var json = JSON.parse(requestBody);",
+							"//postman.setGlobalVariable(\"requestedName\", json.user.username);"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost/udvide/ajax.php",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "test/tAdmin",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "passHash",
+							"value": "iAmBad",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "subject",
+							"value": "user",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "verb",
+							"value": "read",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "updateSubject",
+							"value": "helloWorld",
+							"type": "text",
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "user",
+							"value": "{\"name\":\"test/tEditor\"}",
+							"type": "text",
+							"description": ""
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "update User",
+			"request": {
+				"url": "localhost/udvide/ajax.php",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "BBT/TestUser",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "passHash",
+							"value": "iAmBad",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "subject",
+							"value": "user",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "verb",
+							"value": "update",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "updateSubject",
+							"value": "BBT/TestUser",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "user",
+							"value": "{\"username\":\"BBT/Editor2\",\"role\":1,\"editors\":[\"BBT/t1\"]}",
+							"type": "text",
+							"description": ""
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "create User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"successful\"] = jsonData.success === true;",
+							"tests[\"content indicates a action not changing user input\"] = jsonData.payLoad === true;"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost/udvide/ajax.php",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "root",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "passHash",
+							"value": "plzHackMe",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "subject",
+							"value": "user",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "verb",
+							"value": "create",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "updateSubject",
+							"value": "test/tClient",
+							"type": "text",
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "user",
+							"value": "{\"username\":\"BBT/TestUser\",\"passHash\":\"BBT\",\"role\":\"2\"}",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "",
+							"value": "",
+							"description": "",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
