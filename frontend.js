@@ -69,25 +69,8 @@ function showMapPreview(f) {
     background.src = tempTarget.mapImg;
 }
 
-
-function roleToString(role) {
-    // ToDo read from lang file
-    switch (role) {
-        case 5:
-            return '[root]';
-        case 4:
-            return '[Developer]';
-        case 3:
-            return '[Manager]';
-        case 2:
-            return '[Mod]';
-        case 1:
-            return '[Editor]';
-        default:
-            return ']HACKER[';
-    }
-}
 function toggleMarkEntry(i){
+    console.log("toggle "+ i);
     let entry;
         entry = document.getElementsByClassName('entryboxTarget')[i];
         if(entry.classList.contains("entryboxMarked")){

@@ -1,6 +1,7 @@
 /**
  * Created by Elias on 29.06.2017.
  */
+let resourcePackage;
 let username;
 let passHash;
 let permissions;
@@ -11,7 +12,7 @@ let userList = null;
 let mapList = null;
 let targetList = null;
 
-let image;
+let image=null;
 
 //To set when choosing Map
 let map = null;
@@ -19,13 +20,12 @@ let xPos=0;
 let yPos=0;
 
 //needet for Ajax Requests
-let verb
+let verb=null;
 let updateSubject=null;
-let subjectType=null;
-let subjectPermissions=null;
 
 let creatingUserCurrendtly = false;
-
+let subjectPermissions=null;
+let subjectType=null;
 let initial=null;
 
 let tempTarget = {
@@ -122,7 +122,7 @@ function toggleAssingment(subject) {
             }
         }
         if (toggled == false) {
-            tempUser.editors.add(subject);
+            tempUser.editors.push(subject);
         }
     }
     else {

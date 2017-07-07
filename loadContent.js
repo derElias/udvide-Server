@@ -157,7 +157,7 @@ function loadTargetUpdateWindow() {
     if(tempTarget.map != null){
         showMapPreview(function () {
             activeMapContext.fillStyle = "#FF0000";
-            activeMapContext.fillRect(tempTarget.xPos-1,tempTarget.yPos-1,10,10);
+            activeMapContext.fillRect(tempTarget.xPos-1,tempTarget.yPos-1,50,50);
         });
     }
 }

@@ -2,11 +2,7 @@
  * Created by Elias on 29.06.2017.
  */
 
-// global var updatesubject is name of old subject
-//object: the new objectdata which is to be send
-//subject: typ of object
-//verb: operation on object/subject
-//callbackMathod: Method which is executed when the response arrives
+//comunicates to the backend by ajax requests
 function sendAjax(object, subject, verb, callbackMethod) {
 
     let xhttp = new XMLHttpRequest();
@@ -39,17 +35,14 @@ function sendAjax(object, subject, verb, callbackMethod) {
     xhttp.send(wwwForm);
 }
 
-function selectMap() {
-    let map = document.getElementbyId("mapSelect").value;
-    document.getElementById('m_imgPreview').src = map.image;
-}
-
+//loads targetUpdateWindow and prepares communication
 function  createTarget(){
     emptyCRUDStorage();
     verb = "create";
     loadTargetUpdateWindow();
 }
 
+//loads targetUpdateWindow, prepares communication and copies corresponding target into the local storage
 function updateTarget(i) {
     emptyCRUDStorage();
     verb = "update";
@@ -73,9 +66,10 @@ function updateTarget(i) {
     });
 }
 
+//deletes target object from local storage and sends deleting request to backend
 function deleteTarget(i){
     emptyCRUDStorage();
-    updateSubject=targetList[i].name;
+    //updateSubject=targetList[i].name;
     let target=targetList[i];
     targetList.splice(i,1);
     sendAjax(target, "target", "delete", function () {
@@ -84,8 +78,8 @@ function deleteTarget(i){
         }});
 }
 
+//loads userUpdateField and prepares communication
 function  createUser(){
-    console.log(creatingUserCurrendtly)
     if (creatingUserCurrendtly) {
     closeUserUpdateField();
 }
@@ -95,6 +89,7 @@ function  createUser(){
     verb = "create";
 }
 
+//loads userUpdateField, prepares communication and copies corresponding user object into the local storage
 function updateUser(i) {
     if (creatingUserCurrendtly){
         closeUserUpdateField();
@@ -107,6 +102,7 @@ function updateUser(i) {
     //clickedEntry(0,userList[i].username,"user");
 }
 
+//deletes user object from local storage and sends deleting request to backend
 function deleteUser(i) {
     emptyCRUDStorage();
     updateSubject = userList[i].username;
@@ -119,12 +115,14 @@ function deleteUser(i) {
     });
 }
 
+//loads mapUpdateWindow and prepares communication
 function  createMap(){
     emptyCRUDStorage();
     verb = "create";
     loadMapUpdateWindow();
 }
 
+//loads mapUpdateWindow, prepares communication and copies corresponding target into the local storage
 function updateMap(i) {
     emptyCRUDStorage();
     updateSubject = mapList[i].name;
@@ -133,6 +131,7 @@ function updateMap(i) {
     loadMapUpdateWindow();
 }
 
+//deletes map object from local storage and sends deleting request to backend
 function deleteMap(i){
     emptyCRUDStorage();
     updateSubject = mapList[i].name;
@@ -144,6 +143,7 @@ function deleteMap(i){
         }});
 }
 
+//sends target changes to the backend
 function sendTargetCRUD() {
     let target = {
         name: document.getElementById("target_name").value,
@@ -167,25 +167,7 @@ function sendTargetCRUD() {
     emptyCRUDStorage();
 }
 
-function sendMapCRUD() {
-    let newMap = {
-        name: document.getElementById("map_name").value,
-        image: document.getElementById("map_imgPreview").src
-    };
-    if(verb=="update") {
-        for (let i = 0; i < mapList.length; i++) {
-            if (mapList[i].name == updateSubject) {
-                mapList.splice(i, 1);
-            }
-        }
-    }
-    sendAjax(newMap, "map", verb, testSuccessful);
-    mapList.unshift(newMap);
-    loadMapTable();
-    emptyCRUDStorage();
-}
-
-
+//sends user changes to the backend
 function sendUserCRUD() {
     let pass =document.getElementById("update_user_password").value;
     if(pass==""){pass=null;}
@@ -207,6 +189,8 @@ function sendUserCRUD() {
         };
     }
 
+
+
     sendAjax(user, "user", verb, function () {
         if (this.readyState === 4 && this.status === 200) {
             emptyCRUDStorage();
@@ -225,12 +209,27 @@ function sendUserCRUD() {
     loadUserAndTargetTable();
 }
 
-function sendEditorUpdate() {
-    sendAjax(tempUser,"user","update", function(){});
+//sends map changes to the backend
+function sendMapCRUD() {
+    let newMap = {
+        name: document.getElementById("map_name").value,
+        image: document.getElementById("map_imgPreview").src
+    };
+    if(verb=="update") {
+        for (let i = 0; i < mapList.length; i++) {
+            if (mapList[i].name == updateSubject) {
+                mapList.splice(i, 1);
+            }
+        }
+    }
+    sendAjax(newMap, "map", verb, testSuccessful);
+    mapList.unshift(newMap);
+    loadMapTable();
+    emptyCRUDStorage();
 }
 
+//saves changes to the editor-target-relation to the local storage
 function clickedEntry(i,subject, entryType) {
-
     if (entryType == "user" && view ==0) {
         if (updateSubject == null) {
             tempUser = userList[i];
@@ -259,4 +258,9 @@ function clickedEntry(i,subject, entryType) {
             toggleMarkEntry(i);
         }
     }
+}
+
+// sends changes to the editor-target-relation from the local storage to the backend
+function sendEditorUpdate() {
+    sendAjax(tempUser,"user","update", function(){});
 }

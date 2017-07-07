@@ -1,4 +1,4 @@
-let resourcePackage;
+//initial Request
 let xhttp = new XMLHttpRequest();
 xhttp.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
@@ -59,17 +59,19 @@ class target {
     }
 }
 
-function testSuccessful(){
-    if (this.readyState === 4 && this.status === 200) {
-        let response = JSON.parse(this.responseText);
-
-        console.log("testresponse:"+response);
-
-        if (response.success === false) {
-            alert("action: " + verb + " unssuccessfull")
-        }
-        else {
-            verb=null;
-        }
+function roleToString(role) {
+    switch (role) {
+        case 5:
+            return '[root]';
+        case 4:
+            return '[Developer]';
+        case 3:
+            return '[Manager]';
+        case 2:
+            return '[Mod]';
+        case 1:
+            return '[Editor]';
+        default:
+            return ']HACKER[';
     }
 }
