@@ -32,8 +32,10 @@ class editor extends udvide_entity
     {
         $sql = 'SELECT tName as "0" FROM udvide.Editors WHERE uName = ?';
         $db = access_DB::prepareExecuteFetchStatement($sql, [$this->user]);
-        foreach ($db as $k => $v) {
-            $db[$k] = $v[0];
+        if($db !== false) {
+            foreach ($db as $k => $v) {
+                $db[$k] = $v[0];
+            }
         }
         return $db;
     }
@@ -42,8 +44,10 @@ class editor extends udvide_entity
     {
         $sql = 'SELECT uName as "0" FROM udvide.Editors WHERE tName = ?';
         $db = access_DB::prepareExecuteFetchStatement($sql, [$this->target]);
-        foreach ($db as $k => $v) {
-            $db[$k] = $v[0];
+        if($db !== false) {
+            foreach ($db as $k => $v) {
+                $db[$k] = $v[0];
+            }
         }
         return $db;
     }
