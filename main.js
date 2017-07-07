@@ -9,18 +9,20 @@ xhttp.onreadystatechange = function () {
 xhttp.open("POST", "resourcePackage.php", true);
 xhttp.send();
 
+//	calls loadLogin() and loadFooter
 function main() {
     loadLogin();
     loadFooter();
 }
 
-
+//sets username and passHash in local storage and sends a Ajax request with login data and the callbackmehtod login()
 function sendLoginData() {
     username = document.getElementById("login_username").value;
     passHash = document.getElementById("login_password").value;
     sendAjax(null, "user", "readAll",login);
 }
 
+//interprets the response from the Ajax request and calls initialRead() when login was sucessfull
 function login(){
     if (this.readyState === 4 && this.status === 200) {
         let response = JSON.parse(this.responseText);
@@ -33,12 +35,14 @@ function login(){
     }
 }
 
+//calls sendLoginData() when enter key is pressed
 function onEnterLogin(e) {
     if (e.keyCode === 13) {
         sendLoginData();
     }
 }
 
+//calls loadLogin(), emptyHeader()and emptyStorage()
 function logout() {
     loadLogin();
     emptyHeader();

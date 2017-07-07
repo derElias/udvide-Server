@@ -2,7 +2,7 @@
  * Created by Elias on 29.06.2017.
  */
 
-
+//lets the user load up a JPG for a marker and displays and on webpage
 function markerPreviewFile() {
     let preview=document.getElementById("imgPreview");
     let file = document.querySelector('input[type=file]').files[0]; //same as here
@@ -21,13 +21,14 @@ function markerPreviewFile() {
     }
 }
 
+//generates a marker and displays it to the webpage
 function markerGeneration() {
     generateMarker(document.getElementById("imgPreview"), '', 1000, function () {
         document.getElementById("marker_downloadButton").href=document.getElementById("imgPreview").src;
     });
 }
 
-
+//lets the user load up a JPG for a map and displays it on webpage
 function mapPreviewFile() {
     let preview=document.getElementById("map_imgPreview");
     let file = document.querySelector('input[type=file]').files[0]; //same as here
@@ -45,12 +46,14 @@ function mapPreviewFile() {
     }
 }
 
+//saves the selected map to local storage and calls showMapPriew()
 function triggerMapPreview() {
     let i = document.getElementById("map_select").value;
     tempTarget.mapImg=mapList[i].image;
    showMapPreview(function() {});
 }
 
+//displays the image of the selected map on the webpage
 function showMapPreview(f) {
     let img = document.createElement("img");
     let canvas = document.getElementById("mapCanvas");
@@ -69,6 +72,7 @@ function showMapPreview(f) {
     background.src = tempTarget.mapImg;
 }
 
+//adds or removes the the classname "entryboxMarked" to the corresponding HTML element
 function toggleMarkEntry(i){
     console.log("toggle "+ i);
     let entry;
@@ -81,6 +85,7 @@ function toggleMarkEntry(i){
         }
 }
 
+//adds or removes the the classname "entryboxMarked" to the corresponding HTML elements
 function markEntries(i) {
     document.getElementsByClassName('entryboxUser')[i].classList.add("entryboxMarked");
 
@@ -102,6 +107,7 @@ function markEntries(i) {
     }
 }
 
+//removes the the classname "entryboxMarked" from all HTML elements
 function unmarkEverything() {
     let allMarkedEntrys = document.getElementsByClassName("entryboxMarked");
     let a = allMarkedEntrys.length;

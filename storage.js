@@ -6,12 +6,16 @@ let username;
 let passHash;
 let permissions;
 
+//to set when changing view
 let view = 0;
 
+//storage for users maps and targets
 let userList = null;
 let mapList = null;
 let targetList = null;
+let initial=null;
 
+//temporary storage for a image
 let image=null;
 
 //To set when choosing Map
@@ -23,11 +27,12 @@ let yPos=0;
 let verb=null;
 let updateSubject=null;
 
+//needet temporary storage for correct reacting in multiple functions
 let creatingUserCurrendtly = false;
 let subjectPermissions=null;
 let subjectType=null;
-let initial=null;
 
+//temporary storage for target-, user- and map-objects
 let tempTarget = {
     name: null,
     image: null,
@@ -51,9 +56,11 @@ let tempMap ={
     name: null,
     img: null
 };
-
+//needet temporary storage for displaying the canvas of the map
 let activeMapContext=null;
 
+
+//sends first Ajax request and calls loadHeader() and loadUserAndTargetTable()
 function initialRead() {
     sendAjax(null, "initial", "readAll", function () {
         if (this.readyState === 4 && this.status === 200) {
@@ -77,6 +84,7 @@ function initialRead() {
     });
 }
 
+//sends Ajax request to get all maps, saves the values into the local storage and calls the given function
 function setMapList(printMethode) {
     sendAjax(null, "map", "readAll", function(){
         if (this.readyState === 4 && this.status === 200) {
@@ -89,6 +97,7 @@ function setMapList(printMethode) {
     });
 }
 
+//sends Ajax request to get all users, saves the values into the local storage and calls the given function
 function setUserList(printMethode) {
     sendAjax(null, "user", "readAll", function(){
         if (this.readyState === 4 && this.status === 200) {
@@ -101,6 +110,7 @@ function setUserList(printMethode) {
     }});
 }
 
+//sends Ajax request to get all targets, saves the values into the local storage and calls the given function
 function setTargetList(printMethode) {
     sendAjax(null, "target", "readAll", function(){
         if (this.readyState === 4 && this.status === 200) {
@@ -112,6 +122,7 @@ function setTargetList(printMethode) {
     }});
 }
 
+//toggles the relation of a target to an editor on and of and saves the value into the local storage
 function toggleAssingment(subject) {
     if (tempUser.editors != false) {
         let toggled = false;
@@ -130,6 +141,7 @@ function toggleAssingment(subject) {
     }
 }
 
+//copies the values of the corresponding input fields into the local storage
 function setTempTargetMap() {
     let i=document.getElementById("map_select").value;
     tempTarget.map=mapList[i].name;
@@ -140,6 +152,7 @@ function setTempTargetMap() {
     loadTargetUpdateWindow();
 }
 
+//sets position of a target on a map and saves the values into the storage
 function setPosition(event) {
     var canvas = document.getElementById("mapCanvas");
     var rect = canvas.getBoundingClientRect();
@@ -152,6 +165,7 @@ function setPosition(event) {
     });
 }
 
+//deletes all storage fields necessary for creating, updating, reading and deleting objects
 function emptyCRUDStorage(){
     immage=null;
     map = null;
@@ -189,6 +203,7 @@ function emptyCRUDStorage(){
     unmarkEverything();
 }
 
+//deletes all storage fields
 function emptyStorage() {
     username="";
     passHash="";

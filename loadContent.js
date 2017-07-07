@@ -1,22 +1,23 @@
 /**
  * Created by Elias on 29.06.2017.
  */
+//includes the ressource login.html into the content currently display browsertab
 function loadLogin() {
     document.getElementById("content").innerHTML = resourcePackage.templates["login.html"];
 }
-
+//includes the ressource headerContent.html into the header of the currently displayed browsertab
 function loadHeader() {
     document.getElementById("header").innerHTML = resourcePackage.templates["headerContent.html"]
 }
-
+//removes HTML-headerfile from currently display browsertab
 function emptyHeader() {
     document.getElementById("header").removeChild(document.getElementById("headerContent"))
 }
-
+//includes the ressource footer.html into the header of the currently displayed browsertab
 function loadFooter() {
     document.getElementById("footer").innerHTML = resourcePackage.templates["footer.html"]
 }
-
+//replaces content with entyTable HTML-File for an authorized user
 function loadUserAndTargetTable() {
     if (view == 0) {
     document.getElementById("viewSwitch").innerHTML = "Switch to<br/>Map-View";
@@ -44,6 +45,7 @@ function loadUserAndTargetTable() {
 
 
 //<editor-fold desc="print User Table">
+//displays all users in the designated element
 function printUserTable() {
     let parent = document.getElementById('userList');
 
@@ -76,6 +78,7 @@ function printUserTable() {
     }
 }
 
+//prints information about the logged in user
 function printUser() {
     let parent = document.getElementById('userList');
     let temp = document.createElement('div');
@@ -106,6 +109,7 @@ function printTargetTable() {
     }
 }
 
+//displays all maps in the designated element
 function printMapTable() {
 
     let parent = document.getElementById('mapList');
@@ -124,6 +128,7 @@ function printMapTable() {
     document.getElementById("viewSwitch").innerHTML="Switch to<br/>Main-View";
 }
 
+//lists all maps in the designated select element
 function printMapOptions() {
     let parent=document.getElementById('map_select');
     for (let i = 0; i < mapList.length; i++) {
@@ -136,10 +141,12 @@ function printMapOptions() {
     }
 }
 
+//displays a meaningful Error Message
 function printLoginFail(){
     document.getElementById("loginWarning").innerHTML = "Login Fehlgeschlagen!!!";
 }
 
+//replaces content with targetUpdateWindow.html
 function loadTargetUpdateWindow() {
     document.getElementById("content").innerHTML = resourcePackage.templates["targetUpdateWindow.html"];
     if(tempTarget.name != null){
@@ -162,6 +169,7 @@ function loadTargetUpdateWindow() {
     }
 }
 
+//includes the resource createUser.html into browsertab
 function loadUserUpdateField() {
     let newItem = document.createElement("div");
     newItem.setAttribute("id", "createUserField");
@@ -181,11 +189,13 @@ function loadUserUpdateField() {
     editorcheck();
 }
 
+//removes the resource createUser.html from browsertab
 function closeUserUpdateField() {
     let list=document.getElementById("userList");
     list.removeChild(list.childNodes[0]);
 }
 
+//displays advanced option for administrators in the user creation field
 function editorcheck() {
     let item= document.getElementById("update_user_tnumber");
     let titles = document.getElementById("createUserField_titles");
@@ -208,6 +218,7 @@ function editorcheck() {
     }
 }
 
+//replaces content with createMap.html
 function loadMapUpdateWindow() {
     document.getElementById("content").innerHTML = resourcePackage.templates["createMap.html"];
     if(updateSubject!=null) {
@@ -216,6 +227,7 @@ function loadMapUpdateWindow() {
     }
 }
 
+//loads recent content
 function closeUpdateWindow() {
 
     if(creatingUserCurrendtly){
@@ -232,6 +244,8 @@ function closeUpdateWindow() {
     emptyCRUDStorage();
 }
 
+
+//replaces content with mapTableTempl.html
 function loadMapTable() {
     document.getElementById("content").innerHTML = resourcePackage.templates["mapTableTempl.html"];
     if(mapList === null) {
@@ -242,6 +256,7 @@ function loadMapTable() {
     }
 }
 
+//replaces contend with selectMap.html and calls printMapOptions()
 function loadMapSelect() {
     tempTarget.name = document.getElementById("target_name").value;
     tempTarget.image = document.getElementById("imgPreview").src;
@@ -270,6 +285,7 @@ function loadMapSelect() {
     console.log(tempTarget);
 }
 
+//displays debugging message in the developer console
 function testSuccessful(){
     if (this.readyState === 4 && this.status === 200) {
         let response = JSON.parse(this.responseText);
@@ -285,6 +301,7 @@ function testSuccessful(){
     }
 }
 
+//changes view by calling corresponding load method
 function switchView() {
         if (view == 0) {
         view = 1;
