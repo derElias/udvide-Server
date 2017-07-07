@@ -1,11 +1,12 @@
 <?php
 require_once 'vendor/autoload.php';
 
+/* // Apparently this doesn't work right now... i have no idea why but nothing else seems affected
 if (file_exists('MySQLDBDDL.sql')) {
     $sql = file_get_contents('MySQLDBDDL.sql');
     access_DB::prepareExecuteFetchStatement($sql);
     echo 'DB recreated';
-}
+}*/
 
 $img = imagecreatefromstring(file_get_contents('img/SampleGen.jpg'));
 $img2 = imagecreatefromstring(file_get_contents('img/SampleGen2.jpg'));
