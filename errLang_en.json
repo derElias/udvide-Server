@@ -22,6 +22,8 @@
   "LOGIN_USERDELETED":"This User has been deleted",
   "LOGIN_WRONGPASSWD":"That is not the correct password; please try harder!",
   "USER_DATASET_INVALID":"ERR_USER_DATASET_INVALID",
+  "NAME_REQUIRED":"the Objects identifying name is required for this operation!",
+  "ELEMENT_NOT_FOUND":"If I could rewrite the code now you'd get a statuscode 404 or 410 Element not found or element deleted",
 
   "..999":"Shit?"
 }

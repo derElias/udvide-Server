@@ -7,8 +7,9 @@ if (file_exists('MySQLDBDDL.sql')) {
     echo 'DB recreated';
 }
 
-$img = imagecreatefromstring(file_get_contents('img/img.jpg'));
-$root_passwd = "imGoingToBePepperedAndSalted";
+$img = imagecreatefromstring(file_get_contents('img/SampleGen.jpg'));
+$img2 = imagecreatefromstring(file_get_contents('img/SampleGen2.jpg'));
+$root_passwd = "plzHackMe";
 $default_password = "iAmBad";
 
 
@@ -27,7 +28,7 @@ $root = user::fromDB('root')
 
 (new user())
     ->setPassHash($default_password)
-    ->setRole(PERMISSIONS_DEVELOPER)
+    /*->setRole(PERMISSIONS_DEVELOPER)
     ->setUsername("dev/simon")
     ->create()
     ->setUsername("dev/elias")
@@ -37,80 +38,64 @@ $root = user::fromDB('root')
     ->setUsername("dev/niky")
     ->create()
     ->setUsername("dev/siggi")
-    ->create()
+    ->create()*/
     // add test ppl as root
-    ->setRole(PERMISSIONS_CLIENT)
-    ->setUsername("test/tClient")
-    ->create()
     ->setRole(PERMISSIONS_ADMIN)
-    ->setUsername("test/tAdmin")
+    ->setUsername("BBT/Admin")
     ->create()
     ->setRole(PERMISSIONS_EDITOR)
     ->setTargetCreateLimit(5)
-    ->setUsername("test/tEditor")
+    ->setUsername("BBT/Editor")
     ->create();
 echo "devs and test users created!\n<br/>";
 //// Add maps
-$mapImg = imagecreatetruecolor(1000,1000);
+$mapImg = imagecreatetruecolor(100,100);
+imagefilledrectangle($mapImg,5,5,95,95,imagecolorallocate($mapImg,200,255,200));
 (new map())
     ->setImage($mapImg)
-    ->setName('test/1')
+    ->setName('initialMap')
     ->create()
-    ->setName('test/2')
+    ->setName('BBT/m1')
     ->create();
-
 
 ////-----------------------------------------------------------------
 // add test targets
-$tAdmin = user::fromDB('test/tAdmin')
-    ->setPassHash($default_password)
-    ->login();
 $targets[] = (new target())
-    ->setName('test/t_01_admin')
+    ->setName('initialTarget')
     ->setImage($img)
     ->setActive(true)
-    ->setContent('Hallo Welt!')
-    ->setMap('test/1')
-    ->setXPos(140)
-    ->setYPos(70)
-    ->setOwner($tAdmin->getUsername())
+    ->setContent("<b>Hallo\nWelt!</b>")
+    ->setMap('initialMap')
+    ->setXPos(75)
+    ->setYPos(40)
+    ->setOwner($root->getUsername())
     ->create();
 ////
 $targets[] = (new target())
-    ->setName('test/t_02_client')
-    ->setImage($img)
+    ->setName('BBT/t1')
+    ->setImage($img2)
     ->setActive(true)
-    ->setContent('<bold>Hallo Welt!</bold>')
-    ->setMap('test/1')
+    ->setContent('Hi there!')
+    ->setMap('initialMap')
     ->setXPos(150)
     ->setYPos(80)
-    ->setOwner($tAdmin->getUsername())
+    ->setOwner($root->getUsername())
     ->create();
-////
-$targets[] = (new target())
-    ->setName('test/t_03_shared')
-    ->setImage($img)
-    ->setActive(true)
-    ->setContent('<color red>Hallo Welt!</color>')
-    ->setMap('test/2')
-    ->setXPos(160)
-    ->setYPos(90)
-    ->setOwner($tAdmin->getUsername())
-    ->create();
-////
-$target = target::fromDB('test/t_01_admin');
-$user = user::fromDB('test/tEditor');
-assignEditor($target,$user);
+
+$user = user::fromDB('BBT/Editor');
+// Assign Targets
+(new editor())->setTarget($targets[0])->setUser($user)->create();
 //*/
 // PHP SET UP -----------------------------------------------
 // BEGIN RESOURCE SETUP
 
+/* STRETCHGOAL: PERFORMANCE
 // minify
 $js = ""; //  todo get from udvide.js.php
 minifyJS([$js, 'udvide.min.js']);
-/*$css = ""; //  todo collect wherever it is (stretchgoal)
+$css = ""; //  todo collect wherever it is (stretchgoal)
 minifyCSS([$css, 'udvide.min.css']);*/
 
 
 
-echo "DELETE setup.php BEFORE GOING LIVE!";
+echo "DELETE setup.php BEFORE GOING LIVE! \n and change root password!";

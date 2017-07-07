@@ -136,11 +136,13 @@ class access_vfc
     }
 
     /**
-     * @param string $accessMethod
+     * @param string $accessMethod one of the following:
+     * 'create', 'get', 'getall', 'update', 'delete', 'summarize', 'summarizeall'
      * @return access_vfc
      */
     public function setAccessMethod($accessMethod)
     {
+        // todo rewrite if it will happen - use constants instead of strings for operation selection
         $this->accessMethod = strtolower($accessMethod);
         return $this;
     }
@@ -388,7 +390,7 @@ class access_vfc
 
         try {
             return $request->send();
-        } catch (HTTP_Request2_Exception $e) { // Docu weird Behavior from phpstorm regarding installed packages
+        } catch (HTTP_Request2_Exception $e) {
             trigger_error('Error: ' . $e->getMessage(),E_USER_ERROR);
         }
         return null;

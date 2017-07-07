@@ -38,8 +38,13 @@ class target extends udvide
     /** @var  bool */
     protected $active;
 
-    // VWS generated Values
-    // ToDo
+    // VWS generated Values see https://library.vuforia.com/articles/Solution/How-To-Use-the-Vuforia-Web-Services-API#How-To-Retrieve-a-Target-Summary-Report for potential expandability
+    protected $vwgen_upload_date;
+    protected $vwgen_tracking_rating;
+    protected $vwgen_total_recos;
+    protected $vwgen_current_month_recos;
+    protected $vwgen_previous_month_recos;
+
 
     /**
      * target constructor.
@@ -56,6 +61,16 @@ FROM udvide.Targets
 WHERE name = ?
 SQL;
         $db = access_DB::prepareExecuteFetchStatement($sql, [$this->name]);
+
+        $vwresp = (new access_vfc())
+            ->setAccessMethod('summarize')
+            ->setTargetId($db[0]['vw_id'])
+            ->execute();
+        $vwrespb = json_decode($vwresp->getBody());
+        foreach ($vwrespb as $key => $value) {
+            $db[0]['vwgen_'.$key] = $value;
+        }
+
         $this->set($db[0]);
         $this->editors = editor::readAllUsersFor($this->name);
         return $this;
@@ -87,13 +102,14 @@ SQL;
     }
 
     public function create() {
-        if (user::getLoggedInUser()->getRole() < MIN_ALLOW_TARGET_CREATE
+        $isLimited = user::getLoggedInUser()->getRole() < MIN_ALLOW_TARGET_CREATE;
+        if ($isLimited
             && user::getLoggedInUser()->getTargetCreateLimit() < 1)
             throw new PermissionException(ERR_PERMISSION_INSUFFICIENT,1);
         if (!isset($this->name))
-            throw new IncompleteObjectException(ERR_USER_DATASET_INVALID,1); // How tf did u do dis?
+            throw new IncompleteObjectException(ERR_NAME_REQUIRED,1);
 
-        if (user::getLoggedInUser()->getRole() < MIN_ALLOW_TARGET_CREATE)
+        if ($isLimited)
             user::getLoggedInUser()->targetCreateLimit--; // Why is phpstorm not liking this beautiful code? :P
 
         $sql = <<<'SQL'
@@ -103,7 +119,7 @@ VALUES (?,?);
 SQL;
         $values = [
             $this->name,
-            isset($this->owner) ? $this->owner : user::getLoggedInUser()->getUsername()
+            isset($this->owner)&&!$isLimited ? $this->owner : user::getLoggedInUser()->getUsername()
         ];
         access_DB::prepareExecuteStatementGetAffected($sql,$values);
 
@@ -119,23 +135,36 @@ SQL;
 
         $this->pdbupdate($this->name);
 
+        if (isset($this->owner))
+            (new editor())->setTarget($this->name)->setUser($this->owner)->create();
+
+        // todo note for potential rewrite - default response status to 201
+
         return $this;
     }
 
     public function update(string $subject = null) {
         // If not allowed to update and self-update (in case of self update)
-        // todo if assigned (also @delete)
-        if (user::getLoggedInUser()->getRole() < MIN_ALLOW_TARGET_UPDATE)
+        $isAssigned = false;
+        foreach ($this->editors as $editor) {
+            if (user::getLoggedInUser()->getUsername() == $editor) {
+                $isAssigned = true;
+                break;
+            }
+        }
+        if (user::getLoggedInUser()->getRole() < MIN_ALLOW_TARGET_UPDATE
+            && !$isAssigned)
             throw new PermissionException(ERR_PERMISSION_INSUFFICIENT,1);
 
         $subject = empty($subject) ? $this->name : $subject;
 
+        if (empty($subject))
+            throw new IncompleteObjectException(ERR_NAME_REQUIRED);
+
         $this->pdbupdate($subject);
 
         if (isset($this->name) || isset($this->image) || isset($this->active)) {
-            if (!isset($this->vw_id))
-                $this->vw_id = access_DB::prepareExecuteFetchStatement(
-                    'SELECT vw_id FROM udvide.Targets t WHERE t.name = ?', [$this->name])[0]['vw_id'];
+            $this->fillVWID();
 
             $vwsResponse = $this->pvfupdateobject()
                 ->setTargetId($this->vw_id)
@@ -183,7 +212,9 @@ SET $sql
 WHERE name = ?;
 SQL;
             $ins[] = $subject;
-            access_DB::prepareExecuteFetchStatement($sql, $ins);
+            if (access_DB::prepareExecuteStatementGetAffected($sql, $ins) === false)
+                throw new Exception(ERR_ELEMENT_NOT_FOUND);
+            // todo rewrite/expansion: if i wouldn't be coding mainly for aspecific webclient, which only cares about status 200 i'd send another status code here
         }
     }
 
@@ -194,13 +225,25 @@ SQL;
             ->setTargetName(isset($this->name) ? $this->name : null)
             ->setMeta(isset($this->name) ? '/clientRequest.php?t=' . base64_encode($this->name) : null)
             ->setImage(isset($this->image) ? $this->getImageAsRawJpg() : null)
-            ->setActiveflag(isset($this->active) ? $this->active : null);
+            ->setActiveflag(isset($this->deleted)&&$this->deleted ? false : isset($this->active) ? $this->active : null);
 
         return $vwsa;
     }
+    private function fillVWID() {
+        if (!isset($this->vw_id))
+            $this->vw_id = access_DB::prepareExecuteFetchStatement(
+                'SELECT vw_id FROM udvide.Targets t WHERE t.name = ?', [$this->name])[0]['vw_id'];
+    }
 
     public function delete() {
-        if (user::getLoggedInUser()->getRole() < MIN_ALLOW_TARGET_DEACTIVATE)
+        $isAssigned = false;
+        foreach ($this->editors as $editor) {
+            if (user::getLoggedInUser()->getUsername() == $editor) {
+                $isAssigned = true;
+                break;
+            }
+        }
+        if (user::getLoggedInUser()->getRole() < MIN_ALLOW_TARGET_DEACTIVATE && !$isAssigned)
             throw new PermissionException(ERR_PERMISSION_INSUFFICIENT,1);
 
         $this->deleted = true;
@@ -230,9 +273,28 @@ SQL;
                 return $this->setYPos($value);
             case 'map':
                 return $this->setMap($value);
+            case 'vwgen_active_flag':
+            case 'active':
+                return $this->setActive($value);
+            case 'vwgen_upload_date':
+                $this->vwgen_upload_date = $value;
+                break;
+            case 'vwgen_tracking_rating':
+                $this->vwgen_tracking_rating = $value;
+                break;
+            case 'vwgen_total_recos':
+                $this->vwgen_total_recos = $value;
+                break;
+            case 'vwgen_current_month_recos':
+                $this->vwgen_current_month_recos = $value;
+                break;
+            case 'vwgen_previous_month_recos':
+                $this->vwgen_previous_month_recos = $value;
+                break;
             default:
                 return $this;
         }
+        return $this;
     }
 
     /**
@@ -256,6 +318,18 @@ SQL;
                 return $this->getYPos();
             case 'map':
                 return $this->getMap();
+            case 'active':
+                return $this->isActive();
+            case 'vwgen_upload_date':
+                return $this->vwgen_upload_date;
+            case 'vwgen_tracking_rating':
+                return $this->vwgen_tracking_rating;
+            case 'vwgen_total_recos':
+                return $this->vwgen_total_recos;
+            case 'vwgen_current_month_recos':
+                return $this->vwgen_current_month_recos;
+            case 'vwgen_previous_month_recos':
+                return $this->vwgen_previous_month_recos;
             default:
                 return null;
         }
@@ -506,6 +580,46 @@ SQL;
     public function getPluginData(string $plugin): array
     {
         return $this->pluginData[$plugin];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVwgenUploadDate()
+    {
+        return $this->vwgen_upload_date;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVwgenTrackingRating()
+    {
+        return $this->vwgen_tracking_rating;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVwgenTotalRecos()
+    {
+        return $this->vwgen_total_recos;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVwgenCurrentMonthRecos()
+    {
+        return $this->vwgen_current_month_recos;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVwgenPreviousMonthRecos()
+    {
+        return $this->vwgen_previous_month_recos;
     }
 
     //</editor-fold>

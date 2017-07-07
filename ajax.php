@@ -47,25 +47,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !GET_INSTEAD_POST
  */
 function performVerbForSubjectAs(array $userInput) {
     $verb = $userInput['verb'];
-    $subject = isset($userInput['subject']) ? $userInput['subject'] : null;
 
     $response = new handlerResponse();
     $response->success = true;
 
     if (!empty($userInput['user'])) {
-        $user = user::fromJSON($userInput['user']);
-        $userInput['updateSubject'] = isset($userInput['updateSubject']) ? $userInput['updateSubject'] : $user->getUsername();
+        $sentUser = user::fromJSON($userInput['user']);
+        $userInput['updateSubject'] = isset($userInput['updateSubject']) ? $userInput['updateSubject'] : $sentUser->getUsername();
 
         // if selfedit log in the $user instance
         if ($userInput['updateSubject'] === $userInput['username']) {
-            // potential new username has to be saved before login
-            $newUsername = $user->getUsername();
-            $user->setUsername($userInput['username'])
+            $user = user::fromDB($userInput['username'])
                 ->setPassHash($userInput['passHash'])
                 ->login()
-                ->setUsername($newUsername);
+                ->setUsername($sentUser->getUsername())
+                ->setPassHash($sentUser->getPassHash());
         } else {
             loginUser($userInput['username'], $userInput['passHash']);
+            $user = $sentUser;
         }
         $response->payLoad = performVerbForUser($verb, $user, $userInput['updateSubject']);
 

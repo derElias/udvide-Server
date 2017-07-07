@@ -26,6 +26,8 @@ class user extends udvide
     /** @var  bool */
     private $isLoggedIn;
 
+    private $editors;
+
     /**
      * user constructor.
      */
@@ -43,14 +45,20 @@ class user extends udvide
     }
 
     //<editor-fold desc="CRUD DB">
+
     /**
      * @return $this
+     * @throws Exception
      */
     public function read()
     {
         // fill this with the db values
         $db = $this->readComplete();
         // do not give away private information
+        if ($db == false) {
+            throw new Exception(ERR_ELEMENT_NOT_FOUND);
+            // todo incase of rewrite: send 404
+        }
         $this->set($db[0])
             ->passHash = null;
         return $this;
@@ -91,13 +99,18 @@ SQL;
 
         $sql = <<<'SQL'
 INSERT INTO udvide.users
-(deleted,`passHash`, `username`, `role`)
-VALUES (FALSE,?,?,?);
+(deleted,`passHash`, `username`, `role`, targetCreateLimit)
+VALUES (FALSE,?,?,?,?);
 SQL;
+        $this->role = isset($this->role) ? $this->role : 0;
+        $this->targetCreateLimit = isset($this->targetCreateLimit) ? $this->targetCreateLimit :
+            ($this->role < MIN_ALLOW_TARGET_CREATE ? 0 : -1);
+
         $values = [
             helper::pepperedPassGen($this->passHash),
             $this->username,
-            isset($this->role) ? $this->role : 0
+            $this->role,
+            $this->targetCreateLimit
         ];
         access_DB::prepareExecuteStatementGetAffected($sql,$values);
         return $this;
@@ -116,6 +129,25 @@ SQL;
         if (user::$loggedInUser->role < MIN_ALLOW_USER_UPDATE
             && !($this->isLoggedIn && $this->role < MIN_ALLOW_SELF_UPDATE))
             throw new PermissionException(ERR_PERMISSION_INSUFFICIENT,1);
+
+        // changing Editor assigns - hotfix #48
+        if (isset($this->editors) && $this->editors != false) { // false == no change
+            // this code is a hotfix todo refactor
+            $sql = <<<'SQL'
+DELETE FROM udvide.Editors
+WHERE uName = ?;
+SQL;
+            $ins = [$subject];
+            foreach ($this->editors as $v) {
+                    $sql .= <<<'SQL'
+INSERT INTO udvide.Editors (uName,tName)
+VALUES (?,?)
+SQL;
+                    $ins[] = $subject;
+                    $ins[] = $v;
+            }
+            access_DB::prepareExecuteFetchStatement($sql,$ins);
+        }
 
         $updateDB = false;
         $sql = '';
@@ -233,6 +265,8 @@ SQL;
                 return $this->setRole($value);
             case 'targetCreateLimit':
                 return $this->setTargetCreateLimit($value);
+            case 'editors': // Hotfix #48
+                return $this->editors = $value;
             default:
                 return $this;
         }
@@ -314,27 +348,35 @@ SQL;
 
     //<editor-fold desc="Getter">
     /**
-     * @return string
+     * @return string|null
      */
-    public function getUsername(): string
+    public function getUsername()
     {
         return $this->username;
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getRole(): int
+    public function getRole()
     {
         return $this->role;
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getTargetCreateLimit(): int
+    public function getTargetCreateLimit()
     {
         return $this->targetCreateLimit;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPassHash()
+    {
+        return $this->passHash;
     }
     //</editor-fold>
 }
