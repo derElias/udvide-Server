@@ -11,7 +11,6 @@ require_once 'vendor/autoload.php';
         $host = gethostname();
         $ip = gethostbyname($host);
         define('EXTERNAL_BASE_PATH', $ip);
-        define('INTERNAL_BASE_PATH', 'C:\Users\User\Documents\udvide-Server');
 
 // Where is my DB?
         define('SQL_DB_SERVER', 'localhost');
