@@ -254,7 +254,7 @@ function clickedEntry(i,subject, entryType) {
     }
     else {
         if (updateSubject != null) {
-            toggleAssingment(i);
+            toggleAssingment(subject);
             toggleMarkEntry(i);
         }
     }
