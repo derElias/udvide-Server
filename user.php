@@ -43,14 +43,20 @@ class user extends udvide
     }
 
     //<editor-fold desc="CRUD DB">
+
     /**
      * @return $this
+     * @throws Exception
      */
     public function read()
     {
         // fill this with the db values
         $db = $this->readComplete();
         // do not give away private information
+        if ($db == false) {
+            throw new Exception(ERR_ELEMENT_NOT_FOUND);
+            // todo incase of rewrite: send 404
+        }
         $this->set($db[0])
             ->passHash = null;
         return $this;
