@@ -192,8 +192,9 @@ SQL;
      * @throws PermissionException
      */
     public function delete() {
-        if (user::$loggedInUser->role < MIN_ALLOW_USER_DEACTIVATE
+        if ((user::$loggedInUser->role < MIN_ALLOW_USER_DEACTIVATE
             && !($this->isLoggedIn && $this->role < MIN_ALLOW_SELF_DEACTIVATE))
+          || user::$loggedInUser->role < $this->role)
             throw new PermissionException(ERR_PERMISSION_INSUFFICIENT,1);
         $sql = 'UPDATE udvide.users SET deleted = TRUE WHERE username = ?';
         access_DB::prepareExecuteFetchStatement($sql,[$this->username]);
