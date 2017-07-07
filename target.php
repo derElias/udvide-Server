@@ -135,6 +135,9 @@ SQL;
 
         $this->pdbupdate($this->name);
 
+        if (isset($this->owner))
+            (new editor())->setTarget($this->name)->setUser($this->owner)->create();
+
         // todo note for potential rewrite - default response status to 201
 
         return $this;
@@ -142,8 +145,15 @@ SQL;
 
     public function update(string $subject = null) {
         // If not allowed to update and self-update (in case of self update)
-        // todo if assigned (also @delete)
-        if (user::getLoggedInUser()->getRole() < MIN_ALLOW_TARGET_UPDATE)
+        $isAssigned = false;
+        foreach ($this->editors as $editor) {
+            if (user::getLoggedInUser()->getUsername() == $editor) {
+                $isAssigned = true;
+                break;
+            }
+        }
+        if (user::getLoggedInUser()->getRole() < MIN_ALLOW_TARGET_UPDATE
+            && !$isAssigned)
             throw new PermissionException(ERR_PERMISSION_INSUFFICIENT,1);
 
         $subject = empty($subject) ? $this->name : $subject;
@@ -226,7 +236,14 @@ SQL;
     }
 
     public function delete() {
-        if (user::getLoggedInUser()->getRole() < MIN_ALLOW_TARGET_DEACTIVATE)
+        $isAssigned = false;
+        foreach ($this->editors as $editor) {
+            if (user::getLoggedInUser()->getUsername() == $editor) {
+                $isAssigned = true;
+                break;
+            }
+        }
+        if (user::getLoggedInUser()->getRole() < MIN_ALLOW_TARGET_DEACTIVATE && !$isAssigned)
             throw new PermissionException(ERR_PERMISSION_INSUFFICIENT,1);
 
         $this->deleted = true;
