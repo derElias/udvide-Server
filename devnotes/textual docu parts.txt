@@ -12,15 +12,15 @@ Who did what:
 Everything realized in PHP including, but not limited by
 the Database connector, the Vuforia API connector*, the Core Application,
 the AJAX API, the Plugin Support, the FHWS Plugin and the Udvide-mobile-API
-got written by me Simon if nothing else is explicitly noted, like HTTP_Response2 and the TMS Signature Builder, in a more local context.
+got written by me Simon Janssen if nothing else is explicitly noted, like HTTP_Response2 and the TMS Signature Builder, in a more local context.
 
 *excluding the TMS Signature builder; inspired by the Samples provided by Vuforia
 
-JS code, including the web-application, CSSs and HTM is written by Elias if nothing else is explicitly noted in a more local context except
+JS code, including the web-application, CSSs and HTML is written by Elias Riedel if nothing else is explicitly noted in a more local context except
 the AJAX connection prototype, navigating server-sent resources and parts of DOM-Manipulation are partially written or inspired by Simon.
 
-The Database DDL was written by Lukas and Simon.
-The Documentation about the Databases structure was written by Lukas.
+The Database DDL was written by Lukas Ziegle and Simon Janssen.
+The Documentation about the Databases structure was written by Lukas Ziegler.
 
 
 
