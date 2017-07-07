@@ -91,13 +91,18 @@ SQL;
 
         $sql = <<<'SQL'
 INSERT INTO udvide.users
-(deleted,`passHash`, `username`, `role`)
-VALUES (FALSE,?,?,?);
+(deleted,`passHash`, `username`, `role`, targetCreateLimit)
+VALUES (FALSE,?,?,?,?);
 SQL;
+        $this->role = isset($this->role) ? $this->role : 0;
+        $this->targetCreateLimit = isset($this->targetCreateLimit) ? $this->targetCreateLimit :
+            ($this->role < MIN_ALLOW_TARGET_CREATE ? 0 : -1);
+
         $values = [
             helper::pepperedPassGen($this->passHash),
             $this->username,
-            isset($this->role) ? $this->role : 0
+            $this->role,
+            $this->targetCreateLimit
         ];
         access_DB::prepareExecuteStatementGetAffected($sql,$values);
         return $this;
@@ -314,27 +319,35 @@ SQL;
 
     //<editor-fold desc="Getter">
     /**
-     * @return string
+     * @return string|null
      */
-    public function getUsername(): string
+    public function getUsername()
     {
         return $this->username;
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getRole(): int
+    public function getRole()
     {
         return $this->role;
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getTargetCreateLimit(): int
+    public function getTargetCreateLimit()
     {
         return $this->targetCreateLimit;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPassHash()
+    {
+        return $this->passHash;
     }
     //</editor-fold>
 }
