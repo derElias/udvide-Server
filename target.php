@@ -111,6 +111,7 @@ SQL;
 
         if ($isLimited)
             user::getLoggedInUser()->targetCreateLimit--; // Why is phpstorm not liking this beautiful code? :P
+        user::getLoggedInUser()->update();
 
         $sql = <<<'SQL'
 INSERT INTO udvide.Targets
@@ -244,6 +245,11 @@ SQL;
 
         $this->deleted = true;
         $this->pdbupdate($this->name);
+
+        $isLimited = user::getLoggedInUser()->getRole() < MIN_ALLOW_TARGET_CREATE; // CREATE is correct i think
+        if ($isLimited)
+            user::getLoggedInUser()->targetCreateLimit++; // Why is phpstorm not liking this beautiful code? :P
+        user::getLoggedInUser()->update();
     }
     //</editor-fold>
 

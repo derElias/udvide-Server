@@ -13,23 +13,23 @@ Done: Form accept
     1. Send Vuforia the data set
     2. Sync own data set
     3. give positive answer
-WIP: ToDo get frontend working AJAX API
+Done: get frontend working AJAX API
 WIP: ToDo UnitTests for everything
 
-ToDo manage.php template builder (using connector and templates to generate CMS UI)
-ToDo check Form submission
-ToDo SVG Marker Generator
-ToDo SVG to JPG method
-ToDo Crop picture to replace width as user input
+meh manage.php template builder (using connector and templates to generate CMS UI)
+meh check Form submission
+Done SVG Marker Generator
+Worked around  SVG to JPG method
+Ignored Crop picture to replace width as user input
 
 StretchGoals:
 
 To be proposed Stretch goals:
-ToDo: Plugin API + FH-WS-Plugin (kinda promised)
-ToDo: make udvide.php a class target, user and map extend
+ToDo/WIP: Plugin API + FH-WS-Plugin (kinda promised)
+Done: make udvide.php a class target, user and map extend
 ToDo: ClientSide ActionCache (if server is unavailable set put to 3 minute trigger, add site-close stopper and ping to server)
 ToDo: use Company field to have multiple companies in the same system
-ToDo: If an editor has become owner of a target he can delete it -> new field owner; arrayToTarget; doStuff();
+Done: If an editor has become owner of a target he can delete it -> new field owner; arrayToTarget; doStuff();
 ToDo: instead of plain images use svgs for maps and add an editor to make rooms  reality
 
 VuFo untold requirements:

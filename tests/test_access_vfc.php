@@ -1,11 +1,12 @@
-<?php
+<?php/* outdated
+
 include_once '../access_vfc.php';
 /**
  * Created by PhpStorm.
  * User: User
  * Date: 08.05.2017
  * Time: 01:28
- */
+ *
 
 function test()
 {
@@ -64,7 +65,7 @@ function test()
     printResponse($VuFoAccess
         ->setTargetId($testTargetID)
         ->setAccessMethod('delete')
-        ->execute()); */
+        ->execute()); /
 
 
 // these should fail:
