@@ -266,7 +266,8 @@ SQL;
             case 'targetCreateLimit':
                 return $this->setTargetCreateLimit($value);
             case 'editors': // Hotfix #48
-                return $this->editors = $value;
+                $this->editors = $value;
+                return $this;
             default:
                 return $this;
         }
