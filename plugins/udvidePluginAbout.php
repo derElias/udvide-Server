@@ -9,6 +9,11 @@ require_once 'vendor/autoload.php';
  */
 class udvidePluginAbout
 {
+    /** @var array
+     * tell us after which plugins you want to be executed after if they are present.
+     *  you can check with class_exists(); if a plugin is in existance
+     */
+    public $dependencies;
     /** @var false|array
      * false if you cannot create Custom Targets;
      * associative array otherwise; like [$option_name => $option_type]
@@ -28,6 +33,15 @@ class udvidePluginAbout
 
     // future Releases might support maps to be custom generated
     //  and add further plugin integration
+
+    function __construct()
+    {
+        $this->dependencies = [];
+        $this->customTargetOptions = false;
+        $this->additionalTargetOptions = [];
+        $this->customUserOptions = false;
+        $this->additionalUserOptions = [];
+    }
 
     /**
      * @param array|false $customTargetOptions
@@ -66,6 +80,16 @@ class udvidePluginAbout
     public function setAdditionalUserOptions($additionalUserOptions)
     {
         $this->additionalUserOptions = $additionalUserOptions;
+        return $this;
+    }
+
+    /**
+     * @param mixed $usualBehavior
+     * @return udvidePluginAbout
+     */
+    public function setUsualBehavior($usualBehavior)
+    {
+        $this->usualBehavior = $usualBehavior;
         return $this;
     }
 

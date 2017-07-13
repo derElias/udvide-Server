@@ -8,9 +8,64 @@ require_once 'vendor/autoload.php';
  */
 class pluginLoader extends udvidePlugin
 {
+    private $singleton;
+    /** @var array of strings */
+    private $loadedPlugins = [];
+    /** @var array of all active udvidePlugins */
+    private $plugins = [];
+    private $abouts = []; // todo make the about stuff class properties
+
     public function __construct()
     {
+        udvidePlugin::__construct();
 
+        $directory = '/plugins';
+        $exclude = ['..', '.', 'udvidePlugin.php', 'udvidePluginAbout.php']; // Technically unnessecary (excluded by if(file_exists)), but more obvious
+        $pluginNames = array_diff(scandir($directory), $exclude);
+
+        $this->autoLoadPlugins($pluginNames);
+    }
+
+    private function autoLoadPlugins(array $pluginNames) {
+        foreach ($pluginNames as $pluginName)
+            $this->autoLoadPluginIfNotLoaded($pluginName);
+    }
+
+    private function autoLoadPluginIfNotLoaded($pluginName)
+    {
+        $isAlreadyLoaded = in_array($pluginName,$this->loadedPlugins);
+        if (!$isAlreadyLoaded) {
+            $this->autoLoadPluginIfValid($pluginName);
+        }
+    }
+
+    private function autoLoadPluginIfValid($pluginName) {
+        $isValidPlugin = file_exists('/plugins/'.$pluginName.'.php')
+            && class_exists($pluginName)
+            && is_subclass_of($pluginName,'udvidePlugin');
+
+        if ($isValidPlugin) {
+            $this->autoLoadPlugin($pluginName);
+        }
+    }
+
+    private function autoLoadPlugin($pluginName)
+    {
+        $cPlugin = new $pluginName; // Ty composer autoloader
+
+        if ($cPlugin instanceof udvidePlugin) { // PhpStorm apparently doesn't evaluate is_subclass_of
+            // find out if the dependencies are already included
+            $about = $cPlugin->aboutMe();
+            $deps = $about->dependencies;
+
+            foreach ($deps as $dep) {
+                $this->autoLoadPluginIfNotLoaded($dep);
+            }
+
+            $this->abouts[] = $about;
+            $this->plugins[] = $cPlugin;
+            $this->loadedPlugins[] = $pluginName;
+        }
     }
 
     //<editor-fold desc="Target">
@@ -21,7 +76,13 @@ class pluginLoader extends udvidePlugin
      * @param target $target
      * @return boolean
      */
-    public function onTargetCreate(target &$target): bool {return true;}
+    public function onTargetCreate(target &$target): bool {
+        foreach ($this->plugins as $plugin) {
+            if (!$plugin->onTargetCreate($target))
+                return false;
+        }
+        return true;
+    }
 
     /**
      * Your code to modify the target before change
@@ -34,7 +95,13 @@ class pluginLoader extends udvidePlugin
      * @param target $subject
      * @return boolean
      */
-    public function onTargetUpdate(target &$target, target &$subject): bool {return true;}
+    public function onTargetUpdate(target &$target, target &$subject): bool {
+        foreach ($this->plugins as $plugin) {
+            if (!$plugin->onTargetUpdate($target))
+                return false;
+        }
+        return true;
+    }
 
     /**
      * Your code to modify the target before deletion
@@ -43,7 +110,13 @@ class pluginLoader extends udvidePlugin
      * @param target $target
      * @return boolean
      */
-    public function onTargetDelete(target &$target): bool {return true;}
+    public function onTargetDelete(target &$target): bool {
+        foreach ($this->plugins as $plugin) {
+            if (!$plugin->onTargetDelete($target))
+                return false;
+        }
+        return true;
+    }
 
     // public function onTargetRead(&$target); // stretch goal since todo objects aren't read as objects
     //</editor-fold>
@@ -56,7 +129,13 @@ class pluginLoader extends udvidePlugin
      * @param user $user
      * @return boolean
      */
-    public function onUserCreate(user &$user): bool {return true;}
+    public function onUserCreate(user &$user): bool {
+        foreach ($this->plugins as $plugin) {
+            if (!$plugin->onUserCreate($user))
+                return false;
+        }
+        return true;
+    }
 
     /**
      * Your code to modify the user before change
@@ -69,7 +148,13 @@ class pluginLoader extends udvidePlugin
      * @param user $subject
      * @return boolean
      */
-    public function onUserUpdate(user &$user, user $subject): bool {return true;}
+    public function onUserUpdate(user &$user, user $subject): bool {
+        foreach ($this->plugins as $plugin) {
+            if (!$plugin->onUserUpdate($user))
+                return false;
+        }
+        return true;
+    }
 
     /**
      * Your code to modify the user before deletion
@@ -78,7 +163,13 @@ class pluginLoader extends udvidePlugin
      * @param user $user
      * @return boolean
      */
-    public function onUserDelete(&$user): bool {return true;}
+    public function onUserDelete(&$user): bool {
+        foreach ($this->plugins as $plugin) {
+            if (!$plugin->onUserDelete($user))
+                return false;
+        }
+        return true;
+    }
 
     // public function onUserRead(&$target); // stretch goal since todo objects aren't read as objects
     //</editor-fold>
@@ -124,7 +215,13 @@ class pluginLoader extends udvidePlugin
      * @param user $user
      * @return bool
      */
-    public function onLogin(user &$user): bool {return true;}
+    public function onLogin(user &$user): bool {
+        foreach ($this->plugins as $plugin) {
+            if (!$plugin->onLogin($user))
+                return false;
+        }
+        return true;
+    }
 
     /**
      * Your code to modify a editor-permission grant
@@ -133,7 +230,13 @@ class pluginLoader extends udvidePlugin
      * @param $editor
      * @return bool
      */
-    public function onEditorAssign(user &$user, target &$target, &$editor): bool{return true;} // todo
+    public function onEditorAssign(user &$user, target &$target, &$editor): bool{
+        foreach ($this->plugins as $plugin) {
+            if (!$plugin->onEditorAssign($user, $target, $editor))
+                return false;
+        }
+        return true;
+    } // todo
 
     /**
      * Your code to modify a editor-permission revoke
@@ -142,7 +245,13 @@ class pluginLoader extends udvidePlugin
      * @param $editor
      * @return bool
      */
-    public function onEditorDivest(user &$user, target &$target, &$editor): bool {return true;} // todo
+    public function onEditorDivest(user &$user, target &$target, &$editor): bool {
+        foreach ($this->plugins as $plugin) {
+            if (!$plugin->onEditorDivest($user, $target, $editor))
+                return false;
+        }
+        return true;
+    } // todo
     // public function onEditorRead(user &$user, target &$target):bool // todo stretch
 
     // public function onLog(&$log); // stretch goal since todo low reward
@@ -152,15 +261,33 @@ class pluginLoader extends udvidePlugin
      * @param target $target
      * @return bool
      */
-    public function onMobileRead(target &$target): bool {return true;} // the content of the Target is what is sent in the end
+    public function onMobileRead(target &$target): bool {
+        foreach ($this->plugins as $plugin) {
+            if (!$plugin->onMobileRead($target))
+                return false;
+        }
+        return true;
+    } // the content of the Target is what is sent in the end
 
-    public function onCustomTargetCreate(): bool {return true;}
+    public function onCustomTargetCreate(): bool {
+        foreach ($this->plugins as $plugin) {
+            if (!$plugin->onCustomTargetCreate())
+                return false;
+        }
+        return true;
+    }
 
     /**
      * In case you need to setup something
      * @return bool
      */
-    public function onSetup(): bool {return true;}
+    public function onSetup(): bool {
+        foreach ($this->plugins as $plugin) {
+            if (!$plugin->onSetup())
+                return false;
+        }
+        return true;
+    }
 
     /**
      * You have to tell us somethings about your Plugin - see udvidePluginAbout
@@ -168,6 +295,6 @@ class pluginLoader extends udvidePlugin
      */
     public function aboutMe(): udvidePluginAbout
     {
-        // TODO: Implement aboutMe() method.
+        return new udvidePluginAbout(); // We can't modify loading behavior when we manage it in this class
     }
 }
