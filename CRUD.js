@@ -39,6 +39,7 @@ function sendAjax(object, subject, verb, callbackMethod) {
 function  createTarget(){
     emptyCRUDStorage();
     verb = "create";
+    tempTarget.active=true;
     loadTargetUpdateWindow();
 }
 

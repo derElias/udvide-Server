@@ -57,6 +57,7 @@ function triggerMapPreview() {
 function showMapPreview(f) {
     let img = document.createElement("img");
     let canvas = document.getElementById("mapCanvas");
+    var rect = canvas.getBoundingClientRect();
 
     activeMapContext = canvas.getContext("2d");
 
@@ -67,6 +68,7 @@ function showMapPreview(f) {
         canvas.setAttribute("width","" + background.width);
         canvas.setAttribute("height","" + background.height);
         activeMapContext.drawImage(background, 0, 0);
+        dotSize = 20*canvas.width / rect.width;
         f();
     };
     background.src = tempTarget.mapImg;

@@ -152,19 +152,21 @@ function loadTargetUpdateWindow() {
     if(tempTarget.name != null){
         document.getElementById("target_name").value=tempTarget.name;
     }
-    if(tempTarget.activeFlag != null){
-        document.getElementById("t_activeFlag").checked=tempTarget.activeFlag;
+    console.log(tempTarget.active);
+    if(tempTarget.active != null){
+        document.getElementById("t_activeFlag").checked=tempTarget.active;
     }
     if(tempTarget.content != null){
         document.getElementById("t_content").value=tempTarget.content;
     }
     if(tempTarget.image != null){
         document.getElementById("imgPreview").src=tempTarget.image;
+        document.getElementById("marker_downloadButton").href=tempTarget.image;
     }
     if(tempTarget.map != null){
         showMapPreview(function () {
             activeMapContext.fillStyle = "#FF0000";
-            activeMapContext.fillRect(tempTarget.xPos-1,tempTarget.yPos-1,5,5);
+            activeMapContext.fillRect(tempTarget.xPos-1,tempTarget.yPos-1,dotSize,dotSize);
         });
     }
 }
@@ -260,7 +262,7 @@ function loadMapTable() {
 function loadMapSelect() {
     tempTarget.name = document.getElementById("target_name").value;
     tempTarget.image = document.getElementById("imgPreview").src;
-    tempTarget.activeFlag = document.getElementById("t_activeFlag").checked;
+    tempTarget.active = document.getElementById("t_activeFlag").checked;
     tempTarget.content = document.getElementById("t_content").value;
 
     document.getElementById("content").innerHTML = resourcePackage.templates["selectMap.html"];

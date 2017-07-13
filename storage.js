@@ -22,6 +22,7 @@ let image=null;
 let map = null;
 let xPos=0;
 let yPos=0;
+let dotSize=0;
 
 //needet for Ajax Requests
 let verb=null;
@@ -36,7 +37,7 @@ let subjectType=null;
 let tempTarget = {
     name: null,
     image: null,
-    activeFlag: null,
+    active: true,
     content: null,
     xPos: null,
     yPos: null,
@@ -158,10 +159,11 @@ function setPosition(event) {
     var rect = canvas.getBoundingClientRect();
     xPos = (event.clientX - rect.left) * canvas.width / rect.width;
     yPos = (event.clientY - rect.top) * canvas.height / rect.height;
+    dotSize = 20*canvas.width / rect.width;
     document.getElementById("demo").innerHTML = "X: " + xPos + ", Y: " + yPos;
     showMapPreview(function () {
         activeMapContext.fillStyle = "#FF0000";
-        activeMapContext.fillRect(xPos-1,yPos-1,5,5);
+        activeMapContext.fillRect(xPos-1,yPos-1,dotSize,dotSize);
     });
 }
 
