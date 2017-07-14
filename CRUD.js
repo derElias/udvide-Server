@@ -198,6 +198,7 @@ function sendUserCRUD() {
         }});
     creatingUserCurrendtly = false;
     user.role = parseInt(user.role,10);
+    user.editors=false;
     userList.unshift(user);
     if(verb=="update"){
         for(let i = 0; i < userList.length; i++){

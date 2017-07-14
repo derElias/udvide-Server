@@ -195,7 +195,7 @@ function emptyCRUDStorage(){
         username: null,
         role: null,
         createTargetLimit: null,
-        editors: null
+        editors: false
     };
 
     tempMap ={
