@@ -185,8 +185,8 @@ function loadUserUpdateField() {
     if(tempUser.role != null) {
         document.getElementById("update_user_role").selectedIndex =tempUser.role;
     }
-    if(tempUser.createTargetLimit != null) {
-        document.getElementById("update_user_tnumber").value = tempUser.createTargetLimit;
+    if(tempUser.targetCreateLimit != null) {
+        document.getElementById("update_user_tnumber").value = tempUser.targetCreateLimit;
     }
     editorcheck();
 }
@@ -209,7 +209,7 @@ function editorcheck() {
         item.setAttribute("id","update_user_tnumber");
         item.setAttribute("type","number");
         item.setAttribute("class","createUserInput");
-        item.setAttribute("value",tempUser.createTargetLimit);
+        item.setAttribute("value",tempUser.targetCreateLimit);
         values.appendChild(item);
     }
     else{

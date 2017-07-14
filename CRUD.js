@@ -179,7 +179,7 @@ function sendUserCRUD() {
             passHash: pass,
             username: document.getElementById("update_user_name").value,
             role: role,
-            createTargetLimit: document.getElementById("update_user_tnumber").value
+            targetCreateLimit: document.getElementById("update_user_tnumber").value
         };
     }
     else{

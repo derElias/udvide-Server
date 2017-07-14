@@ -49,7 +49,7 @@ let tempTarget = {
 let tempUser ={
     username: null,
     role: null,
-    createTargetLimit: null,
+    targetCreateLimit: null,
     editors: null
 };
 
